@@ -3,6 +3,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import Dotenv from 'dotenv-webpack';
+import 'webpack-dev-server';
 
 import { Configuration } from 'webpack';
 

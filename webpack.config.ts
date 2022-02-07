@@ -19,7 +19,7 @@ module.exports = async ({ env }: { env: string }) => {
 			},
 		},
 		plugins: 'append',
+		devServer: 'merge'
 	})(common, envConfig);
-	console.dir(mergedConfig);
 	return mergedConfig;
 };
