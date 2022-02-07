@@ -3,7 +3,7 @@
 	"description": "A sub-module to run cypress tests. Otherwise cypress pollutes the global namespace of the parent module and conflicts with jests.",
 	"scripts": {
 		"cypress:open": "cypress open",
-		"cypress:run": "cypress:run"
+		"cypress:run": "cypress run"
 	},
 	"license": "ISC",
 	"devDependencies": {
