@@ -12,7 +12,7 @@ jobs:
       - name: Unit Tests
         run: npm test
       - name: Start Server
-        run: npm start
+        run: npm start &
 
       - name: Install Cypress and run E2E tests
         uses: cypress-io/github-action@v2
