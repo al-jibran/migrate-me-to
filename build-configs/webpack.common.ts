@@ -38,6 +38,12 @@ const config: Configuration = {
 				use: [
 					'style-loader',
 					{
+						loader: MiniCssExtractPlugin.loader,
+						options: {
+							esModule: false, // hides warning of default imports when building
+						},
+					},
+					{
 						loader: 'css-loader',
 						options: {
 							importLoaders: 1,
