@@ -7,12 +7,14 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Install Dependencies
-        run: npm ci
+      - name: Install Root Dependencies
+        uses: bahmutov/npm-install@v1
       - name: Unit Tests
         run: npm test
-      - name: E2E Tests
+      - name: Start Server
+        run: npm start
+
+      - name: Install Cypress and run E2E tests
         uses: cypress-io/github-action@v2
         with: 
-          start: npm start
-          wait-on: 'http://localhost:3000'
+          working-directory: e2e
