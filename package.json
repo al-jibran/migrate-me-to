@@ -4,6 +4,8 @@
   "description": "A web app for migrating users from their old accounts to new one by transferring data that they want",
   "main": "index.js",
   "scripts": {
+    "start": "webpack server --config ./webpack.config.ts --env env=dev",
+    "build": "webpack --config ./webpack.config.ts --env env=prod",
     "test": "jest --verbose"
   },
   "author": "Al Jibran",

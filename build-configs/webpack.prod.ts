@@ -1,7 +1,7 @@
-import { Configuration, DefinePlugin } from 'webpack';
+import { DefinePlugin } from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
-const config: Configuration = {
+module.exports = {
 	mode: 'production',
 	plugins: [
 		new DefinePlugin({
@@ -10,5 +10,3 @@ const config: Configuration = {
 		new BundleAnalyzerPlugin(),
 	],
 };
-
-export default config;

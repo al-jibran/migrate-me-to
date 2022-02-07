@@ -7,10 +7,11 @@ import Dotenv from 'dotenv-webpack';
 import { Configuration } from 'webpack';
 
 const config: Configuration = {
-	entry: path.resolve(__dirname, './src/index.tsx'),
+	entry: path.resolve(__dirname, '..', './src/index.tsx'),
 	output: {
-		filename: '[name].[contentHash].js',
-		path: path.resolve(__dirname, './dist')
+		filename: '[name].[contenthash].js',
+		path: path.resolve(__dirname, '..', './dist'),
+		clean: true,
 	},
 	module: {
 		rules: [
@@ -23,10 +24,10 @@ const config: Configuration = {
 						presets: [
 							'@babel/preset-env',
 							'@babel/preset-react',
-							'@babel/preset-typescript'
-						]
-					}
-				}
+							'@babel/preset-typescript',
+						],
+					},
+				},
 			},
 			{
 				test: /\.css$/,
@@ -34,9 +35,9 @@ const config: Configuration = {
 			},
 			{
 				test: /\.jpg/,
-				type: 'asset'
-			}
-		]
+				type: 'asset',
+			},
+		],
 	},
 	resolve: {
 		extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -44,19 +45,19 @@ const config: Configuration = {
 	plugins: [
 		new HtmlWebpackPlugin({
 			title: 'Migrate Me To',
-			template: path.resolve(__dirname, './src/index.html')
+			template: path.resolve(__dirname, '..', './src/index.html'),
 		}),
 		new ForkTsCheckerWebpackPlugin({
 			async: false,
 		}),
 		new ESLintPlugin({
-			extensions: ['.js', '.ts', '.jsx', '.tsx']
+			extensions: ['.js', '.ts', '.jsx', '.tsx'],
 		}),
 		new Dotenv({
-			path: path.resolve(__dirname, './.env'),
-			systemvars: true
-		})
-	]
+			path: path.resolve(__dirname, '..', './.env'),
+			systemvars: true,
+		}),
+	],
 };
 
 export default config;
