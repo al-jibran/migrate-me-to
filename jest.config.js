@@ -10,5 +10,10 @@ module.exports = {
 	},
 	preset: 'ts-jest',
 	testEnvironment: 'jest-environment-jsdom',
-	testPathIgnorePatterns: ['<rootDir>/e2e/'],
+	testPathIgnorePatterns: ['<rootDir>/e2e/', '<rootDir>/src/__tests__/__mocks__'],
+	moduleNameMapper: {
+		'\\.(css|less|sass|scss)$':
+			'<rootDir>/src/__tests__/__mocks__/styleMock.ts',
+		'\\.(gif|ttf|eot|svg)$': '<rootDir>/__tests__/__mocks__/fileMock.ts',
+	},
 };
