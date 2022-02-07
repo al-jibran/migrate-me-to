@@ -1,2 +1,1 @@
-import path from 'path';
-console.log(path.dirname('./'));
+console.log('hello world');
