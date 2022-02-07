@@ -3,6 +3,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import Dotenv from 'dotenv-webpack';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import 'webpack-dev-server';
 
 import { Configuration } from 'webpack';
@@ -12,7 +13,7 @@ const config: Configuration = {
 	output: {
 		filename: '[name].[contenthash].js',
 		path: path.resolve(__dirname, '..', './dist'),
-		clean: true
+		clean: true,
 	},
 	module: {
 		rules: [
@@ -24,7 +25,7 @@ const config: Configuration = {
 					options: {
 						presets: [
 							'@babel/preset-env',
-							['@babel/preset-react', { 'runtime': 'automatic'}],
+							['@babel/preset-react', { runtime: 'automatic' }],
 							'@babel/preset-typescript',
 						],
 					},
@@ -32,7 +33,24 @@ const config: Configuration = {
 			},
 			{
 				test: /\.css$/,
-				use: ['style-loader', 'css-loader'],
+
+				include: path.resolve(__dirname, '..', './src'),
+				use: [
+					'style-loader',
+					{
+						loader: MiniCssExtractPlugin.loader,
+						options: {
+							esModule: false, // hides warning of default imports when building
+						},
+					},
+					{
+						loader: 'css-loader',
+						options: {
+							importLoaders: 1,
+						},
+					},
+					'postcss-loader',
+				],
 			},
 			{
 				test: /\.jpg/,
@@ -41,8 +59,10 @@ const config: Configuration = {
 		],
 	},
 	resolve: {
+		roots: [path.resolve(__dirname, '..', 'src')],
 		extensions: ['.js', '.jsx', '.ts', '.tsx'],
 	},
+
 	plugins: [
 		new HtmlWebpackPlugin({
 			title: 'Migrate Me To',
@@ -57,6 +77,10 @@ const config: Configuration = {
 		new Dotenv({
 			path: path.resolve(__dirname, '..', './.env'),
 			systemvars: true,
+		}),
+		new MiniCssExtractPlugin({
+			filename: '[name].bundle.css',
+			chunkFilename: '[id].css',
 		}),
 	],
 };
