@@ -1,5 +1,5 @@
 import { DefinePlugin } from 'webpack';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionWebpackPlugin from 'compression-webpack-plugin';
 
 module.exports = {
@@ -8,10 +8,9 @@ module.exports = {
 		new DefinePlugin({
 			'process.env.NODE_ENV': JSON.stringify('production'),
 		}),
-		new BundleAnalyzerPlugin(),
+		// new BundleAnalyzerPlugin(),
 		new CompressionWebpackPlugin({
-			test: /\.js$|\.css$/
-			
-		})
+			test: /\.js$|\.css$/,
+		}),
 	],
 };
