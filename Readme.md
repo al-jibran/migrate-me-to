@@ -6,7 +6,7 @@ Have you ever had to delete your account on social media and make a new one but 
 
 ### What I Learned:
 
-1. Figma design tool to design the app.
+1. Figma design tool to design principles for a web app.
 2. Setting up a React project from scratch with webpack, typescript, babel, typescript, jest and cypress.
 3. The idea of bundling, code-splitting, tree-shaking and compressing bundle files.
 4. What monorepos are.
