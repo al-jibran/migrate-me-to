@@ -10,7 +10,17 @@ describe('navigation', () => {
 		});
 
 		it('hides the menu on tapping x', () => {
-			cy.get('#close-menu').click().should('not.be.inViewport');
+			cy.get('#open-menu')
+				.click()
+				.then(() => {
+					cy.get('#close-menu').click();
+					cy.get('#menu').should('not.be.inViewport');
+				});
+		});
+
+		it('shows the menu on pressing on the hamburger icon', () => {
+			cy.get('#open-menu').click();
+			cy.get('#menu').should('be.inViewport');
 		});
 	});
 });
