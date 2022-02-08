@@ -14,13 +14,13 @@ describe('navigation', () => {
 				.click()
 				.then(() => {
 					cy.get('[aria-label=close-menu]').click();
-					cy.get('#menu').should('not.be.inViewport');
+					cy.get('[aria-label=menu]').should('not.be.inViewport');
 				});
 		});
 
 		it('shows the menu on pressing on the hamburger icon', () => {
 			cy.get('[aria-label=open-menu]').click();
-			cy.get('#menu').should('be.inViewport');
+			cy.get('[aria-label=menu]').should('be.inViewport');
 		});
 	});
 });
