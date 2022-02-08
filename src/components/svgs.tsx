@@ -22,7 +22,6 @@ export const OpenMenuHamburger = (props: SVGProps<SVGSVGElement>) => (
 
 export const DarkModeToggle = (props: SVGProps<SVGSVGElement>) => (
 	<svg
-		className='h-8 w-min hover:cursor-pointer'
 		viewBox='0 0 31 31'
 		fill='none'
 		xmlns='http://www.w3.org/2000/svg'

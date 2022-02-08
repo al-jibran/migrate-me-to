@@ -32,10 +32,10 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 
 	return (
 		<menu className='mt-4'>
-			<div className='flex w-24 justify-between items-center'>
-				<DarkModeToggle />
+			<div className='flex w-24 justify-between lg:justify-end items-center'>
+				<DarkModeToggle className='h-8 w-min hover:cursor-pointer' />
 				<OpenMenuHamburger
-					className='fill-black w-min h-8 hover:cursor-pointer'
+					className='fill-black w-min h-8 hover:cursor-pointer block lg:hidden'
 					aria-label='open-menu'
 					onClick={() => setShowMenu(true)}
 				/>
