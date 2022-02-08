@@ -57,9 +57,9 @@ const config: Configuration = {
 				type: 'asset',
 			},
 			{
-				test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
+				test: /\.ttf/,
+				type: 'asset',
 				include: path.resolve(__dirname, '..', './src/assets'),
-				loader: 'asset/resource',
 			},
 		],
 	},
