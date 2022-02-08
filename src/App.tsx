@@ -1,6 +1,9 @@
+import Navigation from './components/Navigation';
 
 export const App = () => {
-	return <div className="text3xl font-bold underline">Hello World</div>;
+	return <div>
+		<Navigation />
+	</div>;
 };
 
 export default App;
