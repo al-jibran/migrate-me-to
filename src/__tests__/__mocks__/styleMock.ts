@@ -1,1 +1,1 @@
-export {}:wa;
+export {};
