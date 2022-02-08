@@ -12,12 +12,7 @@ describe('Navigation Menu', () => {
 			handleCloseMenu = jest.fn();
 			handleOpenMenu = jest.fn();
 
-			context = render(
-				<Menu
-					handleCloseMenu={handleCloseMenu}
-					handleOpenMenu={handleOpenMenu}
-				/>
-			);
+			context = render(<Menu />);
 		});
 
 		it('calls the handling function on pressing x', () => {

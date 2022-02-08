@@ -1,50 +1,21 @@
-import React, { useEffect } from 'react';
+import { useState } from 'react';
 import { CloseMenuX, OpenMenuHamburger, Logo } from './svgs';
 
 const Navigation = () => {
-	let menu: Element | null;
-
-	useEffect(() => {
-		menu = document.getElementById('menu');
-	});
-
-	const handleCloseMenu = () => {
-		menu?.classList.remove('translate-x-0');
-	};
-
-	const handleOpenMenu = () => {
-		console.log(menu);
-		menu?.classList.add(
-			'translate-x-0',
-			'transition-transform',
-			'duration-1000'
-		);
-	};
 	return (
-		<header className='px-6 py-4'>
-			<nav className='flex justify-between'>
-				<Logo className='stroke-black w-48 hover:cursor-pointer'
-				/>
-				<Menu
-					handleCloseMenu={handleCloseMenu}
-					handleOpenMenu={handleOpenMenu}
-				/>
-			</nav>
-		</header>
+		<nav className='flex justify-between px-6 py-4'>
+			<Logo className='stroke-black w-48 hover:cursor-pointer' />
+			<Menu />
+		</nav>
 	);
 };
 
-export interface MenuProps {
-	handleCloseMenu: () => void;
-	handleOpenMenu: () => void;
-}
+export const Menu = () => {
+	const [showMenu, setShowMenu] = useState(false);
+	const menuStyle = showMenu ? 'translate-x-0' : 'translate-x-full';
 
-export const Menu: React.FC<MenuProps> = ({
-	handleCloseMenu,
-	handleOpenMenu,
-}) => {
 	return (
-		<div>
+		<menu className='mt-4'>
 			<div className='flex w-24 justify-between items-center'>
 				<svg
 					className='h-8 w-min hover:cursor-pointer'
@@ -74,17 +45,20 @@ export const Menu: React.FC<MenuProps> = ({
 						strokeLinejoin='round'
 					/>
 				</svg>
-				<button id='open-menu' onClick={handleOpenMenu} data-testid='open-menu'>
+				<button
+					id='open-menu'
+					onClick={() => setShowMenu(true)}
+					data-testid='open-menu'>
 					<OpenMenuHamburger className='fill-black w-min h-8 hover:cursor-pointer' />
 				</button>
 			</div>
 
-			<menu
-				className='fixed bg-gray-200 w-1/2 h-screen top-0 right-0 translate-x-full'
+			<div
+				className={`fixed bg-gray-200 w-1/2 h-screen top-0 right-0 ${menuStyle} transition-transform duration-700`}
 				id='menu'>
 				<button
 					id='close-menu'
-					onClick={handleCloseMenu}
+					onClick={() => setShowMenu(false)}
 					data-testid='close-menu'
 					className='float-right mt-4 mr-4 hover:cursor-pointer'>
 					<CloseMenuX className='w-10 stroke-white fill-white' />
@@ -112,8 +86,8 @@ export const Menu: React.FC<MenuProps> = ({
 						</a>
 					</li>
 				</ul>
-			</menu>
-		</div>
+			</div>
+		</menu>
 	);
 };
 

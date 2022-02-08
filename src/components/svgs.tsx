@@ -25,7 +25,7 @@ export const Logo = (props: SVGProps<SVGSVGElement>) => (
 		viewBox='0 0 212 71'
 		fill='none'
 		xmlns='http://www.w3.org/2000/svg'
-		{...props}>
+		{...props }>
 		<g filter='url(#filter0_d_8_222)'>
 			<path
 				className='fill-black dark:fill-white'
