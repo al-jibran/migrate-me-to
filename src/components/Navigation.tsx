@@ -3,7 +3,12 @@ import { CloseMenuX } from './svgs';
 
 const Navigation = () => {
 	const handleCloseMenu = () => {
-		console.log('hello');
+		const menu = document.querySelector('#menu');
+		menu?.classList.add(
+			'translate-x-full',
+			'transition-transform',
+			'duration-1000'
+		);
 	};
 	return (
 		<header className='px-6 py-4'>
@@ -109,14 +114,18 @@ const Navigation = () => {
 };
 
 interface MenuProps {
-	handleCloseMenu: (e: React.MouseEvent<HTMLElement>) => void;
+	handleCloseMenu: () => void;
 }
 
 export const Menu: React.FC<MenuProps> = ({ handleCloseMenu }) => {
 	return (
-		<div className='absolute bg-gray-200 w-1/2 h-screen top-0 right-0'>
-			<button onClick={handleCloseMenu} data-testid='close-menu' className=' w-10 float-right mt-4 mr-4 hover:cursor-pointer'>
-				<CloseMenuX />
+		<div className='fixed bg-gray-200 w-1/2 h-screen top-0 right-0' id='menu'>
+			<button
+				id='close-menu'
+				onClick={handleCloseMenu}
+				data-testid='close-menu'
+				className='float-right mt-4 mr-4 hover:cursor-pointer'>
+				<CloseMenuX className='w-10 stroke-white fill-white' />
 			</button>
 			<ul className='mt-16 border-x'>
 				<li className='hover'>
