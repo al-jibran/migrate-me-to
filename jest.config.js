@@ -8,9 +8,13 @@ module.exports = {
 	transform: {
 		'^.+\\.(ts|tsx)$': 'babel-jest',
 	},
+	setupFilesAfterEnv: ['<rootDir>/src/setuptests.ts'],
 	preset: 'ts-jest',
 	testEnvironment: 'jest-environment-jsdom',
-	testPathIgnorePatterns: ['<rootDir>/e2e/', '<rootDir>/src/__tests__/__mocks__'],
+	testPathIgnorePatterns: [
+		'<rootDir>/e2e/',
+		'<rootDir>/src/__tests__/__mocks__',
+	],
 	moduleNameMapper: {
 		'\\.(css|less|sass|scss)$':
 			'<rootDir>/src/__tests__/__mocks__/styleMock.ts',
