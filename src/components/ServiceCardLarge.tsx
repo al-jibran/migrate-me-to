@@ -19,7 +19,7 @@ export const ServiceCardLarge: React.FC<LargeCard> = ({
 		<div className='my-6 shadow-sm' data-testid='service'>
 			<div className={`flex max-h-24 ${serviceColors[name]}`}>
 				{<LogoSvgComponent className={leftBox()} />}
-				<h3 className='self-center text-2xl font-bold text-white'>{name}</h3>
+				<h3 className='self-center text-white'>{name}</h3>
 			</div>
 			<ul>
 				{transferrableList.map((item, index) => (

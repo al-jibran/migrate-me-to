@@ -52,21 +52,28 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 				<ul className='mt-16 border-x'>
 					<li>
 						<a
-							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-4 text-xl'
+							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-6 text-xl'
 							href='#'>
 							Home
 						</a>
 					</li>
 					<li>
 						<a
-							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-4 text-xl'
+							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-6 text-xl'
 							href='#'>
 							Services
 						</a>
 					</li>
 					<li>
 						<a
-							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-4 text-xl'
+							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-6 text-xl'
+							href='#'>
+							About
+						</a>
+					</li>
+					<li>
+						<a
+							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-6 text-xl'
 							href='#'>
 							Code
 						</a>
