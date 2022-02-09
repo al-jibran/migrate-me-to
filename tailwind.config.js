@@ -18,6 +18,7 @@ module.exports = {
 					900: '#aaaaaa',
 				},
 				twitter: '#1DA1F2',
+				reddit: '#DE3E02',
 			},
 		},
 		fontFamily: {

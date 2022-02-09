@@ -1,12 +1,20 @@
 import { DownArrow } from '../components/svgs';
-import ExpandableService from '../components/ExpandableService';
+import ServiceCardLarge from '../components/ServiceCardLarge';
+import services from '../data/services';
 
 const Homepage = () => {
 	return (
 		<>
 			<Hero />
 			<h2 className='text-3xl font-bold mt-6'>Services</h2>
-			<ExpandableService />
+			{services.map(({ name, transferrableList, LogoSvgComponent }) => (
+				<ServiceCardLarge
+					name={name}
+					transferrableList={transferrableList}
+					LogoSvgComponent={LogoSvgComponent}
+					key={name}
+				/>
+			))}
 		</>
 	);
 };
