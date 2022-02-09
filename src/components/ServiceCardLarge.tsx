@@ -2,7 +2,7 @@ import { SVGProps } from 'react';
 import { Checkbox } from './svgs';
 import { serviceColors } from '../data/services';
 
-const leftBox = () => 'w-1/12 px-2 py-4 mr-3 border-r-2 border-r-white';
+const leftBox = () => 'w-16 p-3 mr-4 border-r border-r-white';
 
 interface LargeCard {
 	name: string;
