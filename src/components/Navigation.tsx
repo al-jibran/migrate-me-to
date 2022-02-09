@@ -3,7 +3,7 @@ import { CloseMenuX, OpenMenuHamburger, Logo, DarkModeToggle } from './svgs';
 
 const Navigation = () => {
 	return (
-		<nav className='flex justify-between fixed mt-4 px-6 w-full'>
+		<nav className='flex shadow-sm justify-between fixed px-6 py-4 w-full z-50 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]'>
 			<Logo
 				className='stroke-black w-48 hover:cursor-pointer'
 				aria-label='logo'

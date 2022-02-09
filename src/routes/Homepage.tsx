@@ -5,7 +5,7 @@ const Homepage = () => {
 	return (
 		<>
 			<Hero />
-			<h2 className='text-4xl font-bold'>Services</h2>
+			<h2 className='text-3xl font-bold mt-6'>Services</h2>
 			<ExpandableService />
 		</>
 	);
