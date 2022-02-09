@@ -1,7 +1,14 @@
 import { DownArrow } from '../components/svgs';
+import ExpandableService from '../components/ExpandableService';
 
 const Homepage = () => {
-	return <Hero />;
+	return (
+		<>
+			<Hero />
+			<h2 className='text-4xl font-bold'>Services</h2>
+			<ExpandableService />
+		</>
+	);
 };
 
 const Hero = () => {

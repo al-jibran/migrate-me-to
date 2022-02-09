@@ -17,6 +17,7 @@ module.exports = {
 					200: '#222222',
 					900: '#aaaaaa',
 				},
+				twitter: '#1DA1F2',
 			},
 		},
 		fontFamily: {
