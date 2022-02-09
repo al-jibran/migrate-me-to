@@ -1,6 +1,13 @@
 import { TwitterLogo, RedditLogo } from '../components/svgs';
+import { SVGProps } from 'react';
 
-export default [
+export type Service = {
+	name: string;
+	LogoSvgComponent: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+	transferrableList: string[];
+};
+
+export const services: Service[] = [
 	{
 		name: 'Twitter',
 		LogoSvgComponent: TwitterLogo,

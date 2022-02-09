@@ -1,12 +1,12 @@
 import { DownArrow } from '../components/svgs';
 import ServiceCardLarge from '../components/ServiceCardLarge';
-import services from '../data/services';
+import { Service, services } from '../data/services';
 
 const Homepage = () => {
 	return (
 		<>
 			<Hero />
-			<Services />
+			<Services services={services} />
 		</>
 	);
 };
@@ -22,9 +22,13 @@ const Hero = () => {
 	);
 };
 
-const Services = () => {
+interface ServicesProps {
+	services: Service[];
+}
+
+export const Services: React.FC<ServicesProps> = ({ services }) => {
 	return (
-		<>
+		<section id='#'>
 			<h2 className='text-3xl font-bold mt-6'>Services</h2>
 			{services.map(({ name, transferrableList, LogoSvgComponent }) => (
 				<ServiceCardLarge
@@ -34,7 +38,7 @@ const Services = () => {
 					key={name}
 				/>
 			))}
-		</>
+		</section>
 	);
 };
 export default Homepage;

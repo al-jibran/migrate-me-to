@@ -9,13 +9,13 @@ interface LargeCard {
 	transferrableList: string[];
 }
 
-const ExpandableService: React.FC<LargeCard> = ({
+export const ServiceCardLarge: React.FC<LargeCard> = ({
 	name,
 	LogoSvgComponent,
 	transferrableList,
 }) => {
 	return (
-		<div className='my-6 shadow-sm'>
+		<div className='my-6 shadow-sm' data-testid='service'>
 			<div className={`flex max-h-24 bg-${name.toLowerCase()}`}>
 				{<LogoSvgComponent className={leftBox()} />}
 				<h3 className='self-center text-2xl font-bold text-white'>{name}</h3>
@@ -32,4 +32,4 @@ const ExpandableService: React.FC<LargeCard> = ({
 	);
 };
 
-export default ExpandableService;
+export default ServiceCardLarge;
