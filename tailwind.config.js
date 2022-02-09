@@ -11,14 +11,12 @@ module.exports = {
 		},
 		extend: {
 			colors: {
-				white: '#ffffff',
-				black: '#000000',
+				twitter: '#1DA1F2',
+				reddit: '#DE3E02',
 				gray: {
 					200: '#222222',
 					900: '#aaaaaa',
 				},
-				twitter: '#1DA1F2',
-				reddit: '#DE3E02',
 			},
 		},
 		fontFamily: {

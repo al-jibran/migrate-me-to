@@ -20,4 +20,8 @@
 		font-weight: 700;
 		src: url('../Poppins-Bold.ttf');
 	}
+
+	h1 {
+		@apply text-7xl sm:text-8xl font-bold;
+	}
 }

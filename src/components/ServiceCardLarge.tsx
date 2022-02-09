@@ -1,5 +1,6 @@
 import { SVGProps } from 'react';
 import { Checkbox } from './svgs';
+import { serviceColors } from '../data/services';
 
 const leftBox = () => 'w-1/6 p-3 mr-3 border-r-2 border-r-white';
 
@@ -16,7 +17,7 @@ export const ServiceCardLarge: React.FC<LargeCard> = ({
 }) => {
 	return (
 		<div className='my-6 shadow-sm' data-testid='service'>
-			<div className={`flex max-h-24 bg-${name.toLowerCase()}`}>
+			<div className={`flex max-h-24 ${serviceColors[name]}`}>
 				{<LogoSvgComponent className={leftBox()} />}
 				<h3 className='self-center text-2xl font-bold text-white'>{name}</h3>
 			</div>

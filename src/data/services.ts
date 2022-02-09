@@ -19,3 +19,8 @@ export const services: Service[] = [
 		transferrableList: ['Subreddits', 'Saved', 'Upvoted'],
 	},
 ];
+
+export const serviceColors: Record<string, string> = {
+	Twitter: 'bg-twitter',
+	Reddit: 'bg-reddit',
+};
