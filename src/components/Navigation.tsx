@@ -3,7 +3,7 @@ import { CloseMenuX, OpenMenuHamburger, Logo, DarkModeToggle } from './svgs';
 
 const Navigation = () => {
 	return (
-		<nav className='flex shadow-sm justify-between fixed px-6 py-4 w-full z-50 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]'>
+		<nav className='flex shadow-sm justify-between fixed px-10 py-4 w-full z-50 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]'>
 			<Logo
 				className='stroke-black w-48 hover:cursor-pointer'
 				aria-label='logo'
@@ -50,23 +50,23 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 					onClick={() => setShowMenu(false)}
 				/>
 				<ul className='mt-16 border-x'>
-					<li className='hover'>
+					<li>
 						<a
-							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-4 hover:ring-gray-200'
+							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-4 text-xl'
 							href='#'>
 							Home
 						</a>
 					</li>
-					<li className=''>
+					<li>
 						<a
-							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-4 hover:ring-gray-200'
+							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-4 text-xl'
 							href='#'>
 							Services
 						</a>
 					</li>
-					<li className=''>
+					<li>
 						<a
-							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-4 hover:ring-gray-200'
+							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-4 text-xl'
 							href='#'>
 							Code
 						</a>

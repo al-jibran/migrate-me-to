@@ -7,7 +7,7 @@ export const App = () => {
 	return (
 		<div className='h-full overflow-x-hidden'>
 			<Navigation />
-			<div className='text-gray-200 overscroll-none px-6 h-full pt-32 z-0 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]'>
+			<div className='text-gray-200 overscroll-none px-10 h-full pt-32 z-0 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]'>
 				<Homepage />
 			</div>
 		</div>
