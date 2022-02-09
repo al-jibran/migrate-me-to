@@ -47,7 +47,7 @@ const About = () => {
 	return (
 		<section>
 			<h2 className='my-6'>About</h2>
-			<p className='leading-loose w-full p-8 shadow-xl bg-[#d9f5d0]'>
+			<p className='leading-loose w-full p-8 shadow-xl text-lg bg-[#d9f5d0]'>
 				Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum quaerat
 				itaque ipsa temporibus? Sed, exercitationem dignissimos, veniam eius
 				natus quam amet optio voluptas molestias nemo ipsa magnam, voluptates

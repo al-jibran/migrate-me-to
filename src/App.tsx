@@ -34,7 +34,9 @@ const Footer = () => {
 		<div className={className}>
 			<h3>Created by Al Jibran</h3>
 
-			<p className='underline my-5'>While you&apos;re here check out my:</p>
+			<p className='my-5 tracking-wider'>
+				While you&apos;re here check out my:
+			</p>
 			<ul>
 				<SocialItem
 					Icon={Icon}
