@@ -9,12 +9,14 @@ module.exports = {
 			xl: '1024px',
 			'2xl': '1280px',
 		},
-		colors: {
-			white: '#ffffff',
-			black: '#000000',
-			gray: {
-				200: '#222222',
-				900: '#aaaaaa',
+		extend: {
+			colors: {
+				white: '#ffffff',
+				black: '#000000',
+				gray: {
+					200: '#222222',
+					900: '#aaaaaa',
+				},
 			},
 		},
 		fontFamily: {

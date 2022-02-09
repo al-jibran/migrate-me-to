@@ -5,7 +5,7 @@ const Navigation = () => {
 	return (
 		<nav className='flex justify-between fixed mt-4 px-6 w-full'>
 			<Logo
-				className='stroke-white w-28 hover:cursor-pointer'
+				className='stroke-black w-48 hover:cursor-pointer'
 				aria-label='logo'
 			/>
 			<Menu />
@@ -31,11 +31,11 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 	const menuStyle = showMenu ? 'translate-x-0' : 'translate-x-full';
 
 	return (
-		<menu className='mt-2'>
+		<menu className='mt-4'>
 			<div className='flex w-24 justify-between lg:justify-end items-center'>
-				<DarkModeToggle className='h-6 w-min hover:cursor-pointer' />
+				<DarkModeToggle className='h-8 w-min hover:cursor-pointer' />
 				<OpenMenuHamburger
-					className='fill-black w-min h-6 hover:cursor-pointer block lg:hidden'
+					className='fill-black w-min h-8 hover:cursor-pointer block lg:hidden'
 					aria-label='open-menu'
 					onClick={() => setShowMenu(true)}
 				/>
