@@ -14,8 +14,8 @@ const Homepage = () => {
 const Hero = () => {
 	return (
 		<section className='flex flex-col pb-5 h-full justify-between'>
-			<h1 className='font-bold'>Migrate to another account easily.</h1>
-			<DownArrow className='h-1/4 w-8 animate-bounce' />
+			<h1 className='flex-shrink'>Migrate to another account easily.</h1>
+			<DownArrow className='h-1/4 w-8 flex-shrink animate-bounce' />
 		</section>
 	);
 };
@@ -27,7 +27,7 @@ interface ServicesProps {
 export const Services: React.FC<ServicesProps> = ({ services }) => {
 	return (
 		<section id='#'>
-			<h2 className='text-3xl font-bold mt-6'>Services</h2>
+			<h2 className=' mt-6'>Services</h2>
 			{services.map(({ name, transferrableList, LogoSvgComponent }) => (
 				<ServiceCardLarge
 					name={name}
