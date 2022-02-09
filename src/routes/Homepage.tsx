@@ -1,19 +1,44 @@
+import { DownArrow } from '../components/svgs';
+import ServiceCardLarge from '../components/ServiceCardLarge';
+import { Service, services } from '../data/services';
+
 const Homepage = () => {
 	return (
-		<section className='flex flex-col pt-32 h-[95vh] justify-between'>
-			<h1 className='text-8xl font-bold'>Migrate to another account easily.</h1>
-			<a
-				href='#'
-				className='py-4 px-4
-				 bg-gray-200 w-fit
-				  text-white rounded-md
-				  border-2
-				   hover:bg-white
-				    hover:text-black'>
-				See all offered services
-			</a>
+		<>
+			<Hero />
+			<Services services={services} />
+		</>
+	);
+};
+
+const Hero = () => {
+	return (
+		<section className='flex flex-col pb-5 h-full justify-between'>
+			<h1 className='font-bold text-7xl sm:text-8xl '>
+				Migrate to another account easily.
+			</h1>
+			<DownArrow className='h-1/4 w-8 animate-bounce' />
 		</section>
 	);
 };
 
+interface ServicesProps {
+	services: Service[];
+}
+
+export const Services: React.FC<ServicesProps> = ({ services }) => {
+	return (
+		<section id='#'>
+			<h2 className='text-3xl font-bold mt-6'>Services</h2>
+			{services.map(({ name, transferrableList, LogoSvgComponent }) => (
+				<ServiceCardLarge
+					name={name}
+					transferrableList={transferrableList}
+					LogoSvgComponent={LogoSvgComponent}
+					key={name}
+				/>
+			))}
+		</section>
+	);
+};
 export default Homepage;
