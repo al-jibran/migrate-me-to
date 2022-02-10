@@ -5,35 +5,35 @@ import { MenuContainer as Menu } from '../../components/Navigation';
 describe('Navigation Menu', () => {
 	describe('on smaller screens', () => {
 		let context: RenderResult;
-		let showMenu: boolean;
-		let setShowState: jest.Mock;
+		let state: boolean;
+		let setState: jest.Mock;
+		let toggle: jest.Mock;
 
 		beforeEach(() => {
-			showMenu = false;
-			setShowState = jest
-				.fn()
-				.mockImplementation((value) => (showMenu = value));
-			context = render(<Menu showMenu={showMenu} setShowMenu={setShowState} />);
+			state = false;
+			setState = jest.fn().mockImplementation((value) => (state = value));
+			toggle = jest.fn();
+			context = render(<Menu showMenu={state} setShowMenu={setState} />);
 		});
 
 		it('initially the menu is hidden', async () => {
-			expect(setShowState).not.toHaveBeenCalled();
-			expect(showMenu).toBe(false);
+			expect(setState).not.toHaveBeenCalled();
+			expect(state).toBe(false);
 		});
 
 		it('shows the menu when clicked on open menu button', () => {
 			const { getByLabelText } = context;
 			userEvent.click(getByLabelText('open-menu'));
-			expect(showMenu).toBe(true);
-			expect(setShowState).toHaveBeenCalledWith(true);
+			expect(state).toBe(true);
+			expect(setState).toHaveBeenCalledWith(true);
 		});
 
 		it('hides the menu when clicked on close menu button', () => {
 			const { getByLabelText } = context;
 			userEvent.click(getByLabelText('open-menu'));
 			userEvent.click(getByLabelText('close-menu'));
-			expect(showMenu).toBe(false);
-			expect(setShowState).toHaveBeenCalledTimes(2);
+			expect(state).toBe(false);
+			expect(setState).toHaveBeenCalledTimes(2);
 		});
 
 		it('hides the menu when clicked on an item', () => {
@@ -43,7 +43,28 @@ describe('Navigation Menu', () => {
 					name: /services/i,
 				})
 			);
-			expect(setShowState).toHaveBeenCalledWith(false);
+			expect(setState).toHaveBeenCalledWith(false);
+		});
+
+		describe('toggling dark mode', () => {
+			it('is initially set to dark', () => {
+				const { debug } = context;
+				debug();
+				expect(2).toContain(2);
+			});
+
+			it('sets the class of body to none', () => {
+				const { getByLabelText } = context;
+				userEvent.click(getByLabelText('dark mode toggle'));
+				const body = context.baseElement;
+				expect(body.classList).not.toContain('dark');
+			});
+
+			it('calls the function to toggle mode', () => {
+				const { getByLabelText } = context;
+				userEvent.click(getByLabelText('dark mode toggle'));
+				expect(toggle).toHaveBeenCalled();
+			});
 		});
 	});
 });
