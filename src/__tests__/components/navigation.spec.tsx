@@ -50,26 +50,6 @@ describe('Navigation Menu', () => {
 		});
 
 		describe('toggling dark mode', () => {
-			let appContext: RenderResult;
-			let body: HTMLElement;
-			let darkModeButton: HTMLElement;
-			beforeEach(() => {
-				appContext = render(<App />);
-				const { getByTestId, container } = appContext;
-				body = getByTestId('container');
-				darkModeButton = container.querySelector(
-					'[aria-label="dark mode toggle"]'
-				) as HTMLElement;
-			});
-			it('is initially set to dark', () => {
-				expect(body.classList).toContain('dark');
-			});
-
-			it('sets the class of body to none', () => {
-				userEvent.click(darkModeButton);
-				expect(body.classList).not.toContain('dark');
-			});
-
 			it('calls the function to toggle mode', () => {
 				const { container } = context;
 				const darkModeButton = container.querySelector(
@@ -77,6 +57,28 @@ describe('Navigation Menu', () => {
 				) as HTMLButtonElement;
 				userEvent.click(darkModeButton);
 				expect(toggle).toHaveBeenCalled();
+			});
+
+			describe('the app component', () => {
+				let appContext: RenderResult;
+				let body: HTMLElement;
+				let darkModeButton: HTMLElement;
+				beforeEach(() => {
+					appContext = render(<App />);
+					const { getByTestId, container } = appContext;
+					body = getByTestId('container');
+					darkModeButton = container.querySelector(
+						'[aria-label="dark mode toggle"]'
+					) as HTMLElement;
+				});
+				it('is initially set to dark', () => {
+					expect(body.classList).toContain('dark');
+				});
+
+				it('removes the dark class when toggled the first time', () => {
+					userEvent.click(darkModeButton);
+					expect(body.classList).not.toContain('dark');
+				});
 			});
 		});
 	});
