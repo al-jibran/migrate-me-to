@@ -2,18 +2,21 @@ import { IconProps } from '@iconify/react';
 import React, { createContext, Suspense, useState } from 'react';
 import Navigation from './components/Navigation';
 import Homepage from './routes/Homepage';
+import { normalizeClass } from './utility/normalizeClass';
 
 type ToggleDarkModeType = () => void;
 
 export const ThemeContext = createContext<ToggleDarkModeType | undefined>(
 	undefined
 );
-// For dark mode: linear-gradient(to right, #000000, #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
+/* Note the stars in dark property surrounding from and to.
+	They are to exempt them from being prefixed with their screen size. 
+ */
 const footerStyles = {
 	mobile:
-		'mt-8 h-80 relative bottom-0 bg-gradient-to-r from-[#e1fad4] to-[#72b39f] p-10',
-	sm: 'sm:text-black',
+		'mt-8 h-80 relative bottom-0 bg-gradient-to-r from-[#e1fad4] to-[#72b39f] px-10 py-15',
+	dark: 'bg-gradient-to-r *from-[#000000]* *to-[#434343]* text-white',
 };
 
 export const App = () => {
@@ -37,8 +40,7 @@ export const App = () => {
 };
 
 const Footer = () => {
-	const styles: string[] = Object.values(footerStyles);
-	const className = styles.join(' ');
+	const className = normalizeClass(footerStyles);
 	const Icon = React.lazy(() =>
 		import('@iconify/react').then(({ Icon }) => ({ default: Icon }))
 	);
