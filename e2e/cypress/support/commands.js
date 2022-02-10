@@ -23,13 +23,3 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-
-Cypress.Commands.add('isInViewport', (element) => {
-	cy.get(element).then(($el) => {
-		const right = Cypress.$(cy.state('window')).height();
-		const rect = $el[0].getBoundingClientRect();
-
-		expect(rect.left).not.to.be.greaterThan(right);
-		expect(rect.right).not.to.be.greaterThan(right);
-	});
-});

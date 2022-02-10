@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { ThemeContext } from '../App';
 import { CloseMenuX, OpenMenuHamburger, Logo, DarkModeToggle } from './svgs';
 
 const Navigation = () => {
 	return (
 		<nav className='flex shadow-sm justify-between fixed px-10 py-4 w-full z-50 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]'>
-			<Logo
-				className='stroke-black w-48 hover:cursor-pointer'
-				aria-label='logo'
-			/>
+			<a href='/'>
+				<Logo
+					className='stroke-black w-48 hover:cursor-pointer'
+					aria-label='logo'
+				/>
+			</a>
 			<Menu />
 		</nav>
 	);
@@ -15,25 +18,42 @@ const Navigation = () => {
 
 const Menu = () => {
 	const [showMenu, setShowMenu] = useState(false);
+	const toggleTheme = useContext(ThemeContext);
 
-	return <MenuContainer showMenu={showMenu} setShowMenu={setShowMenu} />;
+	if (!toggleTheme) {
+		throw new Error('No ThemeContext was found');
+	}
+
+	return (
+		<MenuContainer
+			showMenu={showMenu}
+			setShowMenu={setShowMenu}
+			toggleTheme={toggleTheme}
+		/>
+	);
 };
 
 interface MenuStateProps {
 	showMenu: boolean;
 	setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleTheme: () => void;
 }
 
 export const MenuContainer: React.FC<MenuStateProps> = ({
 	showMenu,
 	setShowMenu,
+	toggleTheme,
 }) => {
 	const menuStyle = showMenu ? 'translate-x-0' : 'translate-x-full';
 
 	return (
 		<menu className='mt-4'>
 			<div className='flex w-24 justify-between lg:justify-end items-center'>
-				<DarkModeToggle className='h-8 w-min hover:cursor-pointer' />
+				<DarkModeToggle
+					aria-label='dark mode toggle'
+					className='h-8 w-min hover:cursor-pointer'
+					onClick={toggleTheme}
+				/>
 				<OpenMenuHamburger
 					className='fill-black w-min h-8 hover:cursor-pointer block lg:hidden'
 					aria-label='open-menu'
@@ -59,6 +79,7 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 					</li>
 					<li>
 						<a
+							onClick={() => setShowMenu(false)}
 							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-6 text-xl'
 							href='#'>
 							Services
