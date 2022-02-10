@@ -10,7 +10,9 @@ describe('Navigation Menu', () => {
 
 		beforeEach(() => {
 			showMenu = false;
-			setShowState = jest.fn().mockImplementation(() => (showMenu = !showMenu));
+			setShowState = jest
+				.fn()
+				.mockImplementation((value) => (showMenu = value));
 			context = render(<Menu showMenu={showMenu} setShowMenu={setShowState} />);
 		});
 
@@ -23,7 +25,7 @@ describe('Navigation Menu', () => {
 			const { getByLabelText } = context;
 			userEvent.click(getByLabelText('open-menu'));
 			expect(showMenu).toBe(true);
-			expect(setShowState).toHaveBeenCalled();
+			expect(setShowState).toHaveBeenCalledWith(true);
 		});
 
 		it('hides the menu when clicked on close menu button', () => {
@@ -32,6 +34,16 @@ describe('Navigation Menu', () => {
 			userEvent.click(getByLabelText('close-menu'));
 			expect(showMenu).toBe(false);
 			expect(setShowState).toHaveBeenCalledTimes(2);
+		});
+
+		it('hides the menu when clicked on an item', () => {
+			const { getByRole } = context;
+			userEvent.click(
+				getByRole('link', {
+					name: /services/i,
+				})
+			);
+			expect(setShowState).toHaveBeenCalledWith(false);
 		});
 	});
 });

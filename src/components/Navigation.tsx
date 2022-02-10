@@ -61,6 +61,7 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 					</li>
 					<li>
 						<a
+							onClick={() => setShowMenu(false)}
 							className='block text-white hover:text-gray-200 hover:bg-white px-8 py-6 text-xl'
 							href='#'>
 							Services

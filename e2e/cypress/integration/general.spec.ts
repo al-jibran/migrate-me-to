@@ -12,4 +12,5 @@ describe('tests unaffected by viewport size', () => {
 		cy.get('[aria-label=logo]').click();
 		cy.url().should('eq', `${Cypress.config().baseUrl}/`);
 	});
+
 });
