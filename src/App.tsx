@@ -1,8 +1,13 @@
 import { IconProps } from '@iconify/react';
-import React, { Suspense } from 'react';
+import React, { createContext, Suspense, useState } from 'react';
 import Navigation from './components/Navigation';
 import Homepage from './routes/Homepage';
 
+type ToggleDarkModeType = () => void;
+
+export const ThemeContext = createContext<ToggleDarkModeType | undefined>(
+	undefined
+);
 // For dark mode: linear-gradient(to right, #000000, #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 const footerStyles = {
@@ -12,14 +17,22 @@ const footerStyles = {
 };
 
 export const App = () => {
+	const [darkMode, setDarkMode] = useState('dark');
+
+	const toggleDarkMode = (): void => {
+		const setTo = darkMode === 'dark' ? '' : 'dark';
+		setDarkMode(setTo);
+	};
 	return (
-		<>
-			<div className='overflow-x-hidden h-full'>
+		<ThemeContext.Provider value={toggleDarkMode}>
+			<div
+				data-testid='container'
+				className={`${darkMode} overflow-x-hidden h-full`}>
 				<Navigation />
 				<Homepage />
 				<Footer />
 			</div>
-		</>
+		</ThemeContext.Provider>
 	);
 };
 

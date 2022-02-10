@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { ThemeContext } from '../App';
 import { CloseMenuX, OpenMenuHamburger, Logo, DarkModeToggle } from './svgs';
 
 const Navigation = () => {
@@ -17,18 +18,31 @@ const Navigation = () => {
 
 const Menu = () => {
 	const [showMenu, setShowMenu] = useState(false);
+	const toggleTheme = useContext(ThemeContext);
 
-	return <MenuContainer showMenu={showMenu} setShowMenu={setShowMenu} />;
+	if (!toggleTheme) {
+		throw new Error('No ThemeContext was found');
+	}
+
+	return (
+		<MenuContainer
+			showMenu={showMenu}
+			setShowMenu={setShowMenu}
+			toggleTheme={toggleTheme}
+		/>
+	);
 };
 
 interface MenuStateProps {
 	showMenu: boolean;
 	setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleTheme: () => void;
 }
 
 export const MenuContainer: React.FC<MenuStateProps> = ({
 	showMenu,
 	setShowMenu,
+	toggleTheme,
 }) => {
 	const menuStyle = showMenu ? 'translate-x-0' : 'translate-x-full';
 
@@ -38,6 +52,7 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 				<DarkModeToggle
 					aria-label='dark mode toggle'
 					className='h-8 w-min hover:cursor-pointer'
+					onClick={toggleTheme}
 				/>
 				<OpenMenuHamburger
 					className='fill-black w-min h-8 hover:cursor-pointer block lg:hidden'
