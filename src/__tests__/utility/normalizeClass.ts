@@ -49,5 +49,17 @@ describe('utility', () => {
 				normalizeClass(obj3);
 			}).toThrowError(TypeError);
 		});
+
+		it('does not apply the prefix for blacklisted items', () => {
+			const obj = {
+				sm: 'text-white bg-black',
+				dark: 'bg-gradient-tr *to-black* *from-white*',
+			};
+
+			const className = normalizeClass(obj);
+			expect(className).toMatch(
+				'sm:text-white sm:bg-black dark:bg-gradient-tr to-black from-white'
+			);
+		});
 	});
 });
