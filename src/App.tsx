@@ -15,7 +15,7 @@ export const ThemeContext = createContext<ToggleDarkModeType | undefined>(
  */
 const footerStyles = {
 	mobile:
-		'mt-8 h-80 relative bottom-0 bg-gradient-to-r from-[#e1fad4] to-[#72b39f] px-10 py-15',
+		'mt-8 p-10 relative bottom-0 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]',
 	dark: 'bg-gradient-to-r *from-[#000000]* *to-[#434343]* text-white',
 };
 
