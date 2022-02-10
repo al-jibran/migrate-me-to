@@ -4,10 +4,12 @@ import { CloseMenuX, OpenMenuHamburger, Logo, DarkModeToggle } from './svgs';
 const Navigation = () => {
 	return (
 		<nav className='flex shadow-sm justify-between fixed px-10 py-4 w-full z-50 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]'>
-			<Logo
-				className='stroke-black w-48 hover:cursor-pointer'
-				aria-label='logo'
-			/>
+			<a href='/'>
+				<Logo
+					className='stroke-black w-48 hover:cursor-pointer'
+					aria-label='logo'
+				/>
+			</a>
 			<Menu />
 		</nav>
 	);
