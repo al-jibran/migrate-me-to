@@ -2,7 +2,9 @@ import { SVGProps } from 'react';
 import { Checkbox } from './svgs';
 import { serviceColors } from '../data/services';
 
-const leftBox = () => 'w-16 p-3 mr-4 border-r border-r-white';
+const box = {
+	left: 'w-16 p-3 mr-4',
+};
 
 interface LargeCard {
 	name: string;
@@ -16,16 +18,20 @@ export const ServiceCardLarge: React.FC<LargeCard> = ({
 	transferrableList,
 }) => {
 	return (
-		<div className='my-6 shadow-sm' data-testid='service'>
+		<div
+			className='my-6 shadow-sm shadow-gradientLightStart'
+			data-testid='service'>
 			<div className={`flex max-h-24 ${serviceColors[name]}`}>
-				{<LogoSvgComponent className={leftBox()} />}
-				<h3 className='self-center text-white'>{name}</h3>
+				{<LogoSvgComponent className={box.left} />}
+				<h3 className='self-center text-white w-full'>{name}</h3>
 			</div>
 			<ul>
 				{transferrableList.map((item, index) => (
-					<li className='flex py-2 shadow-sm' key={index}>
-						<Checkbox className={leftBox()} />
-						<div className='self-center text-xl'>{item}</div>
+					<li
+						className='flex items-center py-2 shadow-sm dark:border-green-400'
+						key={index}>
+						<Checkbox className={box.left} />
+						<div className='text-xl w-full align-middle'>{item}</div>
 					</li>
 				))}
 			</ul>
