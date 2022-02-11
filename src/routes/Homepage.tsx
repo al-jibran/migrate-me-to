@@ -18,7 +18,7 @@ const Homepage = () => {
 const heroStyles = {
 	mobile:
 		'flex flex-col px-10 pb-5 h-screen justify-between text-gray-200 overscroll-none pt-32 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]',
-	dark: 'bg-gradient-to-r *from-[#000000]* *to-[#434343]* text-white',
+	dark: 'bg-gradient-to-r from-[#000000] to-[#434343] text-white',
 };
 
 const Hero = () => {
@@ -29,7 +29,7 @@ const Hero = () => {
 			<h1 className='flex-shrink dark:text-white'>
 				Migrate to another account easily.
 			</h1>
-			<DownArrow className='h-1/4 w-8 flex-shrink animate-bounce dark:stroke-white fill-white' />
+			<DownArrow className='h-1/4 w-8 flex-shrink animate-bounce stroke-gray-200 fill-gray-200 dark:stroke-white dark:fill-white' />
 		</section>
 	);
 };
