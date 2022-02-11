@@ -2,6 +2,6 @@ node_modules
 dist
 .env
 .vscode
-src/utility/forLater.ts
+src/utility/forLater.txt
 
 

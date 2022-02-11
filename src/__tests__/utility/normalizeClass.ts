@@ -5,18 +5,13 @@ describe('utility', () => {
 		it('concatenates and adds the screen size prefix to every class', () => {
 			const classesObject = {
 				mobile: 'text-white bg-black',
-				sm: 'p-3 m-4',
+				sm: 'sm:p-3 sm:m-4',
+				dark: 'dark:text-green dark:bg-gray-200',
 			};
 
 			expect(normalizeClass(classesObject)).toMatch(
-				'text-white bg-black sm:p-3 sm:m-4'
+				'text-white bg-black sm:p-3 sm:m-4 dark:text-green dark:bg-gray-200'
 			);
-		});
-
-		it('returns value for default screen size without adding the prefix', () => {
-			expect(
-				normalizeClass({ mobile: 'text-white p-3 m-4 bg-gray-200' })
-			).toMatch('text-white p-3 m-4 bg-gray-200');
 		});
 
 		it('returns an empty string on an empty object', () => {
@@ -48,18 +43,6 @@ describe('utility', () => {
 			expect(() => {
 				normalizeClass(obj3);
 			}).toThrowError(TypeError);
-		});
-
-		it('does not apply the prefix for blacklisted items', () => {
-			const obj = {
-				sm: 'text-white bg-black',
-				dark: 'bg-gradient-tr *to-black* *from-white*',
-			};
-
-			const className = normalizeClass(obj);
-			expect(className).toMatch(
-				'sm:text-white sm:bg-black dark:bg-gradient-tr to-black from-white'
-			);
 		});
 	});
 });
