@@ -1,13 +1,21 @@
 import React, { useContext, useState } from 'react';
 import { ThemeContext } from '../App';
+import { normalizeClass } from '../utility/normalizeClass';
 import { CloseMenuX, OpenMenuHamburger, Logo, DarkModeToggle } from './svgs';
 
+const navigationStyles = {
+	mobile:
+		'flex shadow-sm justify-between fixed px-10 py-4 w-full z-50 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]',
+	dark: 'bg-gradient-to-r from-[#000000] to-[#434343]',
+};
+
 const Navigation = () => {
+	const className = normalizeClass(navigationStyles);
 	return (
-		<nav className='flex shadow-sm justify-between fixed px-10 py-4 w-full z-50 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]'>
+		<nav className={className}>
 			<a href='/'>
 				<Logo
-					className='stroke-black w-48 hover:cursor-pointer'
+					className='stroke-black dark:stroke-white w-48 hover:cursor-pointer'
 					aria-label='logo'
 				/>
 			</a>
