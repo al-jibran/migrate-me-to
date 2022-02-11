@@ -16,7 +16,7 @@ export const ThemeContext = createContext<ToggleDarkModeType | undefined>(
 const footerStyles = {
 	mobile:
 		'mt-8 p-10 relative bottom-0 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
-	dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-200 dark:border dark:border-t-white',
+	dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400 dark:border dark:border-t-white',
 };
 
 export const App = () => {
@@ -31,7 +31,7 @@ export const App = () => {
 			<div
 				data-testid='container'
 				className={`${darkMode} overflow-x-hidden h-full`}>
-				<div className='dark:bg-gradient-to-r dark:from-black dark:to-gray-400 dark:text-white'>
+				<div className='dark:bg-gradient-to-r dark:from-black dark:to-gray-200 dark:text-white'>
 					<Navigation />
 					<Homepage />
 					<Footer />
