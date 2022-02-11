@@ -2,18 +2,21 @@ import { IconProps } from '@iconify/react';
 import React, { createContext, Suspense, useState } from 'react';
 import Navigation from './components/Navigation';
 import Homepage from './routes/Homepage';
+import { normalizeClass } from './utility/normalizeClass';
 
 type ToggleDarkModeType = () => void;
 
 export const ThemeContext = createContext<ToggleDarkModeType | undefined>(
 	undefined
 );
-// For dark mode: linear-gradient(to right, #000000, #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
+/* Note the stars in dark property surrounding from and to.
+	They are to exempt them from being prefixed with their screen size. 
+ */
 const footerStyles = {
 	mobile:
-		'mt-8 h-80 relative bottom-0 bg-gradient-to-r from-[#e1fad4] to-[#72b39f] p-10',
-	sm: 'sm:text-black',
+		'mt-8 p-10 relative bottom-0 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
+	dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400 dark:border dark:border-t-white',
 };
 
 export const App = () => {
@@ -28,17 +31,19 @@ export const App = () => {
 			<div
 				data-testid='container'
 				className={`${darkMode} overflow-x-hidden h-full`}>
-				<Navigation />
-				<Homepage />
-				<Footer />
+				<div className='dark:bg-gradient-to-r dark:from-black dark:to-gray-200 dark:text-white'>
+					<Navigation />
+					<Homepage />
+					<Footer />
+				</div>
 			</div>
 		</ThemeContext.Provider>
 	);
 };
 
 const Footer = () => {
-	const styles: string[] = Object.values(footerStyles);
-	const className = styles.join(' ');
+	const className = normalizeClass(footerStyles);
+
 	const Icon = React.lazy(() =>
 		import('@iconify/react').then(({ Icon }) => ({ default: Icon }))
 	);

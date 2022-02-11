@@ -1,6 +1,7 @@
 import { DownArrow } from '../components/svgs';
 import ServiceCardLarge from '../components/ServiceCardLarge';
 import { Service, services } from '../data/services';
+import { normalizeClass } from '../utility/normalizeClass';
 
 const Homepage = () => {
 	return (
@@ -14,15 +15,21 @@ const Homepage = () => {
 	);
 };
 
+const heroStyles = {
+	mobile:
+		'flex flex-col px-10 pb-5 h-screen justify-between text-gray-200 overscroll-none pt-32 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
+	dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400',
+};
+
 const Hero = () => {
+	const className = normalizeClass(heroStyles);
+
 	return (
-		<section
-			id='hero'
-			className='flex flex-col px-10 pb-5 h-screen justify-between text-gray-200 overscroll-none pt-32 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]'>
+		<section id='hero' className={className}>
 			<h1 className='flex-shrink dark:text-white'>
 				Migrate to another account easily.
 			</h1>
-			<DownArrow className='h-1/4 w-8 flex-shrink animate-bounce' />
+			<DownArrow className='h-1/4 w-8 flex-shrink animate-bounce stroke-gray-200 fill-gray-200 dark:stroke-white dark:fill-white' />
 		</section>
 	);
 };
@@ -51,7 +58,7 @@ const About = () => {
 	return (
 		<section>
 			<h2 className='my-6'>About</h2>
-			<p className='leading-loose w-full p-8 shadow-xl text-lg bg-[#d9f5d0]'>
+			<p className='leading-loose w-full p-8 shadow-xl text-lg bg-gradientLightStart dark:bg-gray-400'>
 				Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum quaerat
 				itaque ipsa temporibus? Sed, exercitationem dignissimos, veniam eius
 				natus quam amet optio voluptas molestias nemo ipsa magnam, voluptates
