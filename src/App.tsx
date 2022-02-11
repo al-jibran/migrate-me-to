@@ -68,7 +68,7 @@ const Footer = () => {
 				/>
 				<SocialItem
 					Icon={Icon}
-					iconName='logos:github-icon'
+					iconName='cib:github'
 					siteInfo={{ name: 'Github', url: 'https://www.github.com/al-jibran' }}
 				/>
 				<SocialItem
@@ -102,7 +102,7 @@ const SocialItem: React.FC<SocialItem> = ({ Icon, siteInfo, iconName }) => {
 		<div>
 			<li className='flex items-center'>
 				<Suspense fallback={<div>Loading...</div>}>
-					<Icon icon={iconName} fontSize={30} />
+					<Icon icon={iconName} fontSize={30} className='dark:text-white' />
 				</Suspense>
 				<a className='py-2 block w-full ml-5 text-lg' href={siteInfo.url}>
 					{siteInfo.name}

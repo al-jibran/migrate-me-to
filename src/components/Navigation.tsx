@@ -59,11 +59,11 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 			<div className='flex w-24 justify-between lg:justify-end items-center'>
 				<DarkModeToggle
 					aria-label='dark mode toggle'
-					className='h-8 w-min hover:cursor-pointer'
+					className='h-8 w-min hover:cursor-pointer stroke-black dark:stroke-white'
 					onClick={toggleTheme}
 				/>
 				<OpenMenuHamburger
-					className='fill-black w-min h-8 hover:cursor-pointer block lg:hidden'
+					className='fill-black dark:fill-white w-min h-8 hover:cursor-pointer block lg:hidden'
 					aria-label='open-menu'
 					onClick={() => setShowMenu(true)}
 				/>

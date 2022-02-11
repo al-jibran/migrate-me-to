@@ -37,7 +37,6 @@ export const DarkModeToggle = (props: SVGProps<SVGSVGElement>) => (
 			width='27'
 			height='27'
 			rx='13.5'
-			stroke='black'
 			strokeWidth='3'
 			strokeLinejoin='round'
 		/>
