@@ -1,5 +1,5 @@
 import { IconProps } from '@iconify/react';
-import React, { createContext, Suspense, useState } from 'react';
+import React, { createContext, Suspense, useEffect, useState } from 'react';
 import Navigation from './components/Navigation';
 import Homepage from './routes/Homepage';
 import { normalizeClass } from './utility/normalizeClass';
@@ -30,9 +30,21 @@ export const App = () => {
 	const [darkMode, setDarkMode] = useState('dark');
 	const className = normalizeClass(styles.app);
 
+	useEffect(() => {
+		const theme: string | null = window.localStorage.getItem('theme');
+
+		if (!theme && !(typeof theme === 'string')) {
+			window.localStorage.setItem('theme', 'dark');
+			return;
+		}
+
+		setDarkMode(theme);
+	});
+
 	const toggleDarkMode = (): void => {
 		const setTo = darkMode === 'dark' ? '' : 'dark';
 		setDarkMode(setTo);
+		window.localStorage.setItem('theme', setTo);
 	};
 	return (
 		<ThemeContext.Provider value={toggleDarkMode}>
