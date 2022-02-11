@@ -13,14 +13,22 @@ export const ThemeContext = createContext<ToggleDarkModeType | undefined>(
 /* Note the stars in dark property surrounding from and to.
 	They are to exempt them from being prefixed with their screen size. 
  */
-const footerStyles = {
-	mobile:
-		'mt-8 p-10 relative bottom-0 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
-	dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400 dark:border dark:border-t-white',
+const styles = {
+	footer: {
+		mobile:
+			'mt-8 p-10 relative bottom-0 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
+		dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400 dark:border dark:border-t-white',
+	},
+
+	app: {
+		sm: 'overflow-x-hidden h-full',
+		dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-200 dark:text-white',
+	},
 };
 
 export const App = () => {
 	const [darkMode, setDarkMode] = useState('dark');
+	const className = normalizeClass(styles.app);
 
 	const toggleDarkMode = (): void => {
 		const setTo = darkMode === 'dark' ? '' : 'dark';
@@ -28,10 +36,8 @@ export const App = () => {
 	};
 	return (
 		<ThemeContext.Provider value={toggleDarkMode}>
-			<div
-				data-testid='container'
-				className={`${darkMode} overflow-x-hidden h-full`}>
-				<div className='dark:bg-gradient-to-r dark:from-black dark:to-gray-200 dark:text-white'>
+			<div data-testid='container' className={darkMode}>
+				<div className={className}>
 					<Navigation />
 					<Homepage />
 					<Footer />
@@ -42,7 +48,7 @@ export const App = () => {
 };
 
 const Footer = () => {
-	const className = normalizeClass(footerStyles);
+	const className = normalizeClass(styles.footer);
 
 	const Icon = React.lazy(() =>
 		import('@iconify/react').then(({ Icon }) => ({ default: Icon }))
