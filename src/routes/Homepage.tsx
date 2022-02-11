@@ -17,8 +17,8 @@ const Homepage = () => {
 
 const heroStyles = {
 	mobile:
-		'flex flex-col px-10 pb-5 h-screen justify-between text-gray-200 overscroll-none pt-32 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]',
-	dark: 'bg-gradient-to-r from-[#000000] to-[#434343] text-white',
+		'flex flex-col px-10 pb-5 h-screen justify-between text-gray-200 overscroll-none pt-32 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
+	dark: 'dark:from-black dark:to-gray-400 dark:text-white',
 };
 
 const Hero = () => {

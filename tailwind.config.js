@@ -16,8 +16,11 @@ module.exports = {
 				reddit: '#DE3E02',
 				gray: {
 					200: '#222222',
+					400: '#434343',
 					900: '#aaaaaa',
 				},
+				gradientLightStart: '#e1fad4',
+				gradientLightStop: '#72b39f',
 			},
 		},
 		fontFamily: {
