@@ -31,7 +31,7 @@ export const App = () => {
 			<div
 				data-testid='container'
 				className={`${darkMode} overflow-x-hidden h-full`}>
-				<div className='dark:bg-gradient-to-r dark:from-black dark:to-gray-400'>
+				<div className='dark:bg-gradient-to-r dark:from-black dark:to-gray-400 dark:text-white'>
 					<Navigation />
 					<Homepage />
 					<Footer />

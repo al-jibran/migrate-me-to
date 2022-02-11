@@ -18,7 +18,7 @@ const Homepage = () => {
 const heroStyles = {
 	mobile:
 		'flex flex-col px-10 pb-5 h-screen justify-between text-gray-200 overscroll-none pt-32 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
-	dark: 'dark:from-black dark:to-gray-400 dark:text-white',
+	dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400',
 };
 
 const Hero = () => {
@@ -40,7 +40,7 @@ interface ServicesProps {
 
 export const Services: React.FC<ServicesProps> = ({ services }) => {
 	return (
-		<section id='#' className={heroStyles.dark}>
+		<section id='#'>
 			<h2 className='my-6'>Services</h2>
 			{services.map(({ name, transferrableList, LogoSvgComponent }) => (
 				<ServiceCardLarge
@@ -58,7 +58,7 @@ const About = () => {
 	return (
 		<section>
 			<h2 className='my-6'>About</h2>
-			<p className='leading-loose w-full p-8 shadow-xl text-lg bg-[#d9f5d0]'>
+			<p className='leading-loose w-full p-8 shadow-xl text-lg bg-gradientLightStart dark:bg-gray-400'>
 				Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum quaerat
 				itaque ipsa temporibus? Sed, exercitationem dignissimos, veniam eius
 				natus quam amet optio voluptas molestias nemo ipsa magnam, voluptates
