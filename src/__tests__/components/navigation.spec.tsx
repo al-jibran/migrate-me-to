@@ -51,18 +51,31 @@ describe('Navigation Menu', () => {
 
 		describe('toggling dark mode', () => {
 			it('calls the function to toggle mode', () => {
-				const { container } = context;
-				const darkModeButton = container.querySelector(
-					'[aria-label="dark mode toggle"]'
+				const { getByLabelText } = context;
+				const darkModeButton = getByLabelText(
+					'dark mode toggle'
 				) as HTMLButtonElement;
 				userEvent.click(darkModeButton);
 				expect(toggle).toHaveBeenCalled();
+			});
+
+			it('stores "dark" in local storage if it is empty', () => {
+				expect(window.localStorage.getItem('theme')).toBeNull();
+				render(<App />);
+				expect(window.localStorage.getItem('theme')).toMatch('dark');
+			});
+
+			it('stores the choice of the user in local storage', () => {
+				const { getByLabelText } = context;
+				userEvent.click(getByLabelText('dark mode toggle'));
+				expect(window.localStorage.getItem('theme')).toMatch('');
 			});
 
 			describe('the app component', () => {
 				let appContext: RenderResult;
 				let body: HTMLElement;
 				let darkModeButton: HTMLElement;
+
 				beforeEach(() => {
 					appContext = render(<App />);
 					const { getByTestId, container } = appContext;
@@ -71,6 +84,7 @@ describe('Navigation Menu', () => {
 						'[aria-label="dark mode toggle"]'
 					) as HTMLElement;
 				});
+
 				it('is initially set to dark', () => {
 					expect(body.classList).toContain('dark');
 				});
