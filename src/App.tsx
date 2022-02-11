@@ -31,9 +31,11 @@ export const App = () => {
 			<div
 				data-testid='container'
 				className={`${darkMode} overflow-x-hidden h-full`}>
-				<Navigation />
-				<Homepage />
-				<Footer />
+				<div className='dark:bg-gradient-to-r dark:from-black dark:to-gray-400'>
+					<Navigation />
+					<Homepage />
+					<Footer />
+				</div>
 			</div>
 		</ThemeContext.Provider>
 	);

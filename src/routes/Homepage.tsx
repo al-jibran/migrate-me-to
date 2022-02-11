@@ -40,7 +40,7 @@ interface ServicesProps {
 
 export const Services: React.FC<ServicesProps> = ({ services }) => {
 	return (
-		<section id='#'>
+		<section id='#' className={heroStyles.dark}>
 			<h2 className='my-6'>Services</h2>
 			{services.map(({ name, transferrableList, LogoSvgComponent }) => (
 				<ServiceCardLarge
