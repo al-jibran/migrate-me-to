@@ -6,7 +6,7 @@ import { CloseMenuX, OpenMenuHamburger, Logo, DarkModeToggle } from './svgs';
 const navigationStyles = {
 	mobile:
 		'flex shadow-sm justify-between fixed px-10 py-4 w-full z-50 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]',
-	dark: 'bg-gradient-to-r from-[#000000] to-[#434343]',
+	dark: 'dark:bg-gradient-to-r dark:from-[#000000] dark:to-[#434343]',
 };
 
 const Navigation = () => {
