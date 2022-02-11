@@ -15,8 +15,8 @@ export const ThemeContext = createContext<ToggleDarkModeType | undefined>(
  */
 const footerStyles = {
 	mobile:
-		'mt-8 p-10 relative bottom-0 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]',
-	dark: 'bg-gradient-to-r *from-[#000000]* *to-[#434343]* text-white',
+		'mt-8 p-10 relative bottom-0 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
+	dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-200 dark:border dark:border-t-white',
 };
 
 export const App = () => {
@@ -43,6 +43,7 @@ export const App = () => {
 
 const Footer = () => {
 	const className = normalizeClass(footerStyles);
+
 	const Icon = React.lazy(() =>
 		import('@iconify/react').then(({ Icon }) => ({ default: Icon }))
 	);
