@@ -7,7 +7,7 @@ const Homepage = () => {
 	return (
 		<>
 			<Hero />
-			<div className='px-10'>
+			<div className='px-10 lg:px-24'>
 				<Services services={services} />
 				<About />
 			</div>
@@ -19,6 +19,7 @@ const styles = {
 	hero: {
 		mobile:
 			'flex flex-col px-10 pb-5 h-screen justify-between text-gray-200 overscroll-none pt-32 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
+		lg: 'lg:px-24',
 		dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400',
 	},
 };

@@ -14,15 +14,15 @@ export const ThemeContext = createContext<ToggleDarkModeType | undefined>(
 	They are to exempt them from being prefixed with their screen size. 
  */
 const styles = {
-	footer: {
-		mobile:
-			'mt-8 p-10 relative bottom-0 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
-		dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400 dark:border dark:border-t-white',
-	},
-
 	app: {
 		sm: 'overflow-x-hidden h-full',
 		dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-200 dark:text-white',
+	},
+	footer: {
+		mobile:
+			'mt-8 p-10 relative bottom-0 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
+		lg: 'lg:px-24',
+		dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400 dark:border dark:border-t-white',
 	},
 };
 

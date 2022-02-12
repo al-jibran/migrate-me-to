@@ -7,6 +7,7 @@ const styles = {
 	nav: {
 		mobile:
 			'flex shadow-sm justify-between fixed px-10 py-4 w-full z-50 bg-gradient-to-r from-[#e1fad4] to-[#72b39f]',
+		lg: 'lg:px-24',
 		dark: 'dark:bg-gradient-to-r dark:from-[#000000] dark:to-[#434343]',
 	},
 };
