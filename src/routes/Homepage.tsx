@@ -75,7 +75,7 @@ export const Services: React.FC<ServicesProps> = ({ services }) => {
 						name={name}
 						transferrableList={transferrableList}
 						LogoSvgComponent={LogoSvgComponent}
-						handleOnClick={() => handleOnClickService(name.toLowerCase())}
+						handleOnClick={() => handleOnClickService(name)}
 						key={name}
 					/>
 				))}
