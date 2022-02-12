@@ -20,14 +20,14 @@ describe('navigation', () => {
 
 		it('shows the menu on pressing on the hamburger icon', () => {
 			cy.get('[aria-label=open-menu]').click();
-			cy.get('[aria-label=menu]').should('be.inViewport');
+			cy.get('[aria-label=menu]').should('be.slidingFromRight');
 		});
 
 		it('hides the menu when clicked on an item', () => {
 			cy.viewport(500, 600); // to be removed when desktop site is completed
 			cy.server({ force404: true });
 			cy.get('[aria-label=open-menu]').click();
-			cy.contains('Services').click().should('not.be.inViewport');
+			cy.contains('Services').click().should('not.be.slidingFromRight');
 		});
 	});
 });
