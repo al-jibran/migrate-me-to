@@ -7,7 +7,7 @@ const Homepage = () => {
 	return (
 		<>
 			<Hero />
-			<div className='px-10 lg:px-24'>
+			<div className='px-10 md:px-16 lg:px-24 xl:max-w-5xl bg-grade xl:mx-auto'>
 				<Services services={services} />
 				<About />
 			</div>
@@ -17,10 +17,16 @@ const Homepage = () => {
 
 const styles = {
 	hero: {
+		mobile: ' bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
+		dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400 ',
+	},
+	heroContainer: {
 		mobile:
-			'flex flex-col px-10 pb-5 h-screen justify-between text-gray-200 overscroll-none pt-32 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
+			'flex flex-col pb-5 h-screen justify-between text-gray-200 overscroll-none px-10 pt-32 w-full',
+		sm: 'sm:px-14',
+		md: 'md:px-16',
 		lg: 'lg:px-24',
-		dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400',
+		xl: 'xl:max-w-5xl xl:mx-auto',
 	},
 };
 
@@ -35,13 +41,16 @@ const heroStyles = {
 const Hero = () => {
 	const className = normalizeClass(styles.hero);
 	const downArrowClass = normalizeClass(heroStyles.downArrow);
+	const heroContainer = normalizeClass(styles.heroContainer);
 
 	return (
 		<section id='hero' className={className}>
-			<h1 className='flex-shrink dark:text-white'>
-				Migrate to another account easily.
-			</h1>
-			<DownArrow className={downArrowClass} />
+			<div className={heroContainer}>
+				<h1 className='flex-shrink dark:text-white'>
+					Migrate to another account easily.
+				</h1>
+				<DownArrow className={downArrowClass} />
+			</div>
 		</section>
 	);
 };
