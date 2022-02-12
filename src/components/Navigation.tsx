@@ -6,11 +6,11 @@ import { CloseMenuX, OpenMenuHamburger, Logo, DarkModeToggle } from './svgs';
 const styles = {
 	nav: {
 		mobile:
-			'fixed w-full shadow-sm bg-gradient-to-r from-[#e1fad4] to-[#72b39f]',
+			'fixed w-full shadow-sm bg-gradient-to-r from-[#e1fad4] to-[#72b39f] z-50',
 		dark: 'dark:bg-gradient-to-r dark:from-[#000000] dark:to-[#434343]',
 	},
 	navContainer: {
-		mobile: 'flex justify-between px-10 py-4 z-50 ',
+		mobile: 'flex justify-between px-10 py-4',
 		sm: 'sm:px-14',
 		md: 'md:px-16',
 		lg: 'lg:px-24',
