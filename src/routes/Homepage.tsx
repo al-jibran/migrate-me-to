@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { DownArrow } from '../components/svgs';
 import ServiceCardLarge from '../components/ServiceCardLarge';
 import { Service, services } from '../data/services';
@@ -60,6 +61,11 @@ interface ServicesProps {
 }
 
 export const Services: React.FC<ServicesProps> = ({ services }) => {
+	const navigate = useNavigate();
+
+	const handleOnClickService = (service: string) => {
+		navigate(`service/${service}`);
+	};
 	return (
 		<section id='services'>
 			<h2 className='my-6'>Services</h2>
@@ -69,6 +75,7 @@ export const Services: React.FC<ServicesProps> = ({ services }) => {
 						name={name}
 						transferrableList={transferrableList}
 						LogoSvgComponent={LogoSvgComponent}
+						handleOnClick={() => handleOnClickService(name.toLowerCase())}
 						key={name}
 					/>
 				))}

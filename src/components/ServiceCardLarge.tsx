@@ -10,17 +10,20 @@ interface LargeCard {
 	name: string;
 	LogoSvgComponent: (props: SVGProps<SVGSVGElement>) => JSX.Element;
 	transferrableList: string[];
+	handleOnClick: () => void;
 }
 
 export const ServiceCardLarge: React.FC<LargeCard> = ({
 	name,
 	LogoSvgComponent,
 	transferrableList,
+	handleOnClick,
 }) => {
 	return (
 		<div
 			className='my-6 shadow-sm shadow-gradientLightStart'
-			data-testid='service'>
+			data-testid='service'
+			onClick={handleOnClick}>
 			<div className={`flex max-h-24 ${serviceColors[name]}`}>
 				{<LogoSvgComponent className={box.left} />}
 				<h3 className='self-center text-white w-full'>{name}</h3>
