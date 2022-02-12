@@ -14,15 +14,20 @@ export const ThemeContext = createContext<ToggleDarkModeType | undefined>(
 	They are to exempt them from being prefixed with their screen size. 
  */
 const styles = {
-	footer: {
-		mobile:
-			'mt-8 p-10 relative bottom-0 bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
-		dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400 dark:border dark:border-t-white',
-	},
-
 	app: {
 		sm: 'overflow-x-hidden h-full',
 		dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-200 dark:text-white',
+	},
+	footer: {
+		mobile: 'bg-gradient-to-r from-gradientLightStart to-gradientLightStop',
+		dark: 'dark:bg-gradient-to-r dark:from-black dark:to-gray-400 dark:border dark:border-t-white',
+	},
+	footerContainer: {
+		mobile: 'mt-8 p-10 relative bottom-0',
+		sm: 'sm:px-14',
+		md: 'md:px-16',
+		lg: 'lg:px-24',
+		xl: 'xl:max-w-5xl xl:mx-auto',
 	},
 };
 
@@ -61,44 +66,50 @@ export const App = () => {
 
 const Footer = () => {
 	const className = normalizeClass(styles.footer);
+	const containerStyle = normalizeClass(styles.footerContainer);
 
 	const Icon = React.lazy(() =>
 		import('@iconify/react').then(({ Icon }) => ({ default: Icon }))
 	);
 
 	return (
-		<div className={className}>
-			<h3>Created by Al Jibran</h3>
+		<footer className={className}>
+			<div className={containerStyle}>
+				<h3>Created by Al Jibran</h3>
 
-			<p className='my-5 tracking-wider'>
-				While you&apos;re here check out my:
-			</p>
-			<ul>
-				<SocialItem
-					Icon={Icon}
-					iconName='carbon:document-sentiment'
-					siteInfo={{ name: 'Portfolio', url: '#' }}
-				/>
-				<SocialItem
-					Icon={Icon}
-					iconName='logos:linkedin-icon'
-					siteInfo={{ name: 'LinkedIn', url: '#' }}
-				/>
-				<SocialItem
-					Icon={Icon}
-					iconName='cib:github'
-					siteInfo={{ name: 'Github', url: 'https://www.github.com/al-jibran' }}
-				/>
-				<SocialItem
-					Icon={Icon}
-					iconName='logos:twitter'
-					siteInfo={{
-						name: 'Twitter',
-						url: 'https://www.twitter.com/Hi-Flexive',
-					}}
-				/>
-			</ul>
-		</div>
+				<p className='my-5 tracking-wider'>
+					While you&apos;re here check out my:
+				</p>
+				<ul className='sm:grid sm:grid-cols-2 md:grid-cols-4'>
+					<SocialItem
+						Icon={Icon}
+						iconName='carbon:document-sentiment'
+						siteInfo={{ name: 'Portfolio', url: '#' }}
+					/>
+					<SocialItem
+						Icon={Icon}
+						iconName='logos:linkedin-icon'
+						siteInfo={{ name: 'LinkedIn', url: '#' }}
+					/>
+					<SocialItem
+						Icon={Icon}
+						iconName='cib:github'
+						siteInfo={{
+							name: 'Github',
+							url: 'https://www.github.com/al-jibran',
+						}}
+					/>
+					<SocialItem
+						Icon={Icon}
+						iconName='logos:twitter'
+						siteInfo={{
+							name: 'Twitter',
+							url: 'https://www.twitter.com/Hi-Flexive',
+						}}
+					/>
+				</ul>
+			</div>
+		</footer>
 	);
 };
 
