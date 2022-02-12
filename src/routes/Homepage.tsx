@@ -61,7 +61,7 @@ interface ServicesProps {
 
 export const Services: React.FC<ServicesProps> = ({ services }) => {
 	return (
-		<section id='#'>
+		<section id='services'>
 			<h2 className='my-6'>Services</h2>
 			<div className='md:grid md:grid-cols-2 gap-10'>
 				{services.map(({ name, transferrableList, LogoSvgComponent }) => (
@@ -79,7 +79,7 @@ export const Services: React.FC<ServicesProps> = ({ services }) => {
 
 const About = () => {
 	return (
-		<section>
+		<section id='about'>
 			<h2 className='my-6'>About</h2>
 			<p className='leading-loose w-full p-8 shadow-xl text-lg bg-gradientLightStart dark:bg-gray-400'>
 				Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum quaerat
