@@ -73,7 +73,7 @@ const Footer = () => {
 			<p className='my-5 tracking-wider'>
 				While you&apos;re here check out my:
 			</p>
-			<ul>
+			<ul className='sm:grid sm:grid-cols-2 md:grid-cols-4'>
 				<SocialItem
 					Icon={Icon}
 					iconName='carbon:document-sentiment'

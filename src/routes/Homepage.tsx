@@ -53,14 +53,16 @@ export const Services: React.FC<ServicesProps> = ({ services }) => {
 	return (
 		<section id='#'>
 			<h2 className='my-6'>Services</h2>
-			{services.map(({ name, transferrableList, LogoSvgComponent }) => (
-				<ServiceCardLarge
-					name={name}
-					transferrableList={transferrableList}
-					LogoSvgComponent={LogoSvgComponent}
-					key={name}
-				/>
-			))}
+			<div className='md:grid md:grid-cols-2 gap-10'>
+				{services.map(({ name, transferrableList, LogoSvgComponent }) => (
+					<ServiceCardLarge
+						name={name}
+						transferrableList={transferrableList}
+						LogoSvgComponent={LogoSvgComponent}
+						key={name}
+					/>
+				))}
+			</div>
 		</section>
 	);
 };
