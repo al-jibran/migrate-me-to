@@ -8,6 +8,7 @@ describe('routes', () => {
 		const LogoSvGComponent = jest.fn().mockImplementation(() => null);
 		const transferrableList: string[] = [];
 		const handleOnClick = jest.fn();
+
 		const { getByTestId } = render(
 			<ServiceCardLarge
 				name={serviceName}
@@ -16,7 +17,7 @@ describe('routes', () => {
 				handleOnClick={handleOnClick}
 			/>
 		);
-		const serviceToTest = getByTestId('service');
+		const serviceToTest = getByTestId(`${serviceName}-service`);
 		userEvent.click(serviceToTest);
 		expect(handleOnClick).toHaveBeenCalled();
 	});
