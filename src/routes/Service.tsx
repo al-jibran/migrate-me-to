@@ -45,6 +45,14 @@ const Service = () => {
 				className={`text-4xl ${borderColor} uppercase pb-3 border-b-4 border-white w-fit mx-auto`}>
 				1<sup className='lowercase'>st</sup> Account
 			</h1>
+			<Steps />
+		</div>
+	);
+};
+
+const Steps = () => {
+	return (
+		<>
 			<h2 className='mt-10 mb-4 uppercase'>Steps</h2>
 			<ul>
 				<li className='flex items-center py-1'>
@@ -68,7 +76,7 @@ const Service = () => {
 					<p>Wait</p>
 				</li>
 			</ul>
-		</div>
+		</>
 	);
 };
 
