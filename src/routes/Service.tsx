@@ -1,4 +1,6 @@
 import { useParams } from 'react-router-dom';
+import { normalizeClass } from '../utility/normalizeClass';
+import { services } from '../data/services';
 // import {
 // 	StepFail,
 // 	StepInactive,
@@ -6,36 +8,80 @@ import { useParams } from 'react-router-dom';
 // 	StepSuccess,
 // } from '../components/svgs';
 
-const styles: Record<string, Record<string, string>> = {
-	border: {
+type StylesProps = {
+	borderBottom: Record<string, string>;
+	border: Record<string, string>;
+	divider: Record<string, string>;
+};
+
+const styles: StylesProps = {
+	borderBottom: {
 		Twitter: 'border-b-twitter',
 		Reddit: 'border-b-reddit',
+	},
+
+	border: {
+		Twitter: 'border-twitter',
+		Reddit: 'border-reddit',
+	},
+
+	divider: {
+		mobile:
+			'flex justify-center items-center w-16 h-16 border-4 mx-auto rounded-full relative top-10 animate-pulse',
+		after:
+			'after:absolute after:w-screen after:border after:border-4 after:top-6 after:left-14',
+		before:
+			'before:absolute before:w-screen before:border before:border-4 before:top-6 before:right-14',
 	},
 };
 
 const Service = () => {
 	const { name } = useParams<string>();
+	const dividerStyle = normalizeClass(styles.divider);
+
+	const borderColor: Record<string, string> = {
+		Twitter: 'border-twitter',
+		Reddit: 'border-reddit',
+	};
+
+	const fillColor: Record<string, string> = {
+		Twitter: 'fill-twitter',
+		Reddit: 'fill-reddit',
+	};
+
+	const beforeDivider: Record<string, string> = {
+		Twitter: 'before:border-twitter',
+		Reddit: 'before:border-reddit',
+	};
+
+	const afterDivider: Record<string, string> = {
+		Twitter: 'after:border-twitter',
+		Reddit: 'after:border-reddit',
+	};
 
 	if (!name) {
 		throw new Error('invalid argument');
 	}
 
-	if (!styles) {
-		throw new Error('No style was defined for this page');
-	} else if (!styles.border) {
-		styles.border = {};
-		styles.border[name] = '#000';
+	const service = services.find((service) => service.name === name);
+
+	if (!service) {
+		throw new Error('This service could not be found');
 	}
 
-	const borderColor = styles.border[name];
+	const headingBorderColor = styles.borderBottom[name];
 
 	return (
 		<div className='pt-32 px-10 h-screen'>
 			<h1
-				className={`text-4xl uppercase pb-3 border-b-4 ${borderColor} w-fit mx-auto`}>
+				className={`text-4xl uppercase pb-3 border-b-4 ${headingBorderColor} w-fit mx-auto`}>
 				1<sup className='lowercase'>st</sup> Account
 			</h1>
 			<Steps onGoing={true} success={true} />
+			<div
+				className={` ${dividerStyle} ${borderColor[name]} ${beforeDivider[name]} ${afterDivider[name]}`}>
+				<service.LogoSvgComponent className={`w-8 h-8 ${fillColor[name]}`} />
+			</div>
 		</div>
 	);
 };
