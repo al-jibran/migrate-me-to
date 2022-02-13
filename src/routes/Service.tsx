@@ -29,9 +29,9 @@ const styles: StylesProps = {
 		mobile:
 			'flex justify-center items-center w-16 h-16 border-4 mx-auto rounded-full relative top-10 animate-pulse',
 		after:
-			'after:absolute after:w-screen after:border after:border-4 after:top-6 after:left-14',
+			'after:absolute after:w-screen after:border after:border-t-4 after:top-6 after:left-14',
 		before:
-			'before:absolute before:w-screen before:border before:border-4 before:top-6 before:right-14',
+			'before:absolute before:w-screen before:border before:border-t-4 before:top-6 before:right-14',
 	},
 };
 

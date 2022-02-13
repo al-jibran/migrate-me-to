@@ -3,7 +3,7 @@ import { Checkbox } from './svgs';
 import { serviceColors } from '../data/services';
 
 const box = {
-	left: 'w-16 p-3 mr-4',
+	left: 'w-16 p-3 mr-4 fill-white',
 };
 
 interface LargeCard {
