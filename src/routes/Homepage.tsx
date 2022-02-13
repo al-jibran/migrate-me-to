@@ -69,7 +69,7 @@ export const Services: React.FC<ServicesProps> = ({ services }) => {
 	return (
 		<section id='services'>
 			<h2 className='my-6'>Services</h2>
-			<div className='md:grid md:grid-cols-2 gap-10'>
+			<div className='md:grid md:grid-cols-2 gap-24'>
 				{services.map(({ name, transferrableList, LogoSvgComponent }) => (
 					<ServiceCardLarge
 						name={name}

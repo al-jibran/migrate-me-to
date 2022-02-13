@@ -21,7 +21,7 @@ export const ServiceCardLarge: React.FC<LargeCard> = ({
 }) => {
 	return (
 		<div
-			className='my-6 shadow-sm shadow-gradientLightStart hover:cursor-pointer'
+			className='my-6 shadow-sm shadow-gradientLightStart hover:cursor-pointer hover:transform hover:scale-110'
 			data-testid={`${name}-service`}
 			onClick={handleOnClick}>
 			<div className={`flex max-h-24 ${serviceColors[name]}`}>

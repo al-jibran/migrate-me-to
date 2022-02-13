@@ -45,11 +45,21 @@ const Menu = () => {
 		throw new Error('No ThemeContext was found');
 	}
 
+	const handleOnClickScroll = (id: string) => {
+		const element = document.getElementById(id) as HTMLElement;
+		const navbar = document.querySelector('nav') as HTMLElement;
+		window.scrollTo({
+			top: element.offsetTop - navbar.clientHeight,
+			behavior: 'smooth',
+		});
+	};
+
 	return (
 		<MenuContainer
 			showMenu={showMenu}
 			setShowMenu={setShowMenu}
 			toggleTheme={toggleTheme}
+			handleOnClickScroll={handleOnClickScroll}
 		/>
 	);
 };
@@ -58,6 +68,7 @@ interface MenuStateProps {
 	showMenu: boolean;
 	setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 	toggleTheme: () => void;
+	handleOnClickScroll: (id: string) => void;
 }
 
 const navStyles = {
@@ -89,11 +100,11 @@ const navStyles = {
 		md: 'md:hidden',
 	},
 	menuItem: {
-		mobile: 'block text-white  px-8 py-6 text-xl',
+		mobile: 'block text-white px-8 py-6 text-xl',
 		md: 'md:inline md:px-2 md:py-0 md:m-0 md:text-sm md:text-gray-200',
-		dark: 'dark:text-white',
+		dark: 'md:dark:text-white',
 		hover:
-			'hover:text-gray-200 hover:bg-white md:hover:bg-transparent md:hover:underline ',
+			'hover:text-gray-200 hover:bg-white md:hover:bg-transparent md:hover:underline hover:cursor-pointer',
 	},
 };
 
@@ -101,6 +112,7 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 	showMenu,
 	setShowMenu,
 	toggleTheme,
+	handleOnClickScroll,
 }) => {
 	const darkMenuClass = normalizeClass(navStyles.darkMenuContainer);
 	const darkModeToggleClass = normalizeClass(navStyles.darkModeToggle);
@@ -133,22 +145,37 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 				/>
 				<ul className='mt-16 md:flex md:m-0'>
 					<li>
-						<a className={menuItem} href='#'>
+						<a
+							className={`${menuItem} font-bold text-black`}
+							onClick={() => {
+								setShowMenu(false);
+								handleOnClickScroll('hero');
+							}}>
 							Home
 						</a>
 					</li>
 					<li>
-						<a onClick={() => setShowMenu(false)} className={menuItem} href='#'>
+						<a
+							onClick={() => {
+								setShowMenu(false);
+								handleOnClickScroll('services');
+							}}
+							className={menuItem}>
 							Services
 						</a>
 					</li>
 					<li>
-						<a className={menuItem} href='#'>
+						<a
+							className={menuItem}
+							onClick={() => {
+								setShowMenu(false);
+								handleOnClickScroll('about');
+							}}>
 							About
 						</a>
 					</li>
 					<li>
-						<a className={menuItem} href='#'>
+						<a className={menuItem} href='https://www.github.com/al-jibran'>
 							Code
 						</a>
 					</li>
