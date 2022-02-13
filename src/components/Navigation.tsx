@@ -122,6 +122,15 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 	const menuItem = normalizeClass(navStyles.menuItem);
 	const menuStyle = showMenu ? 'translate-x-0' : 'translate-x-full';
 
+	const handleOnClickMenuItem = (
+		event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+		idToScrollTo: string
+	) => {
+		event.preventDefault();
+		event.stopPropagation();
+		setShowMenu(false);
+		handleOnClickScroll(idToScrollTo);
+	};
 	return (
 		<menu className='mt-4 md:w-2/3 md:mt-0 md:flex justify-between md:self-center'>
 			<div className={darkMenuClass}>
@@ -147,18 +156,18 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 					<li>
 						<a
 							className={`${menuItem} font-bold text-black`}
-							onClick={() => {
-								setShowMenu(false);
-								handleOnClickScroll('hero');
+							href='/'
+							onClick={(event) => {
+								handleOnClickMenuItem(event, 'hero');
 							}}>
 							Home
 						</a>
 					</li>
 					<li>
 						<a
-							onClick={() => {
-								setShowMenu(false);
-								handleOnClickScroll('services');
+							href='#services'
+							onClick={(event) => {
+								handleOnClickMenuItem(event, 'services');
 							}}
 							className={menuItem}>
 							Services
@@ -166,10 +175,10 @@ export const MenuContainer: React.FC<MenuStateProps> = ({
 					</li>
 					<li>
 						<a
+							href='#about'
 							className={menuItem}
-							onClick={() => {
-								setShowMenu(false);
-								handleOnClickScroll('about');
+							onClick={(event) => {
+								handleOnClickMenuItem(event, 'about');
 							}}>
 							About
 						</a>
