@@ -1,30 +1,19 @@
-describe('service', () => {
+describe('a service page', () => {
 	const serviceName = 'Twitter';
 
 	beforeEach(() => {
-		cy.server({ force404: true });
-		cy.visit('/');
-
-		cy.get('#services')
-			.scrollIntoView({ easing: 'linear' })
-			.find(`[data-testid=${serviceName}-service]`)
-			.as('service-item');
-	});
-	it('contains the service name', () => {
-		cy.get('@service-item').contains(serviceName);
+		cy.visit(`/service/${serviceName}`);
 	});
 
-	it('has a hover effect on the service', () => {
-		cy.get('@service-item').realHover().should('have.css', 'cursor', 'pointer');
-		cy.get('@service-item')
-			.realHover()
-			.should('have.css', 'transform', 'matrix(1.1, 0, 0, 1.1, 0, 0)');
+	it('displays a navigation bar on the top', () => {
+		cy.get('nav').should('exist');
 	});
 
-	it('navigates to service page when clicked on a service', () => {
-		const serviceName = 'Twitter';
-		cy.get('@service-item').click();
-		cy.url().should('eq', `${Cypress.config().baseUrl}/service/${serviceName}`);
+	it('displays the service name on screen', () => {
 		cy.contains(serviceName);
+	});
+
+	it('displays a footer at the bottom', () => {
+		cy.get('footer').should('exist');
 	});
 });
