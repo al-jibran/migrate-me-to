@@ -14,6 +14,7 @@ const config: Configuration = {
 		filename: '[name].[contenthash].js',
 		path: path.resolve(__dirname, '..', './dist'),
 		clean: true,
+		publicPath: '/',
 	},
 	module: {
 		rules: [
