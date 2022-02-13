@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { DownArrow } from '../components/svgs';
 import ServiceCardLarge from '../components/ServiceCardLarge';
-import { Service, services } from '../data/services';
+import { ServiceType, services } from '../data/services';
 import { normalizeClass } from '../utility/normalizeClass';
 
 const Homepage = () => {
@@ -57,7 +57,7 @@ const Hero = () => {
 };
 
 interface ServicesProps {
-	services: Service[];
+	services: ServiceType[];
 }
 
 export const Services: React.FC<ServicesProps> = ({ services }) => {

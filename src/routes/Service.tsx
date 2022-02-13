@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { normalizeClass } from '../utility/normalizeClass';
-import { services } from '../data/services';
+import { ServiceType, services } from '../data/services';
 // import {
 // 	StepFail,
 // 	StepInactive,
@@ -37,30 +37,9 @@ const styles: StylesProps = {
 
 const Service = () => {
 	const { name } = useParams<string>();
-	const dividerStyle = normalizeClass(styles.divider);
-
-	const borderColor: Record<string, string> = {
-		Twitter: 'border-twitter',
-		Reddit: 'border-reddit',
-	};
-
-	const fillColor: Record<string, string> = {
-		Twitter: 'fill-twitter',
-		Reddit: 'fill-reddit',
-	};
-
-	const beforeDivider: Record<string, string> = {
-		Twitter: 'before:border-twitter',
-		Reddit: 'before:border-reddit',
-	};
-
-	const afterDivider: Record<string, string> = {
-		Twitter: 'after:border-twitter',
-		Reddit: 'after:border-reddit',
-	};
 
 	if (!name) {
-		throw new Error('invalid argument');
+		throw new Error('Invalid route');
 	}
 
 	const service = services.find((service) => service.name === name);
@@ -78,10 +57,7 @@ const Service = () => {
 				1<sup className='lowercase'>st</sup> Account
 			</h1>
 			<Steps onGoing={true} success={true} />
-			<div
-				className={` ${dividerStyle} ${borderColor[name]} ${beforeDivider[name]} ${afterDivider[name]}`}>
-				<service.LogoSvgComponent className={`w-8 h-8 ${fillColor[name]}`} />
-			</div>
+			<Divider service={service} />
 		</div>
 	);
 };
@@ -118,4 +94,48 @@ const Steps: React.FC<StepsProps> = ({ onGoing, success }) => {
 	);
 };
 
+interface DividerProps {
+	service: ServiceType;
+}
+
+interface DividerStylesProps {
+	borderColor: Record<string, string>;
+	fillColor: Record<string, string>;
+	beforeDivider: Record<string, string>;
+	afterDivider: Record<string, string>;
+}
+
+const DividerStyles: DividerStylesProps = {
+	borderColor: {
+		Twitter: 'border-twitter',
+		Reddit: 'border-reddit',
+	},
+
+	fillColor: {
+		Twitter: 'fill-twitter',
+		Reddit: 'fill-reddit',
+	},
+
+	beforeDivider: {
+		Twitter: 'before:border-twitter',
+		Reddit: 'before:border-reddit',
+	},
+
+	afterDivider: {
+		Twitter: 'after:border-twitter',
+		Reddit: 'after:border-reddit',
+	},
+};
+const Divider: React.FC<DividerProps> = ({ service }) => {
+	const dividerStyle = normalizeClass(styles.divider);
+	const name = service.name;
+	return (
+		<div
+			className={` ${dividerStyle} ${DividerStyles.borderColor[name]} ${DividerStyles.beforeDivider[name]} ${DividerStyles.afterDivider[name]}`}>
+			<service.LogoSvgComponent
+				className={`w-8 h-8 ${DividerStyles.fillColor[name]}`}
+			/>
+		</div>
+	);
+};
 export default Service;
