@@ -10,12 +10,7 @@ describe('a service page', () => {
 	});
 
 	it('displays the service name on screen', () => {
-		cy.get('@service')
-			.find('h3')
-			.its('text')
-			.then((text) => {
-				cy.contains(text());
-			});
+		cy.contains(serviceName);
 	});
 
 	it('displays a footer at the bottom', () => {

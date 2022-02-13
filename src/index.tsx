@@ -11,7 +11,7 @@ ReactDOM.render(
 		<Routes>
 			<Route path='/' element={<App />}>
 				<Route index element={<Homepage />} />
-				<Route path='service/:id' element={<Service />} />
+				<Route path='service/:name' element={<Service />} />
 			</Route>
 			<Route
 				path='*'
