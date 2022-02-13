@@ -12,32 +12,45 @@ const checkDarkToggle = async (element: JQuery<HTMLElement>): Promise<void> => {
 };
 
 describe('navigation', () => {
-	it('shows pointer cursor when hovered on logo', () => {
+	beforeEach(() => {
 		cy.server({ force404: true });
 		cy.visit('/');
-		const logo = cy.get('[aria-label=logo]');
-		logo
-			.trigger('mouseover')
-			.then((elem) => elem.hasClass('hover:cursor-pointer'));
+		const navigationBar = cy.get('nav');
+		navigationBar.should('be.visible');
+		cy.get('[aria-label=logo]').as('logo');
 	});
 
-	it('takes the user to homepage when clicked on logo', () => {
-		cy.get('[aria-label=logo]').click();
-		cy.url().should('eq', `${Cypress.config().baseUrl}/`);
+	describe('navigation bar', () => {
+		it('shows pointer cursor when hovered on logo', () => {
+			cy.get('@logo')
+				.trigger('mouseover')
+				.then((elem) => elem.hasClass('hover:cursor-pointer'));
+		});
+
+		it('takes the user to homepage when clicked on logo', () => {
+			cy.get('@logo').click();
+			cy.url().should('eq', `${Cypress.config().baseUrl}/`);
+		});
+
+		it('toggles the dark mode', () => {
+			cy.get('h1').then(checkDarkToggle);
+			cy.get('h1').then(checkDarkToggle);
+		});
+
+		it('initially has dark mode on', () => {
+			cy.get('h1').should('have.css', 'color', 'rgb(255, 255, 255)');
+			cy.get('[aria-label="dark mode toggle"]').click();
+		});
 	});
 
-	it('toggles the dark mode', () => {
-		cy.get('h1').then(checkDarkToggle);
-		cy.get('h1').then(checkDarkToggle);
-	});
-
-	it('initially has dark mode on', () => {
-		cy.clearLocalStorage();
-		cy.get('h1').should('have.css', 'color', 'rgb(255, 255, 255)');
-		cy.get('[aria-label="dark mode toggle"]').click();
-	});
-
-	it('remembers the theme the user had set', () => {
-		cy.get('h1').should('have.css', 'color', 'rgb(34, 34, 34)');
+	describe('clicking navigation items', () => {
+		it('scrolls to services when clicked on services menu item', () => {
+			cy.get('nav').contains('Services').click();
+			cy.get('#services').should('be.inViewport');
+		});
+		it('scrolls to about when clicked on about item', () => {
+			cy.get('nav').contains('About').click();
+			cy.get('#about').should('be.inViewport');
+		});
 	});
 });

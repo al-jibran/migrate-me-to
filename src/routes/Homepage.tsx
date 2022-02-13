@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { DownArrow } from '../components/svgs';
 import ServiceCardLarge from '../components/ServiceCardLarge';
 import { Service, services } from '../data/services';
@@ -60,15 +61,21 @@ interface ServicesProps {
 }
 
 export const Services: React.FC<ServicesProps> = ({ services }) => {
+	const navigate = useNavigate();
+
+	const handleOnClickService = (service: string) => {
+		navigate(`service/${service}`);
+	};
 	return (
-		<section id='#'>
+		<section id='services'>
 			<h2 className='my-6'>Services</h2>
-			<div className='md:grid md:grid-cols-2 gap-10'>
+			<div className='md:grid md:grid-cols-2 gap-24'>
 				{services.map(({ name, transferrableList, LogoSvgComponent }) => (
 					<ServiceCardLarge
 						name={name}
 						transferrableList={transferrableList}
 						LogoSvgComponent={LogoSvgComponent}
+						handleOnClick={() => handleOnClickService(name)}
 						key={name}
 					/>
 				))}
@@ -79,7 +86,7 @@ export const Services: React.FC<ServicesProps> = ({ services }) => {
 
 const About = () => {
 	return (
-		<section>
+		<section id='about'>
 			<h2 className='my-6'>About</h2>
 			<p className='leading-loose w-full p-8 shadow-xl text-lg bg-gradientLightStart dark:bg-gray-400'>
 				Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum quaerat

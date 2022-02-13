@@ -1,24 +1,32 @@
+import { BrowserRouter } from 'react-router-dom';
 import { render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
 import { MenuContainer as Menu } from '../../components/Navigation';
 
 describe('Navigation Menu', () => {
+	let context: RenderResult;
+	let state: boolean;
+	let setState: jest.Mock;
+	let toggle: jest.Mock;
+	let handleClick: jest.Mock;
+
+	beforeEach(() => {
+		state = false;
+		setState = jest.fn().mockImplementation((value) => (state = value));
+		toggle = jest.fn();
+		handleClick = jest.fn();
+		context = render(
+			<Menu
+				showMenu={state}
+				setShowMenu={setState}
+				toggleTheme={toggle}
+				handleOnClickScroll={handleClick}
+			/>
+		);
+	});
+
 	describe('on smaller screens', () => {
-		let context: RenderResult;
-		let state: boolean;
-		let setState: jest.Mock;
-		let toggle: jest.Mock;
-
-		beforeEach(() => {
-			state = false;
-			setState = jest.fn().mockImplementation((value) => (state = value));
-			toggle = jest.fn();
-			context = render(
-				<Menu showMenu={state} setShowMenu={setState} toggleTheme={toggle} />
-			);
-		});
-
 		it('initially the menu is hidden', async () => {
 			expect(setState).not.toHaveBeenCalled();
 			expect(state).toBe(false);
@@ -61,7 +69,11 @@ describe('Navigation Menu', () => {
 
 			it('stores "dark" in local storage if it is empty', () => {
 				expect(window.localStorage.getItem('theme')).toBeNull();
-				render(<App />);
+				render(
+					<BrowserRouter>
+						<App />
+					</BrowserRouter>
+				);
 				expect(window.localStorage.getItem('theme')).toMatch('dark');
 			});
 
@@ -77,7 +89,11 @@ describe('Navigation Menu', () => {
 				let darkModeButton: HTMLElement;
 
 				beforeEach(() => {
-					appContext = render(<App />);
+					appContext = render(
+						<BrowserRouter>
+							<App />
+						</BrowserRouter>
+					);
 					const { getByTestId, container } = appContext;
 					body = getByTestId('container');
 					darkModeButton = container.querySelector(

@@ -1,4 +1,5 @@
 import { render, RenderResult } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { Service } from '../../data/services';
 import { Services } from '../../routes/Homepage';
 
@@ -19,7 +20,11 @@ describe('Services', () => {
 	let context: RenderResult;
 
 	beforeEach(() => {
-		context = render(<Services services={services} />);
+		context = render(
+			<BrowserRouter>
+				<Services services={services} />
+			</BrowserRouter>
+		);
 	});
 
 	it('calls the Logo Component', () => {
@@ -30,8 +35,9 @@ describe('Services', () => {
 	});
 
 	it('renders all the items in the array', async () => {
-		const { findAllByTestId } = context;
-		const elements = await findAllByTestId('service');
+		const { container } = context;
+		const elements = container.querySelector('#services div')?.children;
+		console.log(elements);
 
 		expect(elements).toHaveLength(services.length);
 	});

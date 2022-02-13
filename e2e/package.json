@@ -10,5 +10,8 @@
 		"@testing-library/cypress": "^8.0.2",
 		"cypress": "^9.4.1",
 		"typescript": "^4.5.5"
+	},
+	"dependencies": {
+		"cypress-real-events": "^1.7.0"
 	}
 }
