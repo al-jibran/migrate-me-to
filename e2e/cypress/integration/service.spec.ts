@@ -16,6 +16,9 @@ describe('service', () => {
 
 	it('has a hover effect on the service', () => {
 		cy.get('@service-item').realHover().should('have.css', 'cursor', 'pointer');
+		cy.get('@service-item')
+			.realHover()
+			.should('have.css', 'transform', 'matrix(1.1, 0, 0, 1.1, 0, 0)');
 	});
 
 	it('navigates to service page when clicked on a service', () => {
