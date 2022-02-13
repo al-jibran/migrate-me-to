@@ -43,11 +43,12 @@ describe('navigation', () => {
 		});
 	});
 
-	describe('clicking navigation items', () => {
+	describe('clicking menu items', () => {
 		it('scrolls to services when clicked on services menu item', () => {
 			cy.get('nav').contains('Services').click();
 			cy.get('#services').should('be.inViewport');
 		});
+
 		it('scrolls to about when clicked on about item', () => {
 			cy.get('nav').contains('About').click();
 			cy.get('#about').should('be.inViewport');
