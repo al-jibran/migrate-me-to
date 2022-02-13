@@ -74,7 +74,7 @@ export const Steps: React.FC<StepsProps> = ({ inProgress, setInProgress }) => {
 	return (
 		<>
 			<h2 className='mt-10 mb-4 uppercase'>Steps</h2>
-			<ul>
+			<ul id='steps'>
 				<li className='flex items-center py-1' aria-label='step 1'>
 					{!inProgress && <StepInactive aria-label='inactive' />}
 					{inProgress && <StepInProgress aria-label='in progress' />}
@@ -101,7 +101,7 @@ export const Steps: React.FC<StepsProps> = ({ inProgress, setInProgress }) => {
 			<button
 				className='py-2 px-3 rounded-md bg-white text-gray-200'
 				onClick={() => setInProgress(true)}>
-				Change Status
+				Let&apos;s Start!
 			</button>
 		</>
 	);

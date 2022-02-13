@@ -27,7 +27,7 @@ describe('Service', () => {
 	});
 
 	describe('when the state changes', () => {
-		it('changes the first icon to active the first time', () => {
+		it('changes the first icon to in progress the first time', () => {
 			const { getByText } = context;
 			userEvent.click(getByText('Change Status'));
 			expect(handleChangeStatus).toHaveBeenCalled();
