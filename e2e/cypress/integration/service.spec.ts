@@ -9,11 +9,19 @@ describe('a service page', () => {
 		cy.get('nav').should('exist');
 	});
 
-	it('displays the service name on screen', () => {
-		cy.contains(serviceName);
-	});
-
 	it('displays a footer at the bottom', () => {
 		cy.get('footer').should('exist');
+	});
+
+	it('render with each step having inactive status', () => {
+		cy.get('[aria-label="inactive"]');
+	});
+
+	it('changes the inactive item to in progress when the button is clicked', () => {
+		cy.get('button').click();
+		cy.scrollTo('top');
+		cy.get('[aria-label="step 1"]')
+			.children()
+			.get('[aria-label="in progress"]');
 	});
 });

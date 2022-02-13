@@ -1,9 +1,11 @@
 import { useParams } from 'react-router-dom';
 import { normalizeClass } from '../utility/normalizeClass';
 import { ServiceType, services } from '../data/services';
+import { StepInactive, StepInProgress } from '../components/svgs';
+import { useState } from 'react';
 // import {
 // 	StepFail,
-// 	StepInactive,
+// 	StepIninProgress,
 // 	StepInProgress,
 // 	StepSuccess,
 // } from '../components/svgs';
@@ -37,6 +39,7 @@ const styles: StylesProps = {
 
 const Service = () => {
 	const { name } = useParams<string>();
+	const [inProgress, setInProgress] = useState(false);
 
 	if (!name) {
 		throw new Error('Invalid route');
@@ -52,44 +55,54 @@ const Service = () => {
 
 	return (
 		<div className='pt-32 px-10 h-screen'>
+			<Steps inProgress={inProgress} setInProgress={setInProgress} />
+			<Divider service={service} />
 			<h1
 				className={`text-4xl uppercase pb-3 border-b-4 ${headingBorderColor} w-fit mx-auto`}>
 				1<sup className='lowercase'>st</sup> Account
 			</h1>
-			<Steps onGoing={true} success={true} />
-			<Divider service={service} />
 		</div>
 	);
 };
 
 interface StepsProps {
-	onGoing: boolean;
-	success: boolean;
+	inProgress: boolean;
+	setInProgress: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Steps: React.FC<StepsProps> = ({ onGoing, success }) => {
-	onGoing && success;
+export const Steps: React.FC<StepsProps> = ({ inProgress, setInProgress }) => {
 	return (
 		<>
 			<h2 className='mt-10 mb-4 uppercase'>Steps</h2>
 			<ul>
-				<li className='flex items-center py-1'>
+				<li className='flex items-center py-1' aria-label='step 1'>
+					{!inProgress && <StepInactive aria-label='inactive' />}
+					{inProgress && <StepInProgress aria-label='in progress' />}
 					<p>
 						Sign in to the 1<sup>st</sup> account
 					</p>
 				</li>
-				<li className='flex items-center py-1'>
+				<li className='flex items-center py-1' aria-label='step 2'>
+					{!inProgress && <StepInactive aria-label='inactive' />}
 					<p>Select what to migrate</p>
 				</li>
-				<li className='flex items-center py-1'>
+				<li className='flex items-center py-1' aria-label='step 3'>
+					{!inProgress && <StepInactive aria-label='inactive' />}
 					<p>
 						Sign in to the 2<sup>nd</sup> account
 					</p>
 				</li>
-				<li className='flex items-center py-1'>
+				<li className='flex items-center py-1' aria-label='step 4'>
+					{!inProgress && <StepInactive aria-label='inactive' />}
 					<p>Wait</p>
 				</li>
 			</ul>
+
+			<button
+				className='py-2 px-3 rounded-md bg-white text-gray-200'
+				onClick={() => setInProgress(true)}>
+				Change Status
+			</button>
 		</>
 	);
 };
