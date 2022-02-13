@@ -1,7 +1,7 @@
 import { IconProps } from '@iconify/react';
 import React, { createContext, Suspense, useEffect, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation';
-import Homepage from './routes/Homepage';
 import { normalizeClass } from './utility/normalizeClass';
 
 type ToggleDarkModeType = () => void;
@@ -56,7 +56,7 @@ export const App = () => {
 			<div data-testid='container' className={darkMode}>
 				<div className={className}>
 					<Navigation />
-					<Homepage />
+					<Outlet />
 					<Footer />
 				</div>
 			</div>
