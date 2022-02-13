@@ -22,9 +22,7 @@ describe('services', () => {
 	});
 
 	it('navigates to service page when clicked on a service', () => {
-		const serviceName = 'Twitter';
 		cy.get('@service-item').click();
 		cy.url().should('eq', `${Cypress.config().baseUrl}/service/${serviceName}`);
-		cy.contains(serviceName);
 	});
 });
