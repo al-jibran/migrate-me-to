@@ -54,14 +54,14 @@ describe('a service page', () => {
 			).as('authorize');
 
 			// Remove it later when the backend is implemented!
-			cy.wait(900);
+			cy.wait(500);
 			cy.get('@first').find('[aria-label="success"]');
 			cy.get('@second').find('[aria-label="in progress"]');
 		});
 
 		it('changes the third item to in progress when the second one completes', () => {
 			cy.get('@start').click();
-			cy.wait(1200);
+			cy.wait(900);
 			cy.get('@first').find('[aria-label="success"]');
 			cy.get('@second').find('[aria-label="success"]');
 			cy.get('@third').find('[aria-label="in progress"]');
@@ -69,7 +69,7 @@ describe('a service page', () => {
 
 		it('changes the fourth item to in progress when the third one completes', () => {
 			cy.get('@start').click();
-			cy.wait(1500);
+			cy.wait(1300);
 			cy.get('@first').find('[aria-label="success"]');
 			cy.get('@second').find('[aria-label="success"]');
 			cy.get('@third').find('[aria-label="success"]');
@@ -78,7 +78,7 @@ describe('a service page', () => {
 
 		it('changes the next steps to fail when one fails', () => {
 			cy.get('@start').click();
-			cy.wait(2000);
+			cy.wait(1600);
 			cy.get('@first').find('[aria-label="fail"]');
 		});
 	});
