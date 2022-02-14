@@ -150,19 +150,56 @@ const Service = () => {
 		throw new Error('This service could not be found');
 	}
 
-	return <ServiceContainer name={name} service={service} />;
+	const handleDispatchStatus = (
+		type: ReducerActionType['type'],
+		step: ReducerActionType['step']
+	) => {
+		if (type === 'FAIL') {
+			dispatch(failActionCreator(step));
+		} else if (type === 'INPROGRESS' && step === 'stepOne') {
+			dispatch(inProgressActionCreator(step));
+		} else if (type === 'INPROGRESS') {
+			dispatch(inProgressActionCreator(step));
+
+			if (step === 'stepTwo') {
+				dispatch(successActionCreator('stepOne'));
+			} else if (step === 'stepThree') {
+				dispatch(successActionCreator('stepOne'));
+				dispatch(successActionCreator('stepTwo'));
+			} else {
+				dispatch(successActionCreator('stepOne'));
+				dispatch(successActionCreator('stepTwo'));
+				dispatch(successActionCreator('stepThree'));
+			}
+		}
+	};
+
+	return (
+		<ServiceContainer
+			name={name}
+			service={service}
+			status={status}
+			handleDispatchStatus={handleDispatchStatus}
+		/>
+	);
 };
 
 interface ServiceContainerProps {
 	name: string;
 	service: ServiceType;
+	status: StateStatusType;
+	handleDispatchStatus: (
+		type: ReducerActionType['type'],
+		step: ReducerActionType['step']
+	) => void | jest.Mock;
 }
 
 export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	name,
 	service,
+	status,
+	handleDispatchStatus,
 }) => {
-	const [status, dispatch] = useReducer(stepStatusReducer, initStatus);
 	const headingBorderColor = styles.borderBottom[name];
 
 	return (
