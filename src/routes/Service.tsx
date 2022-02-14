@@ -147,46 +147,71 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	);
 };
 
-interface StepsProps {
-	inProgress: boolean;
-	setInProgress: React.Dispatch<React.SetStateAction<boolean>>;
+export interface StepsProps {
+	status: {
+		stepOne: StepStatusType;
+		stepTwo: StepStatusType;
+		stepThree: StepStatusType;
+		stepFour: StepStatusType;
+	};
 }
 
-export const Steps: React.FC<StepsProps> = ({ inProgress, setInProgress }) => {
+export const Steps: React.FC<StepsProps> = ({ status }) => {
 	return (
 		<>
 			<h2 className='mt-10 mb-4 uppercase'>Steps</h2>
 			<ul id='steps'>
 				<li className='flex items-center py-1' aria-label='step 1'>
-					{!inProgress && <StepInactive aria-label='inactive' />}
-					{inProgress && <StepInProgress aria-label='in progress' />}
+					{<RenderStatus status={status.stepOne} />}
 					<p>
 						Sign in to the 1<sup>st</sup> account
 					</p>
 				</li>
 				<li className='flex items-center py-1' aria-label='step 2'>
-					{!inProgress && <StepInactive aria-label='inactive' />}
+					{<RenderStatus status={status.stepTwo} />}
 					<p>Select what to migrate</p>
 				</li>
 				<li className='flex items-center py-1' aria-label='step 3'>
-					{!inProgress && <StepInactive aria-label='inactive' />}
+					{<RenderStatus status={status.stepThree} />}
 					<p>
 						Sign in to the 2<sup>nd</sup> account
 					</p>
 				</li>
 				<li className='flex items-center py-1' aria-label='step 4'>
-					{!inProgress && <StepInactive aria-label='inactive' />}
+					{<RenderStatus status={status.stepFour} />}
 					<p>Wait</p>
 				</li>
 			</ul>
-
-			<button
-				className='py-2 px-3 rounded-md bg-white text-gray-200'
-				onClick={() => setInProgress(true)}>
-				Let&apos;s Start!
-			</button>
 		</>
 	);
+};
+
+interface RenderStatusProps {
+	status: StepStatusType;
+}
+
+const RenderStatus: React.FC<RenderStatusProps> = ({ status }) => {
+	const assertNever = (value: never): never => {
+		throw new Error(
+			`Unhandle discriminated union member: ${JSON.stringify(value)}`
+		);
+	};
+
+	switch (status) {
+		case StepStatusType.INACTIVE:
+			return <StepInactive aria-label='inactive' />;
+
+		case StepStatusType.INPROGRESS:
+			return <StepInProgress aria-label='in progress' />;
+
+		case StepStatusType.SUCCESS:
+			return <StepSuccess aria-label='success' />;
+		case StepStatusType.FAIL:
+			return <StepFail aria-label='fail' />;
+
+		default:
+			return assertNever(status);
+	}
 };
 
 interface DividerProps {
