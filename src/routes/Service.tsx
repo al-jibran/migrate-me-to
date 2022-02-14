@@ -42,9 +42,58 @@ const styles: StylesProps = {
 	},
 };
 
+export enum StepStatusType {
+	'INACTIVE',
+	'INPROGRESS',
+	'SUCCESS',
+	'FAIL',
+}
+
+const initStatus = {
+	stepOne: StepStatusType.INACTIVE,
+	stepTwo: StepStatusType.INACTIVE,
+	stepThree: StepStatusType.INACTIVE,
+	stepFour: StepStatusType.INACTIVE,
+};
+
+type StateStatusType = typeof initStatus;
+
+interface ReducerActionBase {
+	type: string;
+	step: keyof StateStatusType;
+}
+
+interface InactiveAction extends ReducerActionBase {
+	type: 'INACTIVE';
+}
+
+interface InProgressAction extends ReducerActionBase {
+	type: 'INPROGRESS';
+}
+
+type ReducerActionType = InactiveAction | InProgressAction;
+
 const Service = () => {
 	const { name } = useParams<string>();
-	const [inProgress, setInProgress] = useState(false);
+	
+	const [status, dispatch] = useReducer(
+		(state: StateStatusType, action: ReducerActionType): StateStatusType => {
+			const stepName: keyof StateStatusType = action.step;
+			const newState = { ...state };
+			switch (action.type) {
+				case 'INACTIVE': {
+					newState[stepName] = StepStatusType.INACTIVE;
+					return newState;
+				}
+
+				case 'INPROGRESS': {
+					newState[stepName] = StepStatusType.INPROGRESS;
+					return newState;
+				}
+			}
+		},
+		initStatus
+	);
 
 	if (!name) {
 		throw new Error('Invalid route');
