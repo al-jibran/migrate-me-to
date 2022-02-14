@@ -7,13 +7,7 @@ import {
 	StepInProgress,
 	StepSuccess,
 } from '../components/svgs';
-import { Dispatch, useReducer } from 'react';
-// import {
-// 	StepFail,
-// 	StepIninProgress,
-// StepInProgress,
-// 	StepSuccess,
-// } from '../components/svgs';
+import { useReducer } from 'react';
 
 type StylesProps = {
 	borderBottom: Record<string, string>;
@@ -73,27 +67,27 @@ interface InProgressAction extends ReducerActionBase {
 
 type ReducerActionType = InactiveAction | InProgressAction;
 
+const stepStatusReducer = (
+	state: StateStatusType,
+	action: ReducerActionType
+): StateStatusType => {
+	const stepName: keyof StateStatusType = action.step;
+	const newState = { ...state };
+	switch (action.type) {
+		case 'INACTIVE': {
+			newState[stepName] = StepStatusType.INACTIVE;
+			return newState;
+		}
+
+		case 'INPROGRESS': {
+			newState[stepName] = StepStatusType.INPROGRESS;
+			return newState;
+		}
+	}
+};
+
 const Service = () => {
 	const { name } = useParams<string>();
-	
-	const [status, dispatch] = useReducer(
-		(state: StateStatusType, action: ReducerActionType): StateStatusType => {
-			const stepName: keyof StateStatusType = action.step;
-			const newState = { ...state };
-			switch (action.type) {
-				case 'INACTIVE': {
-					newState[stepName] = StepStatusType.INACTIVE;
-					return newState;
-				}
-
-				case 'INPROGRESS': {
-					newState[stepName] = StepStatusType.INPROGRESS;
-					return newState;
-				}
-			}
-		},
-		initStatus
-	);
 
 	if (!name) {
 		throw new Error('Invalid route');
@@ -105,29 +99,19 @@ const Service = () => {
 		throw new Error('This service could not be found');
 	}
 
-	return (
-		<ServiceContainer
-			name={name}
-			service={service}
-			status={status}
-			dispatch={dispatch}
-		/>
-	);
+	return <ServiceContainer name={name} service={service} />;
 };
 
 interface ServiceContainerProps {
 	name: string;
-	status: StateStatusType;
-	dispatch: Dispatch<ReducerActionType>;
 	service: ServiceType;
 }
 
 export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	name,
-	status,
-	dispatch,
 	service,
 }) => {
+	const [status, dispatch] = useReducer(stepStatusReducer, initStatus);
 	const headingBorderColor = styles.borderBottom[name];
 
 	return (
