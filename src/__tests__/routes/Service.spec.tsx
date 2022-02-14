@@ -1,17 +1,41 @@
 import { render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Steps } from '../../routes/Service';
+import { ServiceType } from '../../data/services';
+import {
+	ServiceContainer,
+	StepStatusType,
+	StepsProps,
+} from '../../routes/Service';
 
+// Give a callback function to Steps componet that will take the name for in progress, complete, processes and update their state
+// check whether the Steps components calls it
 describe('Service', () => {
 	let context: RenderResult;
-	let inProgress = false;
-	let handleChangeStatus: jest.Mock;
+	let status: StepsProps['status'];
+	const service: ServiceType = {
+		name: 'Twitter',
+		LogoSvgComponent: jest.fn().mockImplementation(() => null),
+		transferrableList: [],
+	};
+	let dispatch: jest.Mock;
+
 	beforeEach(() => {
-		handleChangeStatus = jest
-			.fn()
-			.mockImplementation(() => (inProgress = true));
+		status = {
+			stepOne: StepStatusType.INACTIVE,
+			stepTwo: StepStatusType.INACTIVE,
+			stepThree: StepStatusType.INACTIVE,
+			stepFour: StepStatusType.INACTIVE,
+		};
+
+		dispatch = jest.fn();
+
 		context = render(
-			<Steps inProgress={inProgress} setInProgress={handleChangeStatus} />
+			<ServiceContainer
+				name={service['name']}
+				status={status}
+				dispatch={dispatch}
+				service={service}
+			/>
 		);
 	});
 	describe('initially', () => {
@@ -21,17 +45,31 @@ describe('Service', () => {
 			const inactiveIcon = getAllByLabelText('inactive');
 			const listItems = container.querySelectorAll('li');
 
+			expect(status.stepOne).toBe(StepStatusType.INACTIVE);
+			expect(status.stepTwo).toBe(StepStatusType.INACTIVE);
+			expect(status.stepThree).toBe(StepStatusType.INACTIVE);
+			expect(status.stepFour).toBe(StepStatusType.INACTIVE);
 			expect(inactiveIcon).toHaveLength(listItems.length);
-			expect(inProgress).toBe(false);
 		});
 	});
 
 	describe('when the state changes', () => {
-		it('changes the first icon to in progress the first time', () => {
-			const { getByText } = context;
-			userEvent.click(getByText('Change Status'));
-			expect(handleChangeStatus).toHaveBeenCalled();
-			expect(inProgress).toBe(true);
+		let button: HTMLButtonElement;
+
+		beforeEach(() => {
+			const { getByRole } = context;
+			button = getByRole('button', {
+				name: /let's start!/i,
+			}) as HTMLButtonElement;
+		});
+
+		it('changes the first icon to be in progress the first time', () => {
+			const { getByLabelText } = context;
+
+			userEvent.click(button);
+
+			expect(dispatch).toHaveBeenCalled();
+			expect(getByLabelText('in progress')).not.toBeNull();
 		});
 	});
 });
