@@ -85,6 +85,7 @@ const stepStatusReducer = (
 ): StateStatusType => {
 	const stepName: keyof StateStatusType = action.step;
 	const newState = { ...state };
+
 	switch (action.type) {
 		case 'INACTIVE': {
 			newState[stepName] = StepStatusType.INACTIVE;
@@ -202,12 +203,16 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 }) => {
 	const headingBorderColor = styles.borderBottom[name];
 
+	const onClickButton = () => {
+		handleDispatchStatus('INPROGRESS', 'stepOne');
+	};
+
 	return (
 		<div className='pt-32 px-10 h-screen'>
 			<Steps status={status} />
 			<button
 				className='py-2 px-3 rounded-md bg-white text-gray-200'
-				onClick={() => dispatch({ type: 'INPROGRESS', step: 'stepOne' })}>
+				onClick={onClickButton}>
 				Let&apos;s Start!
 			</button>
 			<Divider service={service} />
