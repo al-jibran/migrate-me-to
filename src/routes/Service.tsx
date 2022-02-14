@@ -1,12 +1,17 @@
 import { useParams } from 'react-router-dom';
 import { normalizeClass } from '../utility/normalizeClass';
 import { ServiceType, services } from '../data/services';
-import { StepInactive, StepInProgress } from '../components/svgs';
-import { useState } from 'react';
+import {
+	StepFail,
+	StepInactive,
+	StepInProgress,
+	StepSuccess,
+} from '../components/svgs';
+import { Dispatch, useReducer } from 'react';
 // import {
 // 	StepFail,
 // 	StepIninProgress,
-// 	StepInProgress,
+// StepInProgress,
 // 	StepSuccess,
 // } from '../components/svgs';
 
