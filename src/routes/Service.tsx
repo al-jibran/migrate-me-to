@@ -95,11 +95,50 @@ const stepStatusReducer = (
 			newState[stepName] = StepStatusType.INPROGRESS;
 			return newState;
 		}
+
+		case 'SUCCESS': {
+			newState[stepName] = StepStatusType.SUCCESS;
+			return newState;
+		}
+
+		case 'FAIL': {
+			newState[stepName] = StepStatusType.FAIL;
+			return newState;
+		}
+
+		default:
+			return state;
 	}
+};
+
+const inProgressActionCreator = (
+	step: ReducerActionType['step']
+): InProgressAction => {
+	return {
+		type: 'INPROGRESS',
+		step,
+	};
+};
+
+const successActionCreator = (
+	step: ReducerActionType['step']
+): SuccessAction => {
+	return {
+		type: 'SUCCESS',
+		step,
+	};
+};
+
+const failActionCreator = (step: ReducerActionType['step']): FailAction => {
+	return {
+		type: 'FAIL',
+		step,
+	};
 };
 
 const Service = () => {
 	const { name } = useParams<string>();
+	const [status, dispatch] = useReducer(stepStatusReducer, initStatus);
 
 	if (!name) {
 		throw new Error('Invalid route');
