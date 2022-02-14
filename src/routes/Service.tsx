@@ -105,11 +105,39 @@ const Service = () => {
 		throw new Error('This service could not be found');
 	}
 
+	return (
+		<ServiceContainer
+			name={name}
+			service={service}
+			status={status}
+			dispatch={dispatch}
+		/>
+	);
+};
+
+interface ServiceContainerProps {
+	name: string;
+	status: StateStatusType;
+	dispatch: Dispatch<ReducerActionType>;
+	service: ServiceType;
+}
+
+export const ServiceContainer: React.FC<ServiceContainerProps> = ({
+	name,
+	status,
+	dispatch,
+	service,
+}) => {
 	const headingBorderColor = styles.borderBottom[name];
 
 	return (
 		<div className='pt-32 px-10 h-screen'>
-			<Steps inProgress={inProgress} setInProgress={setInProgress} />
+			<Steps status={status} />
+			<button
+				className='py-2 px-3 rounded-md bg-white text-gray-200'
+				onClick={() => dispatch({ type: 'INPROGRESS', step: 'stepOne' })}>
+				Let&apos;s Start!
+			</button>
 			<Divider service={service} />
 			<h1
 				className={`text-4xl uppercase pb-3 border-b-4 ${headingBorderColor} w-fit mx-auto`}>
