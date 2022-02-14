@@ -65,7 +65,19 @@ interface InProgressAction extends ReducerActionBase {
 	type: 'INPROGRESS';
 }
 
-type ReducerActionType = InactiveAction | InProgressAction;
+interface SuccessAction extends ReducerActionBase {
+	type: 'SUCCESS';
+}
+
+interface FailAction extends ReducerActionBase {
+	type: 'FAIL';
+}
+
+type ReducerActionType =
+	| InactiveAction
+	| InProgressAction
+	| SuccessAction
+	| FailAction;
 
 const stepStatusReducer = (
 	state: StateStatusType,
