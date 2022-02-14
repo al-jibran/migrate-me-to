@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom';
-import { normalizeClass } from '../../utility/normalizeClass';
 import { ServiceType, services } from '../../data/services';
 import {
 	StepFail,
@@ -16,11 +15,11 @@ import {
 	stepStatusReducer,
 	successActionCreator,
 } from './reducer';
+import Divider from '../../components/Divider';
 
 type StylesProps = {
 	borderBottom: Record<string, string>;
 	border: Record<string, string>;
-	divider: Record<string, string>;
 };
 
 const styles: StylesProps = {
@@ -32,15 +31,6 @@ const styles: StylesProps = {
 	border: {
 		Twitter: 'border-twitter',
 		Reddit: 'border-reddit',
-	},
-
-	divider: {
-		mobile:
-			'flex justify-center items-center w-16 h-16 border-4 mx-auto rounded-full relative top-10 animate-pulse',
-		after:
-			'after:absolute after:w-screen after:border after:border-t-4 after:top-6 after:left-14',
-		before:
-			'before:absolute before:w-screen before:border before:border-t-4 before:top-6 before:right-14',
 	},
 };
 
@@ -210,51 +200,6 @@ const RenderStatus: React.FC<RenderStatusProps> = ({ status }) => {
 		default:
 			return assertNever(status);
 	}
-};
-
-interface DividerProps {
-	service: ServiceType;
-}
-
-interface DividerStylesProps {
-	borderColor: Record<string, string>;
-	fillColor: Record<string, string>;
-	beforeDivider: Record<string, string>;
-	afterDivider: Record<string, string>;
-}
-
-const DividerStyles: DividerStylesProps = {
-	borderColor: {
-		Twitter: 'border-twitter',
-		Reddit: 'border-reddit',
-	},
-
-	fillColor: {
-		Twitter: 'fill-twitter',
-		Reddit: 'fill-reddit',
-	},
-
-	beforeDivider: {
-		Twitter: 'before:border-twitter',
-		Reddit: 'before:border-reddit',
-	},
-
-	afterDivider: {
-		Twitter: 'after:border-twitter',
-		Reddit: 'after:border-reddit',
-	},
-};
-const Divider: React.FC<DividerProps> = ({ service }) => {
-	const dividerStyle = normalizeClass(styles.divider);
-	const name = service.name;
-	return (
-		<div
-			className={` ${dividerStyle} ${DividerStyles.borderColor[name]} ${DividerStyles.beforeDivider[name]} ${DividerStyles.afterDivider[name]}`}>
-			<service.LogoSvgComponent
-				className={`w-8 h-8 ${DividerStyles.fillColor[name]}`}
-			/>
-		</div>
-	);
 };
 
 export default Service;
