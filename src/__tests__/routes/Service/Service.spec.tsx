@@ -17,18 +17,8 @@ describe('Service', () => {
 			<ServiceContainer name={service['name']} service={service} />
 		);
 	});
-	describe('initially', () => {
-		it('renders each step with inactive lists', () => {
-			const { getAllByLabelText, container } = context;
 
-			const inactiveIcon = getAllByLabelText('inactive');
-			const listItems = container.querySelectorAll('li');
-
-			expect(inactiveIcon).toHaveLength(listItems.length);
-		});
-	});
-
-	describe('when the state changes', () => {
+	describe('when the process starts', () => {
 		let button: HTMLButtonElement;
 
 		beforeEach(() => {
@@ -37,6 +27,14 @@ describe('Service', () => {
 				name: /let's start!/i,
 			}) as HTMLButtonElement;
 			userEvent.click(button);
+		});
+
+		it('changes the first item to in progress', () => {
+			const { getByLabelText } = context;
+
+			expect(getByLabelText('step 1').children).toContain(
+				getByLabelText('in progress')
+			);
 		});
 	});
 });
