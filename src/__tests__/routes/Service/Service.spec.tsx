@@ -1,7 +1,7 @@
 import { render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ServiceType } from '../../data/services';
-import { ServiceContainer } from '../../routes/Service';
+import { ServiceType } from '../../../data/services';
+import { ServiceContainer } from '../../../routes/Service';
 
 describe('Service', () => {
 	let context: RenderResult;
