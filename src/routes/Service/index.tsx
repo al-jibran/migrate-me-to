@@ -74,9 +74,6 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 
 	const onClickButton = () => {
 		handleDispatchStatus('INPROGRESS', 'stepOne');
-		setTimeout(() => handleDispatchStatus('INPROGRESS', 'stepTwo'), 400);
-		setTimeout(() => handleDispatchStatus('INPROGRESS', 'stepThree'), 800);
-		setTimeout(() => handleDispatchStatus('INPROGRESS', 'stepFour'), 1200);
 	};
 
 	return (
