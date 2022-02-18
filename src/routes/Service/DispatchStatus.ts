@@ -24,12 +24,15 @@ export class DispatchStatus {
 			switch (step) {
 				case 'stepFour':
 					this.#dispatch(successActionCreator('stepThree'));
+					break;
 
 				case 'stepThree':
 					this.#dispatch(successActionCreator('stepTwo'));
+					break;
 
 				case 'stepTwo':
 					this.#dispatch(successActionCreator('stepOne'));
+					break;
 			}
 		}
 	};
