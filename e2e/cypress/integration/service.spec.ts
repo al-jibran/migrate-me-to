@@ -9,11 +9,22 @@ describe('a service page', () => {
 		cy.get('nav').should('exist');
 	});
 
-	it('displays the service name on screen', () => {
-		cy.contains(serviceName);
-	});
-
 	it('displays a footer at the bottom', () => {
 		cy.get('footer').should('exist');
+	});
+
+	it('has all the steps as inactive', () => {
+		cy.contains(/Let's Start!/i).as('start');
+		cy.get('#steps li:nth-child(1)').as('first');
+		cy.get('#steps li:nth-child(2)').as('second');
+		cy.get('#steps li:nth-child(3)').as('third');
+		cy.get('#steps li:nth-child(4)').as('fourth');
+
+		cy.scrollTo('top');
+
+		cy.get('#steps li:nth-child(1)').find('[aria-label="inactive"]');
+		cy.get('#steps li:nth-child(2)').find('[aria-label="inactive"]');
+		cy.get('#steps li:nth-child(3)').find('[aria-label="inactive"]');
+		cy.get('#steps li:nth-child(4)').find('[aria-label="inactive"]');
 	});
 });

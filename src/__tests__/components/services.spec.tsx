@@ -1,10 +1,10 @@
 import { render, RenderResult } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { Service } from '../../data/services';
+import { ServiceType } from '../../data/services';
 import { Services } from '../../routes/Homepage';
 
 describe('Services', () => {
-	const services: Service[] = [
+	const services: ServiceType[] = [
 		{
 			name: 'Twitter',
 			LogoSvgComponent: jest.fn().mockImplementation(() => 'Twitter logo'),

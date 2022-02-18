@@ -21,12 +21,6 @@ describe('navigation', () => {
 	});
 
 	describe('navigation bar', () => {
-		it('shows pointer cursor when hovered on logo', () => {
-			cy.get('@logo')
-				.trigger('mouseover')
-				.then((elem) => elem.hasClass('hover:cursor-pointer'));
-		});
-
 		it('takes the user to homepage when clicked on logo', () => {
 			cy.get('@logo').click();
 			cy.url().should('eq', `${Cypress.config().baseUrl}/`);
