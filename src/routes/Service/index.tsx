@@ -105,7 +105,7 @@ export interface StepsProps {
 export const Steps: React.FC<StepsProps> = ({ status }) => {
 	return (
 		<>
-			<h2 className='mt-10 mb-4 uppercase'>Steps</h2>
+			<h3 className='mt-10 mb-4 uppercase'>Steps</h3>
 			<ul id='steps'>
 				<li className='flex items-center py-1' aria-label='step 1'>
 					{<RenderStatus status={status.stepOne} />}
