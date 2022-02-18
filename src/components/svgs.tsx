@@ -140,10 +140,10 @@ export const Checkbox = (props: SVGProps<SVGSVGElement>) => (
 export const StepInactive = (props: SVGProps<SVGSVGElement>) => (
 	<svg
 		{...props}
-		className='h-4 w-4 mr-2'
+		className='h-4 w-4 mr-2 stroke-black fill-white dark:stroke-white dark:fill-black'
 		viewBox='0 0 32 32'
 		xmlns='http://www.w3.org/2000/svg'>
-		<circle cx='16' cy='16' r='14.5' stroke='white' strokeWidth='3' />
+		<circle cx='16' cy='16' r='14.5' strokeWidth='3' />
 	</svg>
 );
 

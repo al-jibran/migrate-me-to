@@ -77,18 +77,18 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	};
 
 	return (
-		<div className='pt-32 px-10 h-screen'>
+		<div className='pt-32 px-10 sm:px-14 md:px-16 lg:px-24 xl:max-w-5xl xl:mx-auto h-screen'>
 			<Steps status={status} />
 			<button
-				className='py-2 px-3 rounded-md bg-white text-gray-200'
+				className='py-2 px-3 rounded-md text-white bg-gray-200 dark:bg-white dark:text-gray-200'
 				onClick={onClickButton}>
 				Let&apos;s Start!
 			</button>
 			<Divider service={service} />
-			<h1
-				className={`text-4xl uppercase pb-3 border-b-4 ${headingBorderColor} w-fit mx-auto`}>
+			<h3
+				className={`uppercase border-b-4 ${headingBorderColor} w-fit mx-auto mt-14`}>
 				1<sup className='lowercase'>st</sup> Account
-			</h1>
+			</h3>
 		</div>
 	);
 };
@@ -105,7 +105,7 @@ export interface StepsProps {
 export const Steps: React.FC<StepsProps> = ({ status }) => {
 	return (
 		<>
-			<h2 className='mt-10 mb-4 uppercase'>Steps</h2>
+			<h3 className='mt-10 mb-4 uppercase'>Steps</h3>
 			<ul id='steps'>
 				<li className='flex items-center py-1' aria-label='step 1'>
 					{<RenderStatus status={status.stepOne} />}
