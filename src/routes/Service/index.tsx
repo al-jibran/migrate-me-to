@@ -77,10 +77,10 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	};
 
 	return (
-		<div className='pt-32 px-10 h-screen'>
+		<div className='pt-32 px-10 sm:px-14 md:px-16 lg:px-24 xl:max-w-5xl xl:mx-auto h-screen'>
 			<Steps status={status} />
 			<button
-				className='py-2 px-3 rounded-md bg-white text-gray-200'
+				className='py-2 px-3 rounded-md text-white bg-gray-200 dark:bg-white dark:text-gray-200'
 				onClick={onClickButton}>
 				Let&apos;s Start!
 			</button>
