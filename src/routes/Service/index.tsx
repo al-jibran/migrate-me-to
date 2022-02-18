@@ -7,15 +7,9 @@ import {
 	StepSuccess,
 } from '../../components/svgs';
 import { useReducer } from 'react';
-import {
-	failActionCreator,
-	inProgressActionCreator,
-	ReducerActionType,
-	StateStatusType,
-	stepStatusReducer,
-	successActionCreator,
-} from './reducer';
+import { stepStatusReducer } from './reducer';
 import Divider from '../../components/Divider';
+import { DispatchStatus } from './DispatchStatus';
 
 type StylesProps = {
 	borderBottom: Record<string, string>;
@@ -50,7 +44,6 @@ export const initStatus = {
 
 const Service = () => {
 	const { name } = useParams<string>();
-	const [status, dispatch] = useReducer(stepStatusReducer, initStatus);
 
 	if (!name) {
 		throw new Error('Invalid route');
@@ -62,60 +55,28 @@ const Service = () => {
 		throw new Error('This service could not be found');
 	}
 
-	const handleDispatchStatus = (
-		type: ReducerActionType['type'],
-		step: ReducerActionType['step']
-	) => {
-		if (type === 'FAIL') {
-			dispatch(failActionCreator(step));
-		} else if (type === 'INPROGRESS' && step === 'stepOne') {
-			dispatch(inProgressActionCreator(step));
-		} else if (type === 'INPROGRESS') {
-			dispatch(inProgressActionCreator(step));
-
-			if (step === 'stepTwo') {
-				dispatch(successActionCreator('stepOne'));
-			} else if (step === 'stepThree') {
-				dispatch(successActionCreator('stepOne'));
-				dispatch(successActionCreator('stepTwo'));
-			} else {
-				dispatch(successActionCreator('stepOne'));
-				dispatch(successActionCreator('stepTwo'));
-				dispatch(successActionCreator('stepThree'));
-			}
-		}
-	};
-
-	return (
-		<ServiceContainer
-			name={name}
-			service={service}
-			status={status}
-			handleDispatchStatus={handleDispatchStatus}
-		/>
-	);
+	return <ServiceContainer name={name} service={service} />;
 };
 
 interface ServiceContainerProps {
 	name: string;
 	service: ServiceType;
-	status: StateStatusType;
-	handleDispatchStatus: (
-		type: ReducerActionType['type'],
-		step: ReducerActionType['step']
-	) => void;
 }
 
 export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	name,
 	service,
-	status,
-	handleDispatchStatus,
 }) => {
+	const [status, dispatch] = useReducer(stepStatusReducer, initStatus);
+	const { handleDispatchStatus } = new DispatchStatus(dispatch);
+
 	const headingBorderColor = styles.borderBottom[name];
 
 	const onClickButton = () => {
 		handleDispatchStatus('INPROGRESS', 'stepOne');
+		setTimeout(() => handleDispatchStatus('INPROGRESS', 'stepTwo'), 400);
+		setTimeout(() => handleDispatchStatus('INPROGRESS', 'stepThree'), 800);
+		setTimeout(() => handleDispatchStatus('INPROGRESS', 'stepFour'), 1200);
 	};
 
 	return (
