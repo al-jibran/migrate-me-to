@@ -85,10 +85,10 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 				Let&apos;s Start!
 			</button>
 			<Divider service={service} />
-			<h1
-				className={`text-4xl uppercase pb-3 border-b-4 ${headingBorderColor} w-fit mx-auto`}>
+			<h3
+				className={`uppercase border-b-4 ${headingBorderColor} w-fit mx-auto mt-14`}>
 				1<sup className='lowercase'>st</sup> Account
-			</h1>
+			</h3>
 		</div>
 	);
 };
