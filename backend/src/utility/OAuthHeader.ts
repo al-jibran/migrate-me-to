@@ -65,6 +65,37 @@ class OAuthHeader {
 		return headerString;
 	};
 
+	getSignature = (
+		method: METHOD,
+		uri: string,
+		data: Record<string, string>
+	): string => {
+		const urlAndQuery = uri.split('?');
+		const url = urlAndQuery[0] || '';
+		const queryString = urlAndQuery[1];
+
+		const queryParams = this.getUrlQueries(queryString);
+
+		const oAuthParams = this.getOAuthStrings().map((v) => v.replace(/"/g, ''));
+
+		const dataEncoded = Object.keys(data).map((k) => {
+			const encodedKey = uriPercentEncode(k);
+			const encodedValue = uriPercentEncode(data[k] || '');
+			return `${encodedKey}=${encodedValue}`;
+		});
+
+		const methodAndUrlParams = `${method.toUpperCase()}&${uriPercentEncode(
+			url
+		)}`;
+
+		const signatureParam = queryParams
+			.concat(oAuthParams)
+			.concat(dataEncoded)
+			.sort()
+			.join('&');
+
+		return `${methodAndUrlParams}&${uriPercentEncode(signatureParam)}`;
+	};
 }
 
 export default OAuthHeader;
