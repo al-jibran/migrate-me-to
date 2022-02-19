@@ -160,12 +160,15 @@ const urlEncoding: Record<string, string> = {
 	ÿ: '%FF	%C3%BF',
 };
 
-export const uriPercentEncode = (value: string) => {
+export const uriPercentEncode = (
+	value: string,
+	exceptions: string[] = ['']
+) => {
 	// copying value to enforcedString rather than passing it by reference and modifying the original.
 	let encodedString = `${value}`;
+	const exceptionsString = exceptions.join('');
 
-	const acceptableChars =
-		'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~';
+	const acceptableChars = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~${exceptionsString}`;
 
 	for (const c of value) {
 		if (!acceptableChars.includes(c)) {
