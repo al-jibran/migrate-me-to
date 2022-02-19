@@ -34,15 +34,16 @@ app.get('/api/authorize', async (_req, res) => {
 		uri: `https://api.twitter.com/oauth/request_token?oauth_callback=${encodedCallback}`,
 	};
 
-	const client = axios.create({
-		baseURL: request.uri,
-		headers: {
-			Authorization: header.getHeaderString(request),
-		},
-	});
-
-	const result = await client.post('/', null, { timeout: 5000 });
-	res.send(result);
+	try {
+		const response = await axios.post(request.uri, undefined, {
+			headers: {
+				Authorization: header.getHeaderString(request),
+			},
+		});
+		res.send(response.data);
+	} catch (e) {
+		res.send(e);
+	}
 });
 
 app.listen(PORT, () => {
