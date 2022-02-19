@@ -1,4 +1,16 @@
+import crypto from 'crypto-js';
 import { uriPercentEncode } from './uriPercentEncode';
+
+interface Token {
+	oauth_token: string;
+	tokenSecret: string;
+}
+
+interface Request {
+	method: METHOD;
+	uri: string;
+	data?: Record<string, string>;
+}
 
 interface HeaderType extends Record<string, string> {
 	oauth_consumer_key: string;
@@ -32,6 +44,26 @@ class OAuthHeader {
 		this.#oAuthParams['oauth_timestamp'] = Date.now().toString();
 	}
 
+	getHeaderString = (request: Request, token?: Token): string => {
+		if (token) {
+			this.#oAuthParams['oauth_token'] = token.oauth_token;
+			this.#tokenSecret = token.tokenSecret;
+		}
+
+		this.#oAuthParams['oauth_signature'] = this.getEncryptedSignature(request);
+
+		const headerString = `OAuth ${this.getOAuthStrings().join(', ')}`;
+
+		return headerString;
+	};
+
+	getEncryptedSignature = (request: Request) => {
+		const signature = this.getSignature(request);
+		const secretKey = `${this.#consumerSecret}&${this.#tokenSecret}`;
+
+		return crypto.HmacSHA1(signature, secretKey).toString();
+	};
+
 	getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
 		const oauthStrings: string[] = [];
 		const params = { ...this.#oAuthParams, ...additionalParams };
@@ -56,34 +88,31 @@ class OAuthHeader {
 		return queryToAppend;
 	};
 
-	getHeaderString = (): string => {
-		this.#consumerSecret;
-		const headerString = `OAuth ${this.getOAuthStrings({
-			oauth_signature: '3843euwfheuksd7282hdsu',
-		}).join(', ')}`;
-
-		return headerString;
-	};
-
-	getSignature = (
-		method: METHOD,
-		uri: string,
-		data: Record<string, string>
-	): string => {
+	getSignature = ({ method, uri, data }: Request): string => {
+		// Collecting information to sign
 		const urlAndQuery = uri.split('?');
 		const url = urlAndQuery[0] || '';
 		const queryString = urlAndQuery[1];
 
-		const queryParams = this.getUrlQueries(queryString);
+		const queryParams: string[] = this.getUrlQueries(queryString);
 
-		const oAuthParams = this.getOAuthStrings().map((v) => v.replace(/"/g, ''));
+		const oAuthParams: string[] = this.getOAuthStrings().map((v) =>
+			v.replace(/"/g, '')
+		);
 
-		const dataEncoded = Object.keys(data).map((k) => {
-			const encodedKey = uriPercentEncode(k);
-			const encodedValue = uriPercentEncode(data[k] || '');
-			return `${encodedKey}=${encodedValue}`;
-		});
+		let dataEncoded: string[] = [];
 
+		// data will be defined only with POST requests.
+		if (data) {
+			dataEncoded = Object.keys(data).map((k) => {
+				const encodedKey = uriPercentEncode(k);
+				const encodedValue = uriPercentEncode(data[k] || '');
+				return `${encodedKey}=${encodedValue}`;
+			});
+		}
+
+		// Percent encoding the information to sign
+		
 		const methodAndUrlParams = `${method.toUpperCase()}&${uriPercentEncode(
 			url
 		)}`;
