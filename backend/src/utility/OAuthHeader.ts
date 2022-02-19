@@ -34,6 +34,7 @@ class OAuthHeader {
 	};
 
 	#consumerSecret: string;
+	#tokenSecret = '';
 
 	constructor(consumerKey: string, consumerSecret: string) {
 		this.#consumerSecret = consumerSecret;
