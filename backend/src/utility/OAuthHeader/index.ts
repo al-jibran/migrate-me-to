@@ -22,7 +22,11 @@ class OAuthHeader {
 		this.#oAuthParams['oauth_version'] = '1.0';
 	}
 
-	getHeaderString = (request: Request, token?: Token): string => {
+	getHeaderString = (
+		request: Request,
+		additionalParams?: Record<string, string>,
+		token?: Token
+	): string => {
 		this.#oAuthParams['oauth_timestamp'] = Date.now().toString();
 		this.#oAuthParams['oauth_nonce'] = randomStringGenerator();
 
@@ -33,7 +37,9 @@ class OAuthHeader {
 
 		this.#oAuthParams['oauth_signature'] = this.getEncryptedSignature(request);
 
-		const headerString = `OAuth ${this.#getOAuthStrings().join(', ')}`;
+		const headerString = `OAuth ${this.#getOAuthStrings(additionalParams).join(
+			', '
+		)}`;
 
 		return headerString;
 	};
