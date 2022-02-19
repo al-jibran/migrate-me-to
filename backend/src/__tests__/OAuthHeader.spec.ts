@@ -27,24 +27,23 @@ describe('OAuth Header', () => {
 	});
 
 	describe('get queries from the url', () => {
-		it('returns an empty array when the string provided is empty', () => {
-			const url = 'https://www.twitter.com';
-
+		const urlParams = (url: string): string[] => {
 			const urlSplit = url.split('?');
 			const urlParams = urlSplit.length > 1 ? urlSplit[1] : '';
 
-			const parameters: string[] = header.getUrlQueries(urlParams);
+			return header.getUrlQueries(urlParams);
+		};
+
+		it('returns an empty array when the string provided is empty', () => {
+			const url = 'https://www.twitter.com';
+			const parameters = urlParams(url);
 
 			expect(parameters.length).toBe(0);
 		});
 
 		it('returns a single query string', () => {
 			const url = 'https://www.twitter.com?include_entities=true';
-
-			const urlSplit = url.split('?');
-			const urlParams = urlSplit.length > 1 ? urlSplit[1] : '';
-
-			const parameters: string[] = header.getUrlQueries(urlParams);
+			const parameters = urlParams(url);
 
 			expect(parameters.length).toBe(1);
 			expect(parameters).toContain('include_entities=true');
@@ -54,10 +53,7 @@ describe('OAuth Header', () => {
 			const url =
 				'https://www.twitter.com?include_entities=true&method=true&friends=false';
 
-			const urlSplit = url.split('?');
-			const urlParams = urlSplit.length > 1 ? urlSplit[1] : '';
-
-			const parameters: string[] = header.getUrlQueries(urlParams);
+			const parameters = urlParams(url);
 
 			expect(parameters.length).toBe(3);
 			expect(parameters).toContain('include_entities=true');
