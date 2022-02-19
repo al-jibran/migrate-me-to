@@ -1,4 +1,5 @@
 /* eslint-disable quotes */
+import crypto from 'crypto';
 
 const urlEncoding: Record<string, string> = {
 	' ': '%20',
@@ -184,4 +185,16 @@ export const uriPercentEncode = (
 		}
 	}
 	return encodedString;
+};
+
+export const randomStringGenerator = () => {
+	return crypto.randomUUID().replace(/[^a-zA-Z0-9]/g, '');
+};
+
+export const getUrlQueries = (queries: string | undefined): string[] => {
+	if (!queries) return [];
+
+	const queryToAppend: string[] = queries.length ? queries.split('&') : [];
+
+	return queryToAppend;
 };

@@ -45,40 +45,4 @@ describe('OAuth Header', () => {
 
 		expect(signature).toMatch(validSignature);
 	});
-
-	describe('get queries from the url', () => {
-		const urlParams = (url: string): string[] => {
-			const urlSplit = url.split('?');
-			const urlParams = urlSplit.length > 1 ? urlSplit[1] : '';
-
-			return header.getUrlQueries(urlParams);
-		};
-
-		it('returns an empty array when the string provided is empty', () => {
-			const url = 'https://www.twitter.com';
-			const parameters = urlParams(url);
-
-			expect(parameters.length).toBe(0);
-		});
-
-		it('returns a single query string', () => {
-			const url = 'https://www.twitter.com?include_entities=true';
-			const parameters = urlParams(url);
-
-			expect(parameters.length).toBe(1);
-			expect(parameters).toContain('include_entities=true');
-		});
-
-		it('returns list of paramters in the url', () => {
-			const url =
-				'https://www.twitter.com?include_entities=true&method=true&friends=false';
-
-			const parameters = urlParams(url);
-
-			expect(parameters.length).toBe(3);
-			expect(parameters).toContain('include_entities=true');
-			expect(parameters).toContain('method=true');
-			expect(parameters).toContain('friends=false');
-		});
-	});
 });

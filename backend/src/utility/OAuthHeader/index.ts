@@ -1,11 +1,11 @@
 import crypto from 'crypto';
-import { uriPercentEncode } from '../uriPercentEncode';
+import { uriPercentEncode, randomStringGenerator, getUrlQueries } from '..';
 import { HeaderType, Request, Token } from './types';
 
 class OAuthHeader {
 	#oAuthParams: HeaderType = {
 		oauth_consumer_key: '',
-		oauth_nonce: 'kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg',
+		oauth_nonce: '',
 		oauth_signature_method: '',
 		oauth_timestamp: '',
 		oauth_version: '',
@@ -20,10 +20,12 @@ class OAuthHeader {
 		this.#oAuthParams['oauth_consumer_key'] = consumerKey;
 		this.#oAuthParams['oauth_signature_method'] = 'HMAC-SHA1';
 		this.#oAuthParams['oauth_version'] = '1.0';
-		this.#oAuthParams['oauth_timestamp'] = Date.now().toString();
 	}
 
 	getHeaderString = (request: Request, token?: Token): string => {
+		this.#oAuthParams['oauth_timestamp'] = Date.now().toString();
+		this.#oAuthParams['oauth_nonce'] = randomStringGenerator();
+
 		if (token) {
 			this.#oAuthParams['oauth_token'] = token.oauth_token;
 			this.#tokenSecret = token.tokenSecret;
@@ -31,13 +33,13 @@ class OAuthHeader {
 
 		this.#oAuthParams['oauth_signature'] = this.getEncryptedSignature(request);
 
-		const headerString = `OAuth ${this.getOAuthStrings().join(', ')}`;
+		const headerString = `OAuth ${this.#getOAuthStrings().join(', ')}`;
 
 		return headerString;
 	};
 
 	getEncryptedSignature = (request: Request) => {
-		const signature = this.getSignature(request);
+		const signature = this.#getSignature(request);
 		const secretKey = `${this.#consumerSecret}&${this.#tokenSecret}`;
 
 		return crypto
@@ -46,9 +48,7 @@ class OAuthHeader {
 			.digest('base64');
 	};
 
-	// Todo: Methods below this line should be private.
-	// Refactor tests to test the public methods rather than these.
-	getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
+	#getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
 		const oauthStrings: string[] = [];
 		const params = { ...this.#oAuthParams, ...additionalParams };
 
@@ -64,23 +64,15 @@ class OAuthHeader {
 		return oauthStrings.sort();
 	};
 
-	getUrlQueries = (queries: string | undefined): string[] => {
-		if (!queries) return [];
-
-		const queryToAppend: string[] = queries.length ? queries.split('&') : [];
-
-		return queryToAppend;
-	};
-
-	getSignature = ({ method, uri, data }: Request): string => {
+	#getSignature = ({ method, uri, data }: Request): string => {
 		// Collecting information to sign
 		const urlAndQuery = uri.split('?');
 		const url = urlAndQuery[0] || '';
 		const queryString = urlAndQuery[1];
 
-		const queryParams: string[] = this.getUrlQueries(queryString);
+		const queryParams: string[] = getUrlQueries(queryString);
 
-		const oAuthParams: string[] = this.getOAuthStrings().map((v) =>
+		const oAuthParams: string[] = this.#getOAuthStrings().map((v) =>
 			v.replace(/"/g, '')
 		);
 
