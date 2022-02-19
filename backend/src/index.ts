@@ -21,13 +21,15 @@ app.get('/ping', (_req, res) => {
 	res.send('pong');
 });
 
-app.get('/api/authorize', async (_req, res) => {
+app.get('/authorize/twitter', async (_req, res) => {
 	const apiKey: string = process.env.CONSUMER_API_KEY || '';
 	const secret: string = process.env.CONSUMER_API_KEY_SECRET || '';
 
 	const header = new OAuthHeader(apiKey, secret);
 
-	const encodedCallback = uriPercentEncode('http://127.0.0.1');
+	const encodedCallback = uriPercentEncode(
+		'http://127.0.0.1:4000/callback/twitter'
+	);
 
 	const request: Request = {
 		method: METHOD.POST,
@@ -35,15 +37,35 @@ app.get('/api/authorize', async (_req, res) => {
 	};
 
 	try {
-		const response = await axios.post(request.uri, undefined, {
+		const { data } = await axios.post(request.uri, undefined, {
 			headers: {
 				Authorization: header.getHeaderString(request),
 			},
 		});
-		res.send(response.data);
+
+		const responseList: string[] = data.split('&');
+
+		const obj: Record<string, string> = responseList.reduce((o, item) => {
+			const key = item.split('=')[0] || 'never';
+			const value = item.split('=')[1];
+
+			return { ...o, [key]: value };
+		}, {});
+
+		if (!obj.oauth_callback_confirmed) {
+			throw new Error('Could not confirm callback for oauth.');
+		}
+
+		const authorizeUserLink = `https://api.twitter.com/oauth/authorize?oauth_token=${obj.oauth_token}`;
+
+		res.redirect(authorizeUserLink);
 	} catch (e) {
 		res.send(e);
 	}
+});
+
+app.get('/callback/twitter', (req, res) => {
+	res.send(req.query);
 });
 
 app.listen(PORT, () => {
