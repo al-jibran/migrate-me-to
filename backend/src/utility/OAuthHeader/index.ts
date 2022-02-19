@@ -27,7 +27,10 @@ class OAuthHeader {
 		additionalParams?: Record<string, string>,
 		token?: Token
 	): string => {
-		this.#oAuthParams['oauth_timestamp'] = Date.now().toString();
+		this.#oAuthParams['oauth_timestamp'] = Math.floor(
+			new Date().getTime() / 1000
+		).toString();
+
 		this.#oAuthParams['oauth_nonce'] = randomStringGenerator();
 
 		if (token) {
