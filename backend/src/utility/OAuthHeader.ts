@@ -1,4 +1,4 @@
-import crypto from 'crypto-js';
+import crypto from 'crypto';
 import { uriPercentEncode } from './uriPercentEncode';
 
 interface Token {
@@ -62,7 +62,10 @@ class OAuthHeader {
 		const signature = this.getSignature(request);
 		const secretKey = `${this.#consumerSecret}&${this.#tokenSecret}`;
 
-		return crypto.HmacSHA1(signature, secretKey).toString();
+		return crypto
+			.createHmac('sha1', secretKey)
+			.update(signature)
+			.digest('base64');
 	};
 
 	getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
@@ -113,7 +116,7 @@ class OAuthHeader {
 		}
 
 		// Percent encoding the information to sign
-		
+
 		const methodAndUrlParams = `${method.toUpperCase()}&${uriPercentEncode(
 			url
 		)}`;
