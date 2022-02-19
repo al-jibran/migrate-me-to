@@ -48,6 +48,13 @@ class OAuthHeader {
 		return oauthStrings.sort();
 	};
 
+	getUrlQueries = (queries: string | undefined): string[] => {
+		if (!queries) return [];
+
+		const queryToAppend: string[] = queries.length ? queries.split('&') : [];
+
+		return queryToAppend;
+	};
 
 	getHeaderString = (): string => {
 		this.#consumerSecret;
