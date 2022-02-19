@@ -31,6 +31,33 @@ class OAuthHeader {
 		this.#oAuthParams['oauth_version'] = '1.0';
 		this.#oAuthParams['oauth_timestamp'] = Date.now().toString();
 	}
+
+	getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
+		const oauthStrings: string[] = [];
+		const params = { ...this.#oAuthParams, ...additionalParams };
+
+		for (const key in params) {
+			const value = params[key] || '';
+			const oauthString = `${uriPercentEncode(key)}="${uriPercentEncode(
+				value
+			)}"`;
+
+			oauthStrings.push(oauthString);
+		}
+
+		return oauthStrings.sort();
+	};
+
+
+	getHeaderString = (): string => {
+		this.#consumerSecret;
+		const headerString = `OAuth ${this.getOAuthStrings({
+			oauth_signature: '3843euwfheuksd7282hdsu',
+		}).join(', ')}`;
+
+		return headerString;
+	};
+
 }
 
 export default OAuthHeader;
