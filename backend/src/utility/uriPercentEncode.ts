@@ -160,11 +160,16 @@ const urlEncoding: Record<string, string> = {
 	ÿ: '%FF	%C3%BF',
 };
 
+/**
+ *
+ * @param value the text that is to be percent encoded.
+ * @param exceptions an array of symbols not to encode other than the default ones (a-z, A-Z, 0-9, -._~)
+ * @returns a percent encoded string
+ */
 export const uriPercentEncode = (
 	value: string,
 	exceptions: string[] = ['']
 ) => {
-	// copying value to enforcedString rather than passing it by reference and modifying the original.
 	let encodedString = '';
 	const exceptionsString = exceptions.join('');
 

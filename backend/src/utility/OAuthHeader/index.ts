@@ -1,28 +1,6 @@
 import crypto from 'crypto';
-import { uriPercentEncode } from './uriPercentEncode';
-
-interface Token {
-	oauth_token: string;
-	tokenSecret: string;
-}
-
-interface Request {
-	method: METHOD;
-	uri: string;
-	data?: Record<string, string>;
-}
-
-interface HeaderType extends Record<string, string> {
-	oauth_consumer_key: string;
-	oauth_signature_method: string;
-	oauth_timestamp: string;
-	oauth_version: string;
-}
-
-enum METHOD {
-	POST = 'POST',
-	GET = 'GET',
-}
+import { uriPercentEncode } from '../uriPercentEncode';
+import { HeaderType, Request, Token } from './types';
 
 class OAuthHeader {
 	#oAuthParams: HeaderType = {
@@ -68,6 +46,8 @@ class OAuthHeader {
 			.digest('base64');
 	};
 
+	// Todo: Methods below this line should be private.
+	// Refactor tests to test the public methods rather than these.
 	getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
 		const oauthStrings: string[] = [];
 		const params = { ...this.#oAuthParams, ...additionalParams };
