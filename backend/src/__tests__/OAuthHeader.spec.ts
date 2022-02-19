@@ -21,6 +21,46 @@ describe('OAuth Header', () => {
 		expect(headerString).toMatch(validHeaderString);
 	});
 
+	describe('get queries from the url', () => {
+		it('returns an empty array when the string provided is empty', () => {
+			const url = 'https://www.twitter.com';
+
+			const urlSplit = url.split('?');
+			const urlParams = urlSplit.length > 1 ? urlSplit[1] : '';
+
+			const parameters: string[] = header.getUrlQueries(urlParams);
+
+			expect(parameters.length).toBe(0);
+		});
+
+		it('returns a single query string', () => {
+			const url = 'https://www.twitter.com?include_entities=true';
+
+			const urlSplit = url.split('?');
+			const urlParams = urlSplit.length > 1 ? urlSplit[1] : '';
+
+			const parameters: string[] = header.getUrlQueries(urlParams);
+
+			expect(parameters.length).toBe(1);
+			expect(parameters).toContain('include_entities=true');
+		});
+
+		it('returns list of paramters in the url', () => {
+			const url =
+				'https://www.twitter.com?include_entities=true&method=true&friends=false';
+
+			const urlSplit = url.split('?');
+			const urlParams = urlSplit.length > 1 ? urlSplit[1] : '';
+
+			const parameters: string[] = header.getUrlQueries(urlParams);
+
+			expect(parameters.length).toBe(3);
+			expect(parameters).toContain('include_entities=true');
+			expect(parameters).toContain('method=true');
+			expect(parameters).toContain('friends=false');
+		});
+	});
+
 	it('returns a valid signature with getSignature', () => {
 		const signature = header.getSignature(
 			METHOD.POST,
