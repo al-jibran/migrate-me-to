@@ -9,10 +9,21 @@ describe('OAuth Header', () => {
 	const oauthRequiredParams =
 		'oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="\\w+", oauth_signature="[a-zA-z0-9%]+.+", oauth_signature_method="HMAC-SHA1", oauth_timestamp="\\d+",( oauth_token="[a-zA-z0-9%]+",)? oauth_version="1.0"';
 
+	const methodAndUrl =
+		'POST&https%3A%2F%2Fapi\\.twitter\\.com%2F1\\.1%2Fstatuses%2Fupdate\\.json';
+
+	const queryString = 'include_entities%3Dtrue%26';
+
+	const oAuthParams =
+		'oauth_consumer_key%3D\\w+%26oauth_nonce%3D\\w+%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D\\d+%26oauth_version%3D1\\.0%26';
+
+	const postQuery =
+		'status%3DHello%2520Ladies%2520%252B%2520Gentlemen%252C%2520a%2520signed%2520OAuth%2520request%2521';
+
 	const validHeaderString = new RegExp(`OAuth ${oauthRequiredParams}`, 'g');
 
 	const validSignature = new RegExp(
-		'POST&https%3A%2F%2Fapi\\.twitter\\.com%2F1\\.1%2Fstatuses%2Fupdate\\.json&include_entities%3Dtrue%26oauth_consumer_key%3D\\w+%26oauth_nonce%3D\\w+%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D\\d+%26oauth_version%3D1\\.0%26status%3DHello%2520Ladies%2520%252B%2520Gentlemen%252C%2520a%2520signed%2520OAuth%2520request%2521',
+		`${methodAndUrl}&${queryString}${oAuthParams}${postQuery}`,
 		'g'
 	);
 
@@ -24,6 +35,16 @@ describe('OAuth Header', () => {
 	it('returns a header string without token', () => {
 		const headerString = header.getHeaderString();
 		expect(headerString).toMatch(validHeaderString);
+	});
+
+	it('returns a valid signature with getSignature', () => {
+		const signature = header.getSignature(
+			METHOD.POST,
+			'https://api.twitter.com/1.1/statuses/update.json?include_entities=true',
+			{ status: 'Hello Ladies + Gentlemen, a signed OAuth request!' }
+		);
+
+		expect(signature).toMatch(validSignature);
 	});
 
 	describe('get queries from the url', () => {
@@ -60,15 +81,5 @@ describe('OAuth Header', () => {
 			expect(parameters).toContain('method=true');
 			expect(parameters).toContain('friends=false');
 		});
-	});
-
-	it('returns a valid signature with getSignature', () => {
-		const signature = header.getSignature(
-			METHOD.POST,
-			'https://api.twitter.com/1.1/statuses/update.json?include_entities=true',
-			{ status: 'Hello Ladies + Gentlemen, a signed OAuth request!' }
-		);
-
-		expect(signature).toMatch(validSignature);
 	});
 });
