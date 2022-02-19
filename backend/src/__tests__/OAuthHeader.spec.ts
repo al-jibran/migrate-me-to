@@ -20,7 +20,15 @@ describe('OAuth Header', () => {
 	const postQuery =
 		'status%3DHello%2520Ladies%2520%252B%2520Gentlemen%252C%2520a%2520signed%2520OAuth%2520request%2521';
 
-	const validHeaderString = new RegExp(`OAuth ${oauthRequiredParams}`, 'g');
+	const validHeaderStringNoToken = new RegExp(
+		`OAuth ${oauthParamsWithoutToken}`,
+		'g'
+	);
+
+	const validHeaderStringToken = new RegExp(
+		`OAuth ${oauthParamsWithToken}`,
+		'g'
+	);
 
 	const validSignature = new RegExp(
 		`${methodAndUrl}&${queryString}${oAuthParams}${postQuery}`,
@@ -33,8 +41,9 @@ describe('OAuth Header', () => {
 	});
 
 	it('returns a header string without token', () => {
-		const headerString = header.getHeaderString();
-		expect(headerString).toMatch(validHeaderString);
+		expect(headerString).toMatch(validHeaderStringNoToken);
+	});
+
 	});
 
 	it('returns a valid signature with getSignature', () => {
