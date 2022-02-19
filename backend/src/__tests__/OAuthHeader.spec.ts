@@ -38,23 +38,33 @@ describe('OAuth Header', () => {
 		'g'
 	);
 
+	const request = {
+		method: METHOD.POST,
+		uri: 'https://api.twitter.com/1.1/statuses/update.json?include_entities=true',
+		data: { status: 'Hello Ladies + Gentlemen, a signed OAuth request!' },
+	};
+
 	let header: OAuthHeader;
+
 	beforeEach(() => {
 		header = new OAuthHeader('xvz1evFS4wEEPTGEFPHBog', 'def');
 	});
 
 	it('returns a header string without token', () => {
+		const headerString = header.getHeaderString(request);
 		expect(headerString).toMatch(validHeaderStringNoToken);
 	});
 
+	it('returns a header string with token', () => {
+		const headerString = header.getHeaderString(request, {
+			oauth_token: 'abcdefghi',
+			tokenSecret: 'secret',
+		});
+		expect(headerString).toMatch(validHeaderStringToken);
 	});
 
 	it('returns a valid signature with getSignature', () => {
-		const signature = header.getSignature(
-			METHOD.POST,
-			'https://api.twitter.com/1.1/statuses/update.json?include_entities=true',
-			{ status: 'Hello Ladies + Gentlemen, a signed OAuth request!' }
-		);
+		const signature = header.getSignature(request);
 
 		expect(signature).toMatch(validSignature);
 	});
