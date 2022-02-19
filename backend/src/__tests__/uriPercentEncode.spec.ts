@@ -1,4 +1,4 @@
-import { uriPercentEncode } from '../utility/uriPercentEncode';
+import { uriPercentEncode } from '../utility';
 
 describe('encoding of string', () => {
 	const test1 = 'Ladies + Gentlemen';

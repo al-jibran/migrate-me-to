@@ -7,36 +7,13 @@ enum METHOD {
 
 describe('OAuth Header', () => {
 	const oauthParamsWithoutToken =
-		'oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="\\w+", oauth_signature="[a-zA-z0-9%]+", oauth_signature_method="HMAC-SHA1", oauth_timestamp="\\d+", oauth_version="1.0"';
+		/OAuth oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="\w+", oauth_signature="[a-zA-z0-9%]+", oauth_signature_method="HMAC-SHA1", oauth_timestamp="\d+", oauth_version="1.0"/g;
 
 	const oauthParamsWithToken =
-		'oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="\\w+", oauth_signature="[a-zA-z0-9%]+", oauth_signature_method="HMAC-SHA1", oauth_timestamp="\\d+", oauth_token="[a-zA-z0-9%]+", oauth_version="1.0"';
+		/OAuth oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="\w+", oauth_signature="[a-zA-z0-9%]+", oauth_signature_method="HMAC-SHA1", oauth_timestamp="\d+", oauth_token="[a-zA-z0-9%]+", oauth_version="1.0"/g;
 
-	const methodAndUrl =
-		'POST&https%3A%2F%2Fapi\\.twitter\\.com%2F1\\.1%2Fstatuses%2Fupdate\\.json';
-
-	const queryString = 'include_entities%3Dtrue%26';
-
-	const oAuthParams =
-		'oauth_consumer_key%3D\\w+%26oauth_nonce%3D\\w+%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D\\d+%26oauth_version%3D1\\.0%26';
-
-	const postQuery =
-		'status%3DHello%2520Ladies%2520%252B%2520Gentlemen%252C%2520a%2520signed%2520OAuth%2520request%2521';
-
-	const validHeaderStringNoToken = new RegExp(
-		`OAuth ${oauthParamsWithoutToken}`,
-		'g'
-	);
-
-	const validHeaderStringToken = new RegExp(
-		`OAuth ${oauthParamsWithToken}`,
-		'g'
-	);
-
-	const validSignature = new RegExp(
-		`${methodAndUrl}&${queryString}${oAuthParams}${postQuery}`,
-		'g'
-	);
+	const validSignature =
+		/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$/g;
 
 	const request = {
 		method: METHOD.POST,
@@ -52,7 +29,7 @@ describe('OAuth Header', () => {
 
 	it('returns a header string without token', () => {
 		const headerString = header.getHeaderString(request);
-		expect(headerString).toMatch(validHeaderStringNoToken);
+		expect(headerString).toMatch(oauthParamsWithoutToken);
 	});
 
 	it('returns a header string with token', () => {
@@ -60,11 +37,11 @@ describe('OAuth Header', () => {
 			oauth_token: 'abcdefghi',
 			tokenSecret: 'secret',
 		});
-		expect(headerString).toMatch(validHeaderStringToken);
+		expect(headerString).toMatch(oauthParamsWithToken);
 	});
 
-	it('returns a valid signature with getSignature', () => {
-		const signature = header.getSignature(request);
+	it('returns a valid base64 string encoded signature with getEncryptedSignature', () => {
+		const signature = header.getEncryptedSignature(request);
 
 		expect(signature).toMatch(validSignature);
 	});
