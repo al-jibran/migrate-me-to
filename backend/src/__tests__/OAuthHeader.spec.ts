@@ -6,8 +6,11 @@ enum METHOD {
 }
 
 describe('OAuth Header', () => {
-	const oauthRequiredParams =
-		'oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="\\w+", oauth_signature="[a-zA-z0-9%]+.+", oauth_signature_method="HMAC-SHA1", oauth_timestamp="\\d+",( oauth_token="[a-zA-z0-9%]+",)? oauth_version="1.0"';
+	const oauthParamsWithoutToken =
+		'oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="\\w+", oauth_signature="[a-zA-z0-9%]+", oauth_signature_method="HMAC-SHA1", oauth_timestamp="\\d+", oauth_version="1.0"';
+
+	const oauthParamsWithToken =
+		'oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="\\w+", oauth_signature="[a-zA-z0-9%]+", oauth_signature_method="HMAC-SHA1", oauth_timestamp="\\d+", oauth_token="[a-zA-z0-9%]+", oauth_version="1.0"';
 
 	const methodAndUrl =
 		'POST&https%3A%2F%2Fapi\\.twitter\\.com%2F1\\.1%2Fstatuses%2Fupdate\\.json';
