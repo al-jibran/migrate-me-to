@@ -18,6 +18,7 @@ module.exports = {
 	moduleNameMapper: {
 		'\\.(css|less|sass|scss)$':
 			'<rootDir>/src/__tests__/__mocks__/styleMock.ts',
-		'\\.(gif|ttf|eot|svg)$': '<rootDir>/__tests__/__mocks__/fileMock.ts',
+		'\\.(gif|ttf|eot|svg|png|jpeg|jpg)$':
+			'<rootDir>/src/__tests__/__mocks__/fileMock.ts',
 	},
 };

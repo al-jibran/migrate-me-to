@@ -23,8 +23,8 @@ describe('Service', () => {
 
 		beforeEach(() => {
 			const { getByRole } = context;
-			button = getByRole('button', {
-				name: /let's start!/i,
+			button = getByRole('link', {
+				name: /log in/i,
 			}) as HTMLButtonElement;
 			userEvent.click(button);
 		});
