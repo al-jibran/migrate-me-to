@@ -10,6 +10,7 @@ import { useReducer } from 'react';
 import { stepStatusReducer } from './reducer';
 import Divider from '../../components/Divider';
 import { DispatchStatus } from './DispatchStatus';
+import myImage from '../../assets/images/sign-in-with-twitter.png';
 
 type StylesProps = {
 	borderBottom: Record<string, string>;
@@ -89,6 +90,7 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 				className={`uppercase border-b-4 ${headingBorderColor} w-fit mx-auto mt-14`}>
 				1<sup className='lowercase'>st</sup> Account
 			</h3>
+			<img src={myImage} alt={`Log in with ${name}`} />
 		</div>
 	);
 };
