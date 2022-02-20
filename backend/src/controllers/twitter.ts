@@ -6,6 +6,10 @@ import { uriPercentEncode } from '../utility';
 
 const twitterRouter = express.Router();
 
+const encodedCallback = uriPercentEncode(
+	'http://127.0.0.1:4000/twitter/callback'
+);
+
 const baseUrl =
 	process.env.NODE_ENV === 'test'
 		? 'http://localhost:4100'
@@ -22,10 +26,6 @@ twitterRouter.get('/authorize', async (_req, res) => {
 	if (!secret) {
 		throw new Error('The Consumer/API Secret was not provided');
 	}
-
-	const encodedCallback = uriPercentEncode(
-		'http://127.0.0.1:4000/twitter/callback'
-	);
 
 	const request: Request = {
 		method: METHOD.POST,
