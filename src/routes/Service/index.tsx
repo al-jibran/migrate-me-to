@@ -10,6 +10,9 @@ import { useReducer } from 'react';
 import { stepStatusReducer } from './reducer';
 import Divider from '../../components/Divider';
 import { DispatchStatus } from './DispatchStatus';
+import { getAuthorizeUserLink } from '../../api';
+
+import serviceImage from 'images/sign-in-with-twitter.png';
 
 type StylesProps = {
 	borderBottom: Record<string, string>;
@@ -68,27 +71,35 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	service,
 }) => {
 	const [status, dispatch] = useReducer(stepStatusReducer, initStatus);
+
 	const { handleDispatchStatus } = new DispatchStatus(dispatch);
-
 	const headingBorderColor = styles.borderBottom[name];
-
 	const onClickButton = () => {
 		handleDispatchStatus('INPROGRESS', 'stepOne');
+
+		getAuthorizeUserLink().then((data) => {
+			window.open(data.authorizeUrl, '_self');
+		});
 	};
 
 	return (
 		<div className='pt-32 px-10 sm:px-14 md:px-16 lg:px-24 xl:max-w-5xl xl:mx-auto h-screen'>
 			<Steps status={status} />
-			<button
-				className='py-2 px-3 rounded-md text-white bg-gray-200 dark:bg-white dark:text-gray-200'
-				onClick={onClickButton}>
-				Let&apos;s Start!
-			</button>
 			<Divider service={service} />
 			<h3
 				className={`uppercase border-b-4 ${headingBorderColor} w-fit mx-auto mt-14`}>
 				1<sup className='lowercase'>st</sup> Account
 			</h3>
+			<div className='flex justify-center mt-14'>
+				<img
+					id='login'
+					className='cursor-pointer'
+					src={serviceImage}
+					role='link'
+					alt={`Log in with ${name}`}
+					onClick={onClickButton}
+				/>
+			</div>
 		</div>
 	);
 };

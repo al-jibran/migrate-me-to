@@ -2,7 +2,6 @@ describe('services', () => {
 	const serviceName = 'Twitter';
 
 	beforeEach(() => {
-		cy.server({ force404: true });
 		cy.visit('/');
 
 		cy.get('#services')

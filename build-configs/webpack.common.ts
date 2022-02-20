@@ -54,8 +54,9 @@ const config: Configuration = {
 				],
 			},
 			{
-				test: /\.jpg/,
-				type: 'asset',
+				test: /\.(jpg|png)$/i,
+				type: 'asset/resource',
+				include: path.resolve(__dirname, '..', './src/assets/images'),
 			},
 			{
 				test: /\.ttf/,
@@ -67,6 +68,9 @@ const config: Configuration = {
 	resolve: {
 		roots: [path.resolve(__dirname, '..', 'src')],
 		extensions: ['.js', '.jsx', '.ts', '.tsx'],
+		alias: {
+			images: path.resolve(__dirname, '..', './src/assets/images'),
+		},
 	},
 
 	plugins: [

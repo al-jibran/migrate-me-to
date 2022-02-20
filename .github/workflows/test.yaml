@@ -1,5 +1,5 @@
 name: Migrate-Me-To Test CI
-on: ["push"]
+on: ['push']
 
 jobs:
   test:
@@ -16,5 +16,7 @@ jobs:
 
       - name: Install Cypress and run E2E tests
         uses: cypress-io/github-action@v2
-        with: 
+        with:
           working-directory: e2e
+          wait-on: 'http://localhost:3000'
+          config: baseUrl=http://localhost:3000
