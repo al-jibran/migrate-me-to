@@ -8,6 +8,7 @@ import cors from 'cors';
 import { uriPercentEncode } from './utility';
 
 config();
+console.log(process.env.NODE_ENV);
 
 const PORT = 4000;
 
@@ -25,6 +26,11 @@ app.get('/authorize/twitter', async (_req, res) => {
 	const apiKey: string = process.env.CONSUMER_API_KEY || '';
 	const secret: string = process.env.CONSUMER_API_KEY_SECRET || '';
 
+	const baseUrl =
+		process.env.NODE_ENV === 'testing'
+			? 'http://localhost:4100'
+			: 'https://api.twitter.com';
+
 	const header = new OAuthHeader(apiKey, secret);
 
 	const encodedCallback = uriPercentEncode(
@@ -33,8 +39,10 @@ app.get('/authorize/twitter', async (_req, res) => {
 
 	const request: Request = {
 		method: METHOD.POST,
-		uri: `https://api.twitter.com/oauth/request_token?oauth_callback=${encodedCallback}`,
+		uri: `${baseUrl}/oauth/request_token?oauth_callback=${encodedCallback}`,
 	};
+
+	console.log(request);
 
 	try {
 		const { data } = await axios.post(request.uri, undefined, {
@@ -58,7 +66,9 @@ app.get('/authorize/twitter', async (_req, res) => {
 
 		const authorizeUserLink = `https://api.twitter.com/oauth/authorize?oauth_token=${obj.oauth_token}`;
 
-		res.redirect(authorizeUserLink);
+		res.json({
+			authorizeUrl: authorizeUserLink,
+		});
 	} catch (e) {
 		res.send(e);
 	}
