@@ -11,6 +11,7 @@ import { stepStatusReducer } from './reducer';
 import Divider from '../../components/Divider';
 import { DispatchStatus } from './DispatchStatus';
 import myImage from '../../assets/images/sign-in-with-twitter.png';
+import { getAuthorizeUserLink } from '../../api';
 
 type StylesProps = {
 	borderBottom: Record<string, string>;
@@ -69,12 +70,15 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	service,
 }) => {
 	const [status, dispatch] = useReducer(stepStatusReducer, initStatus);
+
 	const { handleDispatchStatus } = new DispatchStatus(dispatch);
-
 	const headingBorderColor = styles.borderBottom[name];
-
 	const onClickButton = () => {
 		handleDispatchStatus('INPROGRESS', 'stepOne');
+
+		getAuthorizeUserLink().then((data) => {
+			window.open(data.authorizeUrl, '_self');
+		});
 	};
 
 	return (
