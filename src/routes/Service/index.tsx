@@ -10,8 +10,9 @@ import { useReducer } from 'react';
 import { stepStatusReducer } from './reducer';
 import Divider from '../../components/Divider';
 import { DispatchStatus } from './DispatchStatus';
-import myImage from '../../assets/images/sign-in-with-twitter.png';
 import { getAuthorizeUserLink } from '../../api';
+
+import serviceImage from 'images/sign-in-with-twitter.png';
 
 type StylesProps = {
 	borderBottom: Record<string, string>;
@@ -93,7 +94,8 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 				<img
 					id='login'
 					className='cursor-pointer'
-					src={myImage}
+					src={serviceImage}
+					role='link'
 					alt={`Log in with ${name}`}
 					onClick={onClickButton}
 				/>
