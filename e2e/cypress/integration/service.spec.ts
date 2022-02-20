@@ -1,7 +1,5 @@
 describe('a service page', () => {
 	const serviceName = 'Twitter';
-	const serviceAuthorizeUrl =
-		/https:\/\/api\.twitter\.com\/oauth\/authorize\?oauth_token=\w+/g;
 
 	beforeEach(() => {
 		cy.visit(`/service/${serviceName}`);
@@ -30,7 +28,24 @@ describe('a service page', () => {
 	});
 
 	it('open the page to login when clicked on log in to service button', () => {
+		// A non existing same origin page. 
+		// Link to an external page will fail the test because CORS is not supported in cypress.
+		const authorizeUrl =
+			'http://localhost:3000/oauth/authorize?oauth_token=kdnn4o2ntnen2f';
+
+		cy.intercept(
+			{
+				method: 'GET',
+				url: 'http://localhost:4000/twitter/authorize',
+			},
+
+			{
+				authorizeUrl,
+			}
+		).as('getAuthorizeUserLink');
+
 		cy.get('#login').click();
-		cy.url().should('match', serviceAuthorizeUrl);
+
+		cy.url().should('eq', authorizeUrl);
 	});
 });
