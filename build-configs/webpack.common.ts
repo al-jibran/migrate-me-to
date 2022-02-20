@@ -68,6 +68,9 @@ const config: Configuration = {
 	resolve: {
 		roots: [path.resolve(__dirname, '..', 'src')],
 		extensions: ['.js', '.jsx', '.ts', '.tsx'],
+		alias: {
+			images: path.resolve(__dirname, '..', './src/assets/images'),
+		},
 	},
 
 	plugins: [
