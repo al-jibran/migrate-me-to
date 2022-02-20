@@ -28,10 +28,11 @@ describe('a service page', () => {
 	});
 
 	it('open the page to login when clicked on log in to service button', () => {
-		// A non existing same origin page. 
+		// A non existing same origin page.
 		// Link to an external page will fail the test because CORS is not supported in cypress.
-		const authorizeUrl =
-			'http://localhost:3000/oauth/authorize?oauth_token=kdnn4o2ntnen2f';
+		const authorizeUrl = `${
+			Cypress.config().baseUrl
+		}/oauth/authorize?oauth_token=kdnn4o2ntnen2f`;
 
 		cy.intercept(
 			{
