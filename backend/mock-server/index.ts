@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { MOCK_SERVER_PORT as PORT } from '../src/config';
 
 const app = express();
 
@@ -13,6 +14,6 @@ app.post('/oauth/request_token', (_req: Request, res: Response) => {
 	res.send(twitterRequestToken);
 });
 
-app.listen(4100, () => {
-	console.log(`Mock server running on PORT ${4100}`);
+app.listen(PORT, () => {
+	console.log(`Mock server running on PORT ${PORT}`);
 });

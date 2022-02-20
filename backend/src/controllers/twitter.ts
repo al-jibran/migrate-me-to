@@ -1,19 +1,17 @@
 import express from 'express';
+import axios from 'axios';
+
 import OAuthHeader from '../utility/OAuthHeader';
 import { METHOD, Request } from '../utility/OAuthHeader/types';
-import axios from 'axios';
 import { uriPercentEncode } from '../utility';
+
+import { TWITTER_BASE_URL } from '../config';
 
 const twitterRouter = express.Router();
 
 const encodedCallback = uriPercentEncode(
 	'http://127.0.0.1:4000/twitter/callback'
 );
-
-const baseUrl =
-	process.env.NODE_ENV === 'test'
-		? 'http://localhost:4100'
-		: 'https://api.twitter.com';
 
 twitterRouter.get('/authorize', async (_req, res) => {
 	const apiKey = process.env.CONSUMER_API_KEY;
@@ -29,7 +27,7 @@ twitterRouter.get('/authorize', async (_req, res) => {
 
 	const request: Request = {
 		method: METHOD.POST,
-		uri: `${baseUrl}/oauth/request_token?oauth_callback=${encodedCallback}`,
+		uri: `${TWITTER_BASE_URL}/oauth/request_token?oauth_callback=${encodedCallback}`,
 	};
 
 	try {
