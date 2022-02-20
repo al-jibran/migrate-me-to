@@ -16,7 +16,6 @@ describe('a service page', () => {
 	});
 
 	it('has all the steps as inactive', () => {
-		cy.contains(/Let's Start!/i).as('start');
 		cy.get('#steps li:nth-child(1)').as('first');
 		cy.get('#steps li:nth-child(2)').as('second');
 		cy.get('#steps li:nth-child(3)').as('third');
