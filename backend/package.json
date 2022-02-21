@@ -5,8 +5,8 @@
 	"main": "./src/index.ts",
 	"scripts": {
 		"tsc": "tsc",
-		"build": "rm -rf .\\dist\\ && tsc",
-		"start": "tsc && cross-env NODE_ENV=production node dist/index.js",
+		"build": "npm run tsc",
+		"start": "cross-env NODE_ENV=production node dist/index.js",
 		"dev": "cross-env NODE_ENV=development nodemon index.ts",
 		"test": "cross-env NODE_ENV=testing jest --verbose",
 		"auth:server": "nodemon ./mock-server/index.ts"
