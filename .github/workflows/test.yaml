@@ -12,6 +12,7 @@ jobs:
 
   start_backend:
     name: Start Backend
+    runs-on: ubuntu-20.04
     needs: project_setup
     defaults:
       run:
@@ -26,6 +27,7 @@ jobs:
 
   test:
     name: Test React App
+    runs-on: ubuntu-20.04
     needs: start_backend
     steps:
       - name: Unit Tests
