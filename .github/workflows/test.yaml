@@ -10,14 +10,14 @@ jobs:
       - name: Install Root Dependencies
         uses: bahmutov/npm-install@v1
       - name: Install Dependencies for backend
-          working-directory: ./backend
+        working-directory: ./backend
         run: npm ci
       - name: Build server
+        working-directory: ./backend
         run: npm run build
-          working-directory: ./backend
       - name: Run server
+        working-directory: ./backend
         run: npm start
-          working-directory: ./backend
       - name: Unit Tests
         run: npm test
       - name: Start React App
