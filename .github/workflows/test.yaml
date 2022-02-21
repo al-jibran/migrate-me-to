@@ -1,4 +1,4 @@
-name: Migrate-Me-To Test CI
+name: Migrate-Me-To Pipeline CI
 on: ['push']
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
       - name: Run server
         run: npm start
 
-  Test:
+  test:
     name: Test React App
     needs: start_backend
     steps:
