@@ -11,8 +11,12 @@ jobs:
         uses: bahmutov/npm-install@v1
       - name: Unit Tests
         run: npm test
-      - name: Start Server
+      - name: Start React App
         run: npm start &
+      - name: Start Backend Server
+        run: npm run server:open
+        with:
+          wait-on: 'http://localhost:4000'
 
       - name: Install Cypress and run E2E tests
         uses: cypress-io/github-action@v2
