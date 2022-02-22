@@ -70,11 +70,13 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	name,
 	service,
 }) => {
-	const [status, dispatch] = useReducer(stepStatusReducer, initStatus);
+	const [stepStatus, dispatch] = useReducer(stepStatusReducer, initStatus);
 
 	const { handleDispatchStatus } = new DispatchStatus(dispatch);
-	const headingBorderColor = styles.borderBottom[name];
-	const onClickButton = () => {
+
+	const headingBorderColor = styles.borderBottom[name] || 'white';
+
+	const handleLogin = () => {
 		handleDispatchStatus('INPROGRESS', 'stepOne');
 
 		getAuthorizeUserLink().then((data) => {
@@ -84,27 +86,14 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 
 	return (
 		<div className='pt-32 px-10 sm:px-14 md:px-16 lg:px-24 xl:max-w-5xl xl:mx-auto h-screen'>
-			<Steps status={status} />
+			<Steps status={stepStatus} />
 			<Divider service={service} />
-			<h3
-				className={`uppercase border-b-4 ${headingBorderColor} w-fit mx-auto mt-14`}>
-				1<sup className='lowercase'>st</sup> Account
-			</h3>
-			<div className='flex justify-center mt-14'>
-				<img
-					id='login'
-					className='cursor-pointer'
-					src={serviceImage}
-					role='link'
-					alt={`Log in with ${name}`}
-					onClick={onClickButton}
-				/>
-			</div>
+			<Process headingBorderColor={headingBorderColor} handleLogin={handleLogin}/>
 		</div>
 	);
 };
 
-export interface StepsProps {
+interface StepsProps {
 	status: {
 		stepOne: StepStatusType;
 		stepTwo: StepStatusType;
@@ -113,7 +102,7 @@ export interface StepsProps {
 	};
 }
 
-export const Steps: React.FC<StepsProps> = ({ status }) => {
+const Steps: React.FC<StepsProps> = ({ status }) => {
 	return (
 		<>
 			<h3 className='mt-10 mb-4 uppercase'>Steps</h3>
@@ -169,6 +158,34 @@ const RenderStatus: React.FC<RenderStatusProps> = ({ status }) => {
 		default:
 			return assertNever(status);
 	}
+};
+
+interface ProcessProps {
+	headingBorderColor: string
+	handleLogin: () => void
+}
+
+const Process: React.FC<ProcessProps> = ({ headingBorderColor, handleLogin}) => {
+	return (
+		<div>
+			<h3
+				className={`uppercase border-b-4 ${headingBorderColor} w-fit mx-auto mt-14`}>
+				1<sup className='lowercase'>st</sup> Account
+			</h3>
+			<div className='flex justify-center mt-14'>
+				<span aria-label='loading'></span>
+					
+				<img
+					id='login'
+					className='cursor-pointer'
+					src={serviceImage}
+					role='link'
+					alt={`Log in with ${name}`}
+					onClick={handleLogin}
+				/>
+			</div>
+		</div>
+	);
 };
 
 export default Service;
