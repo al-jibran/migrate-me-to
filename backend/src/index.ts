@@ -5,5 +5,5 @@ import { PORT } from './config';
 const server = http.createServer(app);
 
 server.listen(PORT, () => {
-	console.log(`Server running on PORT ${4000}`);
+	console.log(`Server running on PORT ${PORT}`);
 });
