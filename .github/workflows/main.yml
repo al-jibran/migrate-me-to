@@ -17,9 +17,12 @@ jobs:
       - name: Run Mock Server
         run: npm run mock:server &
       - name: Create .env file
+        env:
+          MOCK_SERVER: http://localhost:5000
         run: |
           touch .env
           echo CONSUMER_API_KEY=${{ secrets.CONSUMER_API_KEY }} >> .env
           echo CONSUMER_API_KEY_SECRET=${{ secrets.CONSUMER_API_KEY_SECRET }} >> .env
+          echo MOCK_SERVER=$MOCK_SERVER >> .env
       - name: Tests
         run: npm test
