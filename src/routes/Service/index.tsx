@@ -1,35 +1,13 @@
 import { useParams } from 'react-router-dom';
 import { ServiceType, services } from '../../data/services';
-import {
-	StepFail,
-	StepInactive,
-	StepInProgress,
-	StepSuccess,
-} from '../../components/svgs';
 import { useReducer } from 'react';
 import { stepStatusReducer } from './state/reducer';
 import Divider from '../../components/Divider';
 import { DispatchStatus } from './state/DispatchStatus';
 import { getAuthorizeUserLink } from '../../api';
+import Process from './Process';
+import Steps from './Steps';
 
-import serviceImage from 'images/sign-in-with-twitter.png';
-
-type StylesProps = {
-	borderBottom: Record<string, string>;
-	border: Record<string, string>;
-};
-
-const styles: StylesProps = {
-	borderBottom: {
-		Twitter: 'border-b-twitter',
-		Reddit: 'border-b-reddit',
-	},
-
-	border: {
-		Twitter: 'border-twitter',
-		Reddit: 'border-reddit',
-	},
-};
 
 export enum StepStatusType {
 	'INACTIVE',
@@ -91,101 +69,5 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	);
 };
 
-interface StepsProps {
-	status: {
-		stepOne: StepStatusType;
-		stepTwo: StepStatusType;
-		stepThree: StepStatusType;
-		stepFour: StepStatusType;
-	};
-}
-
-const Steps: React.FC<StepsProps> = ({ status }) => {
-	return (
-		<>
-			<h3 className='mt-10 mb-4 uppercase'>Steps</h3>
-			<ul id='steps'>
-				<li className='flex items-center py-1' aria-label='step 1'>
-					{<RenderStatus status={status.stepOne} />}
-					<p>
-						Sign in to the 1<sup>st</sup> account
-					</p>
-				</li>
-				<li className='flex items-center py-1' aria-label='step 2'>
-					{<RenderStatus status={status.stepTwo} />}
-					<p>Select what to migrate</p>
-				</li>
-				<li className='flex items-center py-1' aria-label='step 3'>
-					{<RenderStatus status={status.stepThree} />}
-					<p>
-						Sign in to the 2<sup>nd</sup> account
-					</p>
-				</li>
-				<li className='flex items-center py-1' aria-label='step 4'>
-					{<RenderStatus status={status.stepFour} />}
-					<p>Wait</p>
-				</li>
-			</ul>
-		</>
-	);
-};
-
-interface RenderStatusProps {
-	status: StepStatusType;
-}
-
-const RenderStatus: React.FC<RenderStatusProps> = ({ status }) => {
-	const assertNever = (value: never): never => {
-		throw new Error(
-			`Unhandle discriminated union member: ${JSON.stringify(value)}`
-		);
-	};
-
-	switch (status) {
-		case StepStatusType.INACTIVE:
-			return <StepInactive aria-label='inactive' />;
-
-		case StepStatusType.INPROGRESS:
-			return <StepInProgress aria-label='in progress' />;
-
-		case StepStatusType.SUCCESS:
-			return <StepSuccess aria-label='success' />;
-		case StepStatusType.FAIL:
-			return <StepFail aria-label='fail' />;
-
-		default:
-			return assertNever(status);
-	}
-};
-
-interface ProcessProps {
-	name: string
-	handleLogin: () => void
-}
-
-const Process: React.FC<ProcessProps> = ({ name, handleLogin}) => {
-	const headingBorderColor = styles.borderBottom[name];
-
-	return (
-		<div>
-			<h3
-				className={`uppercase border-b-4 ${headingBorderColor} w-fit mx-auto mt-14`}>
-				1<sup className='lowercase'>st</sup> Account
-			</h3>
-			<div className='flex justify-center mt-14'>
-				<span aria-label='loading'></span>
-					
-				<img
-					id='login'
-					className='cursor-pointer'
-					src={serviceImage}
-					role='link'
-					alt={`Log in with ${name}`}
-					onClick={handleLogin}
-				/>
-			</div>
-		</div>
-	);
-};
 
 export default Service;
