@@ -8,7 +8,6 @@ import { getAuthorizeUserLink } from '../../api';
 import Process from './Process';
 import Steps from './Steps';
 
-
 export enum StepStatusType {
 	'INACTIVE',
 	'INPROGRESS',
@@ -51,7 +50,6 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	const [stepStatus, dispatch] = useReducer(stepStatusReducer, initStatus);
 	const { handleDispatchStatus } = new DispatchStatus(dispatch);
 
-
 	const handleLogin = () => {
 		handleDispatchStatus('INPROGRESS', 'stepOne');
 
@@ -64,10 +62,9 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 		<div className='pt-32 px-10 sm:px-14 md:px-16 lg:px-24 xl:max-w-5xl xl:mx-auto h-screen'>
 			<Steps status={stepStatus} />
 			<Divider service={service} />
-			<Process name={name} handleLogin={handleLogin}/>
+			<Process name={name} handleLogin={handleLogin} loading={false} />
 		</div>
 	);
 };
-
 
 export default Service;

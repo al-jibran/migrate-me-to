@@ -18,11 +18,16 @@ const styles: StylesProps = {
 };
 
 interface ProcessProps {
-	name: string
-	handleLogin: () => void
+	name: string;
+	handleLogin: () => void;
+	loading: boolean;
 }
 
-export const Process: React.FC<ProcessProps> = ({ name, handleLogin}) => {
+export const Process: React.FC<ProcessProps> = ({
+	name,
+	handleLogin,
+	loading,
+}) => {
 	const headingBorderColor = styles.borderBottom[name];
 
 	return (
@@ -32,16 +37,18 @@ export const Process: React.FC<ProcessProps> = ({ name, handleLogin}) => {
 				1<sup className='lowercase'>st</sup> Account
 			</h3>
 			<div className='flex justify-center mt-14'>
-				<span aria-label='loading'></span>
-					
-				<img
-					id='login'
-					className='cursor-pointer'
-					src={serviceImage}
-					role='link'
-					alt={`Log in with ${name}`}
-					onClick={handleLogin}
-				/>
+				{loading ? (
+					<span aria-label='loading'>Loading...</span>
+				) : (
+					<img
+						id='login'
+						className='cursor-pointer'
+						src={serviceImage}
+						role='link'
+						alt={`Log in with ${name}`}
+						onClick={handleLogin}
+					/>
+				)}
 			</div>
 		</div>
 	);
