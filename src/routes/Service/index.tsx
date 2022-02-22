@@ -7,9 +7,9 @@ import {
 	StepSuccess,
 } from '../../components/svgs';
 import { useReducer } from 'react';
-import { stepStatusReducer } from './reducer';
+import { stepStatusReducer } from './state/reducer';
 import Divider from '../../components/Divider';
-import { DispatchStatus } from './DispatchStatus';
+import { DispatchStatus } from './state/DispatchStatus';
 import { getAuthorizeUserLink } from '../../api';
 
 import serviceImage from 'images/sign-in-with-twitter.png';
@@ -71,7 +71,6 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	service,
 }) => {
 	const [stepStatus, dispatch] = useReducer(stepStatusReducer, initStatus);
-
 	const { handleDispatchStatus } = new DispatchStatus(dispatch);
 
 
