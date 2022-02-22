@@ -12,12 +12,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Root Dependencies
         uses: bahmutov/npm-install@v1
-      - name: Install Dependencies for backend
-        working-directory: ./backend
-        run: npm ci
-      - name: Build server
-        working-directory: ./backend
-        run: npm run build
       - name: Unit Tests
         run: npm test
       - name: Start React App
