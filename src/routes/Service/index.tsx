@@ -3,8 +3,6 @@ import { ServiceType, services } from '../../data/services';
 import { useReducer } from 'react';
 import { stepStatusReducer } from './state/reducer';
 import Divider from '../../components/Divider';
-import { DispatchStatus } from './state/DispatchStatus';
-import { getAuthorizeUserLink } from '../../api';
 import Process from './Process';
 import Steps from './Steps';
 
@@ -48,21 +46,12 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 	service,
 }) => {
 	const [stepStatus, dispatch] = useReducer(stepStatusReducer, initStatus);
-	const { handleDispatchStatus } = new DispatchStatus(dispatch);
-
-	const handleLogin = () => {
-		handleDispatchStatus('INPROGRESS', 'stepOne');
-
-		getAuthorizeUserLink().then((data) => {
-			window.open(data.authorizeUrl, '_self');
-		});
-	};
 
 	return (
 		<div className='pt-32 px-10 sm:px-14 md:px-16 lg:px-24 xl:max-w-5xl xl:mx-auto h-screen'>
 			<Steps status={stepStatus} />
 			<Divider service={service} />
-			<Process name={name} handleLogin={handleLogin} loading={false} />
+			<Process name={name} dispatchStepsStatus={dispatch} />
 		</div>
 	);
 };
