@@ -1,4 +1,9 @@
-import { getByLabelText, render, RenderResult } from '@testing-library/react';
+import {
+	getByLabelText,
+	queryByLabelText,
+	render,
+	RenderResult,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ServiceType } from '../../../data/services';
 import { ServiceContainer } from '../../../routes/Service';
@@ -38,6 +43,7 @@ describe('Service', () => {
 
 describe('Process', () => {
 	let processContext: RenderResult;
+	let handleLogin: jest.Mock;
 	const serviceName = 'Twitter';
 
 	const renderWithProps = (loading: boolean) => {
@@ -47,10 +53,11 @@ describe('Process', () => {
 			loading,
 		};
 
+		handleLogin = props.handleLogin;
 		processContext = render(<Process {...props} />);
 	};
 
-	it('changes the log in button to display a loading indicator', () => {
+	it('displays a loading indicator when loading', () => {
 		renderWithProps(true);
 
 		const { queryByLabelText, queryByRole } = processContext;
@@ -61,10 +68,22 @@ describe('Process', () => {
 
 	it('does not display the loading indicator when not loading', () => {
 		renderWithProps(false);
-		const { queryByLabelText, queryByRole, debug } = processContext;
-		debug();
+		const { queryByLabelText, queryByRole } = processContext;
 
 		expect(queryByLabelText('loading')).toBeNull();
 		expect(queryByRole('link', { name: /log in/i })).not.toBeNull();
+	});
+
+	it('changes the loading state when clicked on the button', () => {
+		renderWithProps(false);
+
+		const { queryByRole, queryByLabelText } = processContext;
+
+		const button = queryByRole('link', { name: /log in/i }) as HTMLImageElement;
+		userEvent.click(button);
+
+		expect(handleLogin).toHaveBeenCalled();
+		expect(queryByLabelText('loading')).not.toBeNull();
+		expect(button).toBeNull();
 	});
 });
