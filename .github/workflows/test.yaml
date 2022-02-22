@@ -15,16 +15,15 @@ jobs:
       - name: Build server
         working-directory: ./backend
         run: npm run build
-      - name: Run server
-        working-directory: ./backend
-        run: npm start
       - name: Unit Tests
         run: npm test
       - name: Start React App
         run: npm start &
       - name: Install Cypress and run E2E tests
+        working-directory: ./backend
+        run: npm start
         uses: cypress-io/github-action@v2
         with:
-          working-directory: e2e
+          working-directory: ../e2e
           wait-on: 'http://localhost:3000'
           config: baseUrl=http://localhost:3000
