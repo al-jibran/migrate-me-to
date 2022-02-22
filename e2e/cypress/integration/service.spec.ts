@@ -27,26 +27,26 @@ describe('a service page', () => {
 		cy.get('#steps li:nth-child(4)').find('[aria-label="inactive"]');
 	});
 
-	// it('open the page to login when clicked on log in to service button', () => {
-	// 	// A non existing same origin page.
-	// 	// Link to an external page will fail the test because CORS is not supported in cypress.
-	// 	const authorizeUrl = `${
-	// 		Cypress.config().baseUrl
-	// 	}/oauth/authorize?oauth_token=kdnn4o2ntnen2f`;
+	it('open the page to login when clicked on log in to service button', () => {
+		// A non existing same origin page.
+		// Link to an external page will fail the test because CORS is not supported in cypress.
+		const authorizeUrl = `${
+			Cypress.config().baseUrl
+		}/oauth/authorize?oauth_token=kdnn4o2ntnen2f`;
 
-	// 	cy.intercept(
-	// 		{
-	// 			method: 'GET',
-	// 			url: 'http://localhost:4000/twitter/authorize',
-	// 		},
+		cy.intercept(
+			{
+				method: 'GET',
+				url: 'http://localhost:4000/twitter/authorize',
+			},
 
-	// 		{
-	// 			authorizeUrl,
-	// 		}
-	// 	).as('getAuthorizeUserLink');
+			{
+				authorizeUrl,
+			}
+		).as('getAuthorizeUserLink');
 
-	// 	cy.get('#login').click();
+		cy.get('#login').click();
 
-	// 	cy.url().should('eq', authorizeUrl);
-	// });
+		cy.url().should('eq', authorizeUrl);
+	});
 });

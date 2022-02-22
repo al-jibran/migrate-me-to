@@ -1,17 +1,24 @@
-name: Migrate-Me-To Test CI
-on: ['push']
+name: Migrate-Me-To Frontend CI
+on: 
+  push:
+    paths-ignore:
+      - 'backend/**'
+  
 
 jobs:
-  test:
-    name: Test
+  project_setup:
+    name: Project Setup
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+
       - name: Install Root Dependencies
         uses: bahmutov/npm-install@v1
+
       - name: Unit Tests
         run: npm test
-      - name: Start Server
+
+      - name: Start React App
         run: npm start &
 
       - name: Install Cypress and run E2E tests
