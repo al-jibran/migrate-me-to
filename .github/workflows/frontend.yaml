@@ -1,8 +1,9 @@
-name: Migrate-Me-To Pipeline CI
+name: Migrate-Me-To Frontend CI
 on: 
   push:
     paths-ignore:
       - 'backend/**'
+  
 
 jobs:
   project_setup:
@@ -10,12 +11,16 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+
       - name: Install Root Dependencies
         uses: bahmutov/npm-install@v1
+
       - name: Unit Tests
         run: npm test
+
       - name: Start React App
         run: npm start &
+
       - name: Install Cypress and run E2E tests
         uses: cypress-io/github-action@v2
         with:

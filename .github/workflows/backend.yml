@@ -1,5 +1,8 @@
 name: Migrate Me To Backend Pipeline
-on: ['push']
+on:
+  push:
+    paths:
+    - ./backend/**
 
 jobs:
   deploy_pipeline:
@@ -10,19 +13,22 @@ jobs:
         working-directory: ./backend
     steps:
       - uses: actions/checkout@v2
+
       - name: Install Dependencies
         run: npm ci
+
       - name: Build
         run: npm run build
+        
       - name: Run Mock Server
         run: npm run mock:server &
+
       - name: Create .env file
-        env:
-          MOCK_SERVER: http://localhost:5000
+
         run: |
           touch .env
           echo CONSUMER_API_KEY=${{ secrets.CONSUMER_API_KEY }} >> .env
           echo CONSUMER_API_KEY_SECRET=${{ secrets.CONSUMER_API_KEY_SECRET }} >> .env
-          echo MOCK_SERVER=$MOCK_SERVER >> .env
+      
       - name: Tests
         run: npm test
