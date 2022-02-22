@@ -1,4 +1,4 @@
-import { initStatus, StepStatusType } from '.';
+import { initStatus, StepStatusType } from '..';
 
 export type StateStatusType = typeof initStatus;
 

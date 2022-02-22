@@ -1,10 +1,10 @@
-import { DispatchStatus } from '../../../routes/Service/DispatchStatus';
+import { DispatchStatus } from '../../../routes/Service/state//DispatchStatus';
 import {
 	failActionCreator,
 	inProgressActionCreator,
 	ReducerActionType,
 	successActionCreator,
-} from '../../../routes/Service/reducer';
+} from '../../../routes/Service/state/reducer';
 
 describe('DispatchStatus', () => {
 	let dispatch: jest.Mock;
