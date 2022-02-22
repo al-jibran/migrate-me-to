@@ -5,6 +5,9 @@ jobs:
   deploy_pipeline:
     name: Deploy Pipeline
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
       - uses: actions/checkout@v2
       - name: Install Dependencies
