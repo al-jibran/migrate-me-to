@@ -1,0 +1,15 @@
+name: Migrate Me To Backend Pipeline
+on: ['push']
+
+jobs:
+  deploy_pipeline:
+    name: Deploy Pipeline
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Tests
+        run: npm test

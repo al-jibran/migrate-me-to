@@ -8,8 +8,9 @@
 		"build": "npm run tsc",
 		"start": "cross-env NODE_ENV=production node dist/index.js",
 		"dev": "cross-env NODE_ENV=development nodemon index.ts",
-		"test": "cross-env NODE_ENV=testing jest --verbose",
-		"auth:server": "nodemon ./mock-server/index.ts"
+		"test": "npm run mock:server && cross-env NODE_ENV=testing jest --verbose",
+		"mock:server": "node ./mock-server/index.ts",
+		"mock:server:dev": "nodemon ./mock-server/index.ts"
 	},
 	"author": "Al Jibran",
 	"license": "ISC",
