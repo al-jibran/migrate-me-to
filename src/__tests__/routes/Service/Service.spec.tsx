@@ -1,17 +1,13 @@
-import {
-	getByLabelText,
-	queryByLabelText,
-	render,
-	RenderResult,
-} from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import { ServiceType } from '../../../data/services';
 import { ServiceContainer } from '../../../routes/Service';
-import Process from '../../../routes/Service/Process';
+import { Process, ProcessContainer } from '../../../routes/Service/Process';
 
 describe('Service', () => {
 	let serviceContext: RenderResult;
-	let button: HTMLButtonElement;
+	let button: HTMLImageElement;
 
 	const service: ServiceType = {
 		name: 'Twitter',
@@ -23,17 +19,16 @@ describe('Service', () => {
 		serviceContext = render(
 			<ServiceContainer name={service['name']} service={service} />
 		);
+
+		button = serviceContext.getByRole('link', {
+			name: /log in/i,
+		}) as HTMLImageElement;
 	});
 
 	it('changes the first step to in progress when clicked on log in button', () => {
-		const { getByRole } = serviceContext;
-
-		button = getByRole('link', {
-			name: /log in/i,
-		}) as HTMLButtonElement;
-		userEvent.click(button);
-
 		const { getByLabelText } = serviceContext;
+
+		userEvent.click(button);
 
 		expect(getByLabelText('step 1').children).toContain(
 			getByLabelText('in progress')
@@ -43,7 +38,6 @@ describe('Service', () => {
 
 describe('Process', () => {
 	let processContext: RenderResult;
-	let handleLogin: jest.Mock;
 	const serviceName = 'Twitter';
 
 	const renderWithProps = (loading: boolean) => {
@@ -53,8 +47,7 @@ describe('Process', () => {
 			loading,
 		};
 
-		handleLogin = props.handleLogin;
-		processContext = render(<Process {...props} />);
+		processContext = render(<ProcessContainer {...props} />);
 	};
 
 	it('displays a loading indicator when loading', () => {
@@ -74,16 +67,20 @@ describe('Process', () => {
 		expect(queryByRole('link', { name: /log in/i })).not.toBeNull();
 	});
 
-	it('changes the loading state when clicked on the button', () => {
-		renderWithProps(false);
+	it('changes the button to loading when the button is clicked', async () => {
+		const dispatch = jest.fn();
 
-		const { queryByRole, queryByLabelText } = processContext;
+		const { queryByRole } = render(
+			<Process name={serviceName} dispatchStepsStatus={dispatch} />
+		);
 
 		const button = queryByRole('link', { name: /log in/i }) as HTMLImageElement;
-		userEvent.click(button);
 
-		expect(handleLogin).toHaveBeenCalled();
-		expect(queryByLabelText('loading')).not.toBeNull();
-		expect(button).toBeNull();
+		// using toBeInTheDocument instead of toBeNull because toBeNull would require a rerendering since
+		// this instance of button is when the button was not null.
+
+		expect(button).toBeInTheDocument();
+		userEvent.click(button);
+		expect(button).not.toBeInTheDocument();
 	});
 });
