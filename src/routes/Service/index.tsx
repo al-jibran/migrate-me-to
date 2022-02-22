@@ -74,7 +74,6 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 
 	const { handleDispatchStatus } = new DispatchStatus(dispatch);
 
-	const headingBorderColor = styles.borderBottom[name] || 'white';
 
 	const handleLogin = () => {
 		handleDispatchStatus('INPROGRESS', 'stepOne');
@@ -88,7 +87,7 @@ export const ServiceContainer: React.FC<ServiceContainerProps> = ({
 		<div className='pt-32 px-10 sm:px-14 md:px-16 lg:px-24 xl:max-w-5xl xl:mx-auto h-screen'>
 			<Steps status={stepStatus} />
 			<Divider service={service} />
-			<Process headingBorderColor={headingBorderColor} handleLogin={handleLogin}/>
+			<Process name={name} handleLogin={handleLogin}/>
 		</div>
 	);
 };
@@ -161,11 +160,13 @@ const RenderStatus: React.FC<RenderStatusProps> = ({ status }) => {
 };
 
 interface ProcessProps {
-	headingBorderColor: string
+	name: string
 	handleLogin: () => void
 }
 
-const Process: React.FC<ProcessProps> = ({ headingBorderColor, handleLogin}) => {
+const Process: React.FC<ProcessProps> = ({ name, handleLogin}) => {
+	const headingBorderColor = styles.borderBottom[name];
+
 	return (
 		<div>
 			<h3
