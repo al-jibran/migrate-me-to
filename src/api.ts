@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const baseURL = process.env.BACKEND_URL || 'http://localhost:4000';
+
 const client = axios.create({
-	baseURL: process.env.BACKEND_URL,
+	baseURL
 });
 
 export const getAuthorizeUserLink = async () => {
