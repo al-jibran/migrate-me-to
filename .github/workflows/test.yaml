@@ -1,5 +1,8 @@
 name: Migrate-Me-To Pipeline CI
-on: ['push']
+on: 
+  push:
+    paths-ignore:
+      - 'backend/**'
 
 jobs:
   project_setup:
@@ -20,8 +23,6 @@ jobs:
       - name: Start React App
         run: npm start &
       - name: Install Cypress and run E2E tests
-        working-directory: ./backend
-        run: npm start
         uses: cypress-io/github-action@v2
         with:
           working-directory: ../e2e
