@@ -1,6 +1,7 @@
 import serviceImage from 'images/sign-in-with-twitter.png';
 import { Dispatch, useState } from 'react';
 import { getAuthorizeUserLink } from '../../api';
+import Loading from '../../components/Loading';
 import { DispatchStatus } from './state/DispatchStatus';
 import { ReducerActionType } from './state/reducer';
 
@@ -31,10 +32,12 @@ export const Process: React.FC<ProcessProps> = ({
 	dispatchStepsStatus,
 }) => {
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<AppError | null>(null);
 
 	const { handleDispatchStatus } = new DispatchStatus(dispatchStepsStatus);
 
 	const handleLogin = () => {
+		let isMounted = true;
 		handleDispatchStatus('INPROGRESS', 'stepOne');
 		setLoading(true);
 
@@ -42,26 +45,43 @@ export const Process: React.FC<ProcessProps> = ({
 			.then((data) => {
 				window.open(data.authorizeUrl, '_self');
 			})
-			.catch((e) => e);
+			.catch((e: AppError) => {
+				if (isMounted) setError(e);
+			});
+
+		isMounted = false;
 	};
 
 	return (
-		<ProcessContainer name={name} loading={loading} handleLogin={handleLogin} />
+		<ProcessContainer
+			name={name}
+			loading={loading}
+			error={error}
+			handleLogin={handleLogin}
+		/>
 	);
 };
+
+interface AppError {
+	code: number;
+	message: string;
+}
 
 interface ProcessContainerProps {
 	name: string;
 	loading: boolean;
+	error: AppError | null;
 	handleLogin: () => void;
 }
 
 export const ProcessContainer: React.FC<ProcessContainerProps> = ({
 	name,
 	loading,
+	error,
 	handleLogin,
 }) => {
-	const headingBorderColor = styles.borderBottom[name];
+	const headingBorderColor = styles.borderBottom[name] || 'teal-300';
+	const loadingIconColor = styles.border[name] || 'teal-300';
 
 	return (
 		<div className='flex justify-between'>
@@ -69,10 +89,13 @@ export const ProcessContainer: React.FC<ProcessContainerProps> = ({
 				1<sup className='lowercase'>st</sup> Account
 			</h3>
 			<div className='mt-14'>
+				{error && (
+					<div>
+						There is a problem connecting to the server. Try again later.
+					</div>
+				)}
 				{loading ? (
-					<div
-						aria-label='loading'
-						className='border-twitter border-l-transparent border-r-transparent border-l-white animate-spin border-4 rounded-full w-8 h-8'></div>
+					<Loading color={loadingIconColor} />
 				) : (
 					<img
 						id='login'
