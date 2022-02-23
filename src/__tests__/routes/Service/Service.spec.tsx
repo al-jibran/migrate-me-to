@@ -1,9 +1,10 @@
-import { render, RenderResult } from '@testing-library/react';
+import { act, render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { ServiceType } from '../../../data/services';
 import { ServiceContainer } from '../../../routes/Service';
 import { Process, ProcessContainer } from '../../../routes/Service/Process';
+import flushPromises from 'flush-promises';
 
 describe('Service', () => {
 	let serviceContext: RenderResult;
@@ -39,24 +40,64 @@ describe('Service', () => {
 describe('Process', () => {
 	let processContext: RenderResult;
 	const serviceName = 'Twitter';
+	const error = {
+		code: 503,
+		message: 'There is a problem connecting to the server. Try again later.',
+	};
 
-	const renderWithProps = (loading: boolean) => {
+	const renderWithProps = (propsOverride = {}) => {
 		const props = {
 			name: serviceName,
 			handleLogin: jest.fn().mockName('handleLogin'),
-			loading,
+			loading: false,
+			error: null,
+			...propsOverride,
 		};
 
 		processContext = render(<ProcessContainer {...props} />);
 	};
 
-	it('displays a loading indicator when loading', () => {
-		renderWithProps(true);
+	describe('while loading', () => {
+		beforeEach(() => {
+			renderWithProps({ loading: true });
+		});
 
-		const { queryByLabelText, queryByRole } = processContext;
+		it('displays a loading indicator', () => {
+			const { queryByLabelText } = processContext;
+			expect(queryByLabelText('loading')).not.toBeNull();
+		});
 
-		expect(queryByLabelText('loading')).not.toBeNull();
-		expect(queryByRole('link', { name: /log in/i })).toBeNull();
+		it('does not display the error message', () => {
+			const { queryByText } = processContext;
+			expect(queryByText(error.message)).toBeNull();
+		});
+
+		it('does not display the log in button', () => {
+			const { queryByRole } = processContext;
+			expect(queryByRole('link', { name: /log in/i })).toBeNull();
+		});
+	});
+
+	describe('error', () => {
+		beforeEach(() => {
+			renderWithProps({ error });
+			return act(flushPromises);
+		});
+
+		it('displays the appropriate message if cannot connect to the backend', () => {
+			const { queryByText } = processContext;
+			expect(queryByText(error.message)).not.toBeNull();
+		});
+
+		it('does not display the loading indicator', () => {
+			const { queryByLabelText } = processContext;
+			expect(queryByLabelText('loading')).toBeNull();
+		});
+
+		it('displays the button to log in again', () => {
+			const { queryByRole } = processContext;
+			expect(queryByRole('link', { name: /log in/i })).not.toBeNull();
+		});
 	});
 
 	it('does not display the loading indicator when not loading', () => {
