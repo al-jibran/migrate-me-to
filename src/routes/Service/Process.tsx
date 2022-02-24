@@ -74,7 +74,7 @@ interface ProcessContainerProps {
 	handleLogin: () => void;
 }
 
-export const ProcessContainer: React.FC<ProcessContainerProps> = ({
+const ProcessContainer: React.FC<ProcessContainerProps> = ({
 	name,
 	loading,
 	error,
@@ -84,28 +84,25 @@ export const ProcessContainer: React.FC<ProcessContainerProps> = ({
 	const loadingIconColor = styles.border[name] || 'teal-300';
 
 	return (
-		<div className='flex justify-between'>
-			<h3 className={`uppercase border-b-4 ${headingBorderColor} w-fit mt-14`}>
-				1<sup className='lowercase'>st</sup> Account
-			</h3>
-			<div className='mt-14'>
-				{error && (
-					<div>
-						There is a problem connecting to the server. Try again later.
-					</div>
-				)}
-				{loading ? (
-					<Loading color={loadingIconColor} />
-				) : (
-					<img
-						id='login'
-						className='cursor-pointer'
-						src={serviceImage}
-						role='link'
-						alt={`Log in with ${name}`}
-						onClick={handleLogin}
-					/>
-				)}
+		<div className='mt-14'>
+			<div className='flex justify-between mt-5'>
+				<h3 className={`uppercase border-b-4 ${headingBorderColor} w-fit`}>
+					1<sup className='lowercase'>st</sup> Account
+				</h3>
+				<div>
+					{loading ? (
+						<Loading color={loadingIconColor} />
+					) : (
+						<img
+							id='login'
+							className='cursor-pointer'
+							src={serviceImage}
+							role='link'
+							alt={`Log in with ${name}`}
+							onClick={handleLogin}
+						/>
+					)}
+				</div>
 			</div>
 		</div>
 	);
