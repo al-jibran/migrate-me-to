@@ -1,5 +1,5 @@
 {
-	"name": "backend",
+	"name": "migrate-me-to-backend",
 	"version": "1.0.0",
 	"description": "Backend for MigrateMeTo and communication with various services",
 	"main": "./src/index.ts",
