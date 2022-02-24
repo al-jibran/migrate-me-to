@@ -114,6 +114,36 @@ describe('Process', () => {
 				expect(queryByRole('link', { name: /log in/i })).toBeInTheDocument();
 			});
 
+			describe('trying again after the error', () => {
+				// beforeEach of the parents will run before this.
+
+				/* 
+				Order of beforeEach called:
+				
+				1. Process (render the component)
+				2. an error (mocks an error response)
+				3. this - trying again after the error (loading)
+				*/
+
+				beforeEach(() => {
+					const { queryByText } = context;
+					expect(queryByText(error.message)).not.toBeNull();
+
+					(getAuthorizeUserLink as jest.Mock).mockResolvedValue('resolved');
+
+					return clickButton();
+				});
+
+				it('removes the error', () => {
+					const { queryByText } = context;
+					expect(queryByText(error.message)).toBeNull();
+				});
+
+				it('displays the loading indicator', () => {
+					const { queryByLabelText } = context;
+					expect(queryByLabelText('loading')).not.toBeNull();
+				});
+			});
 		});
 	});
 });
