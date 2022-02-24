@@ -40,3 +40,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: 'migrate-me-to-backend'
           heroku_email: jibran.web@gmail.com
+          appdir: backend
