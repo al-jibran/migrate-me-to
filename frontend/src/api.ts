@@ -1,6 +1,9 @@
 import axios, { AxiosError } from 'axios';
 
-const baseURL = process.env.BACKEND_URL || 'http://localhost:4000';
+const baseURL =
+	process.env.NODE_ENV === 'production'
+		? process.env.BACKEND_URL
+		: process.env.BACKEND_URL_DEV || 'http://localhost:4000';
 
 const client = axios.create({
 	baseURL,
