@@ -4,8 +4,8 @@
 	"description": "Backend for MigrateMeTo and communication with various services",
 	"main": "./src/index.ts",
 	"scripts": {
-		"tsc": "tsc",
-		"build": "npm run tsc",
+		"build": "tsc",
+		"postinstall": "npm run build",
 		"start": "cross-env NODE_ENV=production node dist/index.js",
 		"dev": "cross-env NODE_ENV=development nodemon ./src/index.ts",
 		"test": "cross-env NODE_ENV=testing jest --verbose",
