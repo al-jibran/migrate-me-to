@@ -2,7 +2,8 @@ name: Migrate Me To Backend Pipeline
 on:
   push:
     paths:
-    - 'backend/**'
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
 
 jobs:
   deploy_pipeline:
@@ -19,7 +20,7 @@ jobs:
 
       - name: Build
         run: npm run build
-        
+
       - name: Run Mock Server
         run: npm run mock:server &
 
@@ -29,6 +30,13 @@ jobs:
           touch .env
           echo CONSUMER_API_KEY=${{ secrets.CONSUMER_API_KEY }} >> .env
           echo CONSUMER_API_KEY_SECRET=${{ secrets.CONSUMER_API_KEY_SECRET }} >> .env
-      
+
       - name: Tests
         run: npm test
+
+      - name: Deploy To Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: 'migrate-me-to-backend'
+          heroku_email: jibran.web@gmail.com
