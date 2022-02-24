@@ -7,7 +7,7 @@
 		"tsc": "tsc",
 		"build": "npm run tsc",
 		"start": "cross-env NODE_ENV=production node dist/index.js",
-		"dev": "cross-env NODE_ENV=development nodemon index.ts",
+		"dev": "cross-env NODE_ENV=development nodemon ./src/index.ts",
 		"test": "cross-env NODE_ENV=testing jest --verbose",
 		"mock:server": "ts-node ./mock-server/index.ts",
 		"mock:server:dev": "nodemon ./mock-server/index.ts"

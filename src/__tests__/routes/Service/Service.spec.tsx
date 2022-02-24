@@ -1,9 +1,14 @@
-import { render, RenderResult } from '@testing-library/react';
+import { act, render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import flushPromises from 'flush-promises';
 
 import { ServiceType } from '../../../data/services';
 import { ServiceContainer } from '../../../routes/Service';
-import { Process, ProcessContainer } from '../../../routes/Service/Process';
+import { Process } from '../../../routes/Service/Process';
+import { getAuthorizeUserLink } from '../../../api';
+
+jest.mock('../../../api');
+window.open = jest.fn();
 
 describe('Service', () => {
 	let serviceContext: RenderResult;
@@ -16,6 +21,8 @@ describe('Service', () => {
 	};
 
 	beforeEach(() => {
+		(getAuthorizeUserLink as jest.Mock).mockResolvedValue('resolved');
+
 		serviceContext = render(
 			<ServiceContainer name={service['name']} service={service} />
 		);
@@ -37,50 +44,106 @@ describe('Service', () => {
 });
 
 describe('Process', () => {
-	let processContext: RenderResult;
+	let context: RenderResult;
 	const serviceName = 'Twitter';
-
-	const renderWithProps = (loading: boolean) => {
-		const props = {
-			name: serviceName,
-			handleLogin: jest.fn().mockName('handleLogin'),
-			loading,
-		};
-
-		processContext = render(<ProcessContainer {...props} />);
+	const error = {
+		code: 503,
+		message: 'There was a problem connecting to the server. Try again later.',
 	};
 
-	it('displays a loading indicator when loading', () => {
-		renderWithProps(true);
-
-		const { queryByLabelText, queryByRole } = processContext;
-
-		expect(queryByLabelText('loading')).not.toBeNull();
-		expect(queryByRole('link', { name: /log in/i })).toBeNull();
-	});
-
-	it('does not display the loading indicator when not loading', () => {
-		renderWithProps(false);
-		const { queryByLabelText, queryByRole } = processContext;
-
-		expect(queryByLabelText('loading')).toBeNull();
-		expect(queryByRole('link', { name: /log in/i })).not.toBeNull();
-	});
-
-	it('changes the button to loading when the button is clicked', async () => {
-		const dispatch = jest.fn();
-
-		const { queryByRole } = render(
-			<Process name={serviceName} dispatchStepsStatus={dispatch} />
+	beforeEach(() => {
+		context = render(
+			<Process name={serviceName} dispatchStepsStatus={jest.fn()} />
 		);
+	});
 
-		const button = queryByRole('link', { name: /log in/i }) as HTMLImageElement;
+	describe('when the log in button is clicked', () => {
+		let button: HTMLImageElement;
 
-		// using toBeInTheDocument instead of toBeNull because toBeNull would require a rerendering since
-		// this instance of button is when the button was not null.
+		const clickButton = () => {
+			button = context.queryByRole('link', {
+				name: /log in/i,
+			}) as HTMLImageElement;
 
-		expect(button).toBeInTheDocument();
-		userEvent.click(button);
-		expect(button).not.toBeInTheDocument();
+			expect(button).toBeInTheDocument();
+
+			userEvent.click(button);
+
+			return act(flushPromises); // clicking a button triggers an asynchronous task in handleLogin. This waits for it to fulfill.
+		};
+
+		describe('loading', () => {
+			beforeEach(() => {
+				(getAuthorizeUserLink as jest.Mock).mockResolvedValue('resolved');
+				return clickButton();
+			});
+
+			it('displays the loading indicator', () => {
+				const { queryByLabelText } = context;
+				expect(queryByLabelText('loading')).not.toBeNull();
+			});
+
+			it('does not display the error', () => {
+				const { queryByText } = context;
+				expect(queryByText(error.message)).toBeNull();
+			});
+
+			it('does not display the button', () => {
+				expect(button).not.toBeInTheDocument();
+			});
+		});
+
+		describe('an error', () => {
+			beforeEach(async () => {
+				(getAuthorizeUserLink as jest.Mock).mockRejectedValue(error);
+				return clickButton();
+			});
+
+			it('displays the error message', async () => {
+				const { queryByText } = context;
+				expect(queryByText(error.message)).not.toBeNull();
+			});
+
+			it('does not display the loading indicator', async () => {
+				const { queryByLabelText } = context;
+				expect(queryByLabelText('loading')).toBeNull();
+			});
+
+			it('displays the log in button again', async () => {
+				const { queryByRole } = context;
+				expect(queryByRole('link', { name: /log in/i })).toBeInTheDocument();
+			});
+
+			describe('trying again after the error', () => {
+				// beforeEach of the parents will run before this.
+
+				/* 
+				Order of beforeEach called:
+				
+				1. Process (render the component)
+				2. an error (mocks an error response)
+				3. this - trying again after the error (loading)
+				*/
+
+				beforeEach(() => {
+					const { queryByText } = context;
+					expect(queryByText(error.message)).not.toBeNull();
+
+					(getAuthorizeUserLink as jest.Mock).mockResolvedValue('resolved');
+
+					return clickButton();
+				});
+
+				it('removes the error', () => {
+					const { queryByText } = context;
+					expect(queryByText(error.message)).toBeNull();
+				});
+
+				it('displays the loading indicator', () => {
+					const { queryByLabelText } = context;
+					expect(queryByLabelText('loading')).not.toBeNull();
+				});
+			});
+		});
 	});
 });

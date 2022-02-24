@@ -1,6 +1,7 @@
 import serviceImage from 'images/sign-in-with-twitter.png';
 import { Dispatch, useState } from 'react';
 import { getAuthorizeUserLink } from '../../api';
+import Loading from '../../components/Loading';
 import { DispatchStatus } from './state/DispatchStatus';
 import { ReducerActionType } from './state/reducer';
 
@@ -31,58 +32,81 @@ export const Process: React.FC<ProcessProps> = ({
 	dispatchStepsStatus,
 }) => {
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<AppError | null>(null);
 
 	const { handleDispatchStatus } = new DispatchStatus(dispatchStepsStatus);
 
 	const handleLogin = () => {
 		handleDispatchStatus('INPROGRESS', 'stepOne');
 		setLoading(true);
+		setError(null);
 
 		getAuthorizeUserLink()
 			.then((data) => {
 				window.open(data.authorizeUrl, '_self');
 			})
-			.catch((e) => e);
+			.catch((e: AppError) => {
+				setLoading(false);
+				setError(e);
+			});
 	};
 
 	return (
-		<ProcessContainer name={name} loading={loading} handleLogin={handleLogin} />
+		<ProcessContainer
+			name={name}
+			loading={loading}
+			error={error}
+			handleLogin={handleLogin}
+		/>
 	);
 };
+
+interface AppError {
+	code: number;
+	message: string;
+}
 
 interface ProcessContainerProps {
 	name: string;
 	loading: boolean;
+	error: AppError | null;
 	handleLogin: () => void;
 }
 
-export const ProcessContainer: React.FC<ProcessContainerProps> = ({
+const ProcessContainer: React.FC<ProcessContainerProps> = ({
 	name,
 	loading,
+	error,
 	handleLogin,
 }) => {
-	const headingBorderColor = styles.borderBottom[name];
+	const headingBorderColor = styles.borderBottom[name] || 'teal-300';
+	const loadingIconColor = styles.border[name] || 'teal-300';
 
 	return (
-		<div className='flex justify-between'>
-			<h3 className={`uppercase border-b-4 ${headingBorderColor} w-fit mt-14`}>
-				1<sup className='lowercase'>st</sup> Account
-			</h3>
-			<div className='mt-14'>
-				{loading ? (
-					<div
-						aria-label='loading'
-						className='border-twitter border-l-transparent border-r-transparent border-l-white animate-spin border-4 rounded-full w-8 h-8'></div>
-				) : (
-					<img
-						id='login'
-						className='cursor-pointer'
-						src={serviceImage}
-						role='link'
-						alt={`Log in with ${name}`}
-						onClick={handleLogin}
-					/>
-				)}
+		<div className='mt-14'>
+			{error && (
+				<div className='bg-red-700 px-4 py-3 rounded-md text-white'>
+					{error.message}
+				</div>
+			)}
+			<div className='flex justify-between mt-5'>
+				<h3 className={`uppercase border-b-4 ${headingBorderColor} w-fit`}>
+					1<sup className='lowercase'>st</sup> Account
+				</h3>
+				<div>
+					{loading ? (
+						<Loading color={loadingIconColor} />
+					) : (
+						<img
+							id='login'
+							className='cursor-pointer'
+							src={serviceImage}
+							role='link'
+							alt={`Log in with ${name}`}
+							onClick={handleLogin}
+						/>
+					)}
+				</div>
 			</div>
 		</div>
 	);
