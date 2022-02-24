@@ -6,7 +6,8 @@
 	"scripts": {
 		"build": "tsc",
 		"postinstall": "npm run build",
-		"start": "cross-env NODE_ENV=production node dist/index.js",
+		"start": "node dist/index.js",
+		"start:prod": "cross-env NODE_ENV=production node dist/index.js",
 		"dev": "cross-env NODE_ENV=development nodemon ./src/index.ts",
 		"test": "cross-env NODE_ENV=testing jest --verbose",
 		"mock:server": "ts-node ./mock-server/index.ts",
