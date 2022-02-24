@@ -1,14 +1,16 @@
-name: Migrate-Me-To Frontend CI
-on: 
+name: Migrate-Me-To Frontend Test Pipeline
+on:
   push:
-    paths-ignore:
-      - 'backend/**'
-  
+    paths:
+      - 'frontend/**'
 
 jobs:
   project_setup:
     name: Project Setup
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./frontend
     steps:
       - uses: actions/checkout@v2
 
