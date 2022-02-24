@@ -1,6 +1,8 @@
 name: Migrate Me To Backend Pipeline
 on:
   push:
+    branches:
+      - main
     paths:
       - 'backend/**'
       - '.github/workflows/backend.yml'
@@ -39,4 +41,6 @@ jobs:
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: 'migrate-me-to-backend'
-          heroku_email: jibran.web@gmail.com
+          heroku_email: 'jibran1in1000.web@gmail.com'
+          healthcheck: 'https://migrate-me-to-backend.herokuapp.com/ping'
+          appdir: backend
