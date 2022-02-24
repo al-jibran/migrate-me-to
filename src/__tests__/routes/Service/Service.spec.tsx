@@ -1,10 +1,14 @@
 import { act, render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import flushPromises from 'flush-promises';
 
 import { ServiceType } from '../../../data/services';
 import { ServiceContainer } from '../../../routes/Service';
-import { Process, ProcessContainer } from '../../../routes/Service/Process';
-import flushPromises from 'flush-promises';
+import { Process } from '../../../routes/Service/Process';
+import { getAuthorizeUserLink } from '../../../api';
+
+jest.mock('../../../api');
+window.open = jest.fn();
 
 describe('Service', () => {
 	let serviceContext: RenderResult;
