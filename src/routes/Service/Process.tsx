@@ -37,7 +37,6 @@ export const Process: React.FC<ProcessProps> = ({
 	const { handleDispatchStatus } = new DispatchStatus(dispatchStepsStatus);
 
 	const handleLogin = () => {
-		let isMounted = true;
 		handleDispatchStatus('INPROGRESS', 'stepOne');
 		setLoading(true);
 
@@ -46,10 +45,9 @@ export const Process: React.FC<ProcessProps> = ({
 				window.open(data.authorizeUrl, '_self');
 			})
 			.catch((e: AppError) => {
-				if (isMounted) setError(e);
+				setLoading(false);
+				setError(e);
 			});
-
-		isMounted = false;
 	};
 
 	return (
@@ -85,6 +83,11 @@ const ProcessContainer: React.FC<ProcessContainerProps> = ({
 
 	return (
 		<div className='mt-14'>
+			{error && (
+				<div className='bg-red-700 px-4 py-3 rounded-md text-white'>
+					{error.message}
+				</div>
+			)}
 			<div className='flex justify-between mt-5'>
 				<h3 className={`uppercase border-b-4 ${headingBorderColor} w-fit`}>
 					1<sup className='lowercase'>st</sup> Account
