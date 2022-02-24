@@ -28,6 +28,6 @@ jobs:
       - name: Install Cypress, Dependencies and run E2E tests
         uses: cypress-io/github-action@v2
         with:
-          working-directory: e2e
+          working-directory: frontend/e2e
           wait-on: 'http://localhost:3000'
           config: baseUrl=http://localhost:3000
