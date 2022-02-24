@@ -93,6 +93,27 @@ describe('Process', () => {
 			});
 		});
 
+		describe('an error', () => {
+			beforeEach(async () => {
+				(getAuthorizeUserLink as jest.Mock).mockRejectedValue(error);
+				return clickButton();
+			});
+
+			it('displays the error message', async () => {
+				const { queryByText } = context;
+				expect(queryByText(error.message)).not.toBeNull();
+			});
+
+			it('does not display the loading indicator', async () => {
+				const { queryByLabelText } = context;
+				expect(queryByLabelText('loading')).toBeNull();
+			});
+
+			it('displays the log in button again', async () => {
+				const { queryByRole } = context;
+				expect(queryByRole('link', { name: /log in/i })).toBeInTheDocument();
+			});
+
 		});
 	});
 });
