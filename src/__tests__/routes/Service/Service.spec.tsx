@@ -21,6 +21,8 @@ describe('Service', () => {
 	};
 
 	beforeEach(() => {
+		(getAuthorizeUserLink as jest.Mock).mockResolvedValue('resolved');
+
 		serviceContext = render(
 			<ServiceContainer name={service['name']} service={service} />
 		);
