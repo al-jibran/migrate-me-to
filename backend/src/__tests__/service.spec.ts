@@ -15,4 +15,11 @@ describe('Service', () => {
 				'https://api.twitter.com/oauth/authorize?oauth_token=NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0',
 		});
 	});
+
+	it('return a successful status on acquiring a oauth_token', async () => {
+		await api
+			.get('/twitter/callback')
+			.expect(204)
+			.expect('Content-Type', /application\/json/);
+	});
 });
