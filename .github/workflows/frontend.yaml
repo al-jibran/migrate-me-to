@@ -14,8 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Root Dependencies
+      - name: Install Frontend Root Dependencies
         uses: bahmutov/npm-install@v1
+        with:
+          working-directory: frontend
 
       - name: Unit Tests
         run: npm test
@@ -23,7 +25,7 @@ jobs:
       - name: Start React App
         run: npm start &
 
-      - name: Install Cypress and run E2E tests
+      - name: Install Cypress, Dependencies and run E2E tests
         uses: cypress-io/github-action@v2
         with:
           working-directory: e2e
