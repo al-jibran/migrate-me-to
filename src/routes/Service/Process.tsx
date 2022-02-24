@@ -39,6 +39,7 @@ export const Process: React.FC<ProcessProps> = ({
 	const handleLogin = () => {
 		handleDispatchStatus('INPROGRESS', 'stepOne');
 		setLoading(true);
+		setError(null);
 
 		getAuthorizeUserLink()
 			.then((data) => {
