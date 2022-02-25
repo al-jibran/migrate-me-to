@@ -1,11 +1,10 @@
 import express from 'express';
-import axios from 'axios';
 
 import OAuthHeader from '../utility/OAuthHeader';
 import { METHOD, Request } from '../utility/OAuthHeader/types';
 import { uriPercentEncode } from '../utility';
-
 import { TWITTER_BASE_URL } from '../config';
+import { getOAuthToken } from '../api';
 
 const twitterRouter = express.Router();
 
@@ -13,9 +12,9 @@ const encodedCallback = uriPercentEncode(
 	'http://127.0.0.1:4000/twitter/callback'
 );
 
-twitterRouter.get('/authorize', async (_req, res) => {
-	const apiKey = process.env.CONSUMER_API_KEY;
-	const secret = process.env.CONSUMER_API_KEY_SECRET;
+twitterRouter.get('/authorize', async (req, res) => {
+	const apiKey = process.env.TWITTER_CONSUMER_KEY;
+	const secret = process.env.TWITTER_CONSUMER_KEY_SECRET;
 
 	if (!apiKey) {
 		throw new Error('The Consumer/API key was not provided');
@@ -31,21 +30,25 @@ twitterRouter.get('/authorize', async (_req, res) => {
 	};
 
 	try {
-		const header = new OAuthHeader(apiKey, secret);
-		const { data } = await axios.post(request.uri, undefined, {
-			headers: {
-				Authorization: header.getHeaderString(request),
-			},
-		});
+		req.session.processing = true;
+		// Make a request to twitter
+		const oAuthHeader = new OAuthHeader(apiKey, secret);
+		const headers = {
+			Authorization: oAuthHeader.getHeaderString(request),
+		};
+		const oAuthAuthorize = await getOAuthToken(request.uri, headers);
 
-		const oAuthAuthorize: Record<string, string> = responseToObject(data);
-
+		// confirm callback
 		if (!oAuthAuthorize.oauth_callback_confirmed) {
 			throw new Error('Could not confirm callback for oauth.');
 		}
 
+		// set the token received in session
+		req.session.oauth_token = oAuthAuthorize.oauth_token;
 		const authorizeUserLink = `https://api.twitter.com/oauth/authorize?oauth_token=${oAuthAuthorize.oauth_token}`;
+		req.session.save();
 
+		// send the client uri for authorization
 		res.json({
 			authorizeUrl: authorizeUserLink,
 		});
@@ -55,20 +58,29 @@ twitterRouter.get('/authorize', async (_req, res) => {
 });
 
 twitterRouter.get('/callback', (req, res) => {
-	res.send(req.query);
+	if (req.query.oauth_token === req.session.oauth_token) {
+		req.session.verified = true;
+		req.session.denied = false;
+	} else if (req.query.denied) {
+		req.session.denied = true;
+		req.session.verified = false;
+	}
+
+	req.session.processing = false;
+	res.end();
 });
 
-const responseToObject = (data: string): Record<string, string> => {
-	const responseList: string[] = data.split('&');
-
-	const obj: Record<string, string> = responseList.reduce((o, item) => {
-		const key = item.split('=')[0] || 'never';
-		const value = item.split('=')[1];
-
-		return { ...o, [key]: value };
-	}, {});
-
-	return obj;
-};
+twitterRouter.get('/verify', (req, res) => {
+	console.log(req.session);
+	if (req.session.processing) {
+		res.status(202).send();
+	} else if (req.session.verified) {
+		res.status(204).send();
+	} else if (req.session.denied) {
+		res.status(401).send();
+	} else {
+		res.status(502).send();
+	}
+});
 
 export default twitterRouter;
