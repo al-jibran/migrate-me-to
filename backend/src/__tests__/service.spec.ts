@@ -31,8 +31,21 @@ describe('Service', () => {
 				.get(`/twitter/verify`);
 		};
 
+		const routeToTest = '/twitter/verify';
+		it('returns 202 when the request is being processed', async () => {
+			await fromRoute(routeToTest, { processing: true }).expect(202);
+		});
+
 		it('returns 204 when authorization is successful', async () => {
-			await fromRoute('/twitter/verify', { verified: true }).expect(204);
+			await fromRoute(routeToTest, { verified: true }).expect(204);
+		});
+
+		it('fails with 401 if the user does not authorize', async () => {
+			await fromRoute(routeToTest, { denied: true }).expect(401);
+		});
+
+		it('fails with 500 if the status of authorization could not be confirmed', async () => {
+			await fromRoute(routeToTest, {}).expect(502);
 		});
 	});
 });
