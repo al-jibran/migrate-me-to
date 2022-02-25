@@ -21,10 +21,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Create .env file
         run: |
           touch .env
-          echo TWITTER_CONSUMER_KEY=${{ secrets.CONSUMER_API_KEY }} >> .env
-          echo TWITTER_CONSUMER_KEY_SECRET=${{ secrets.CONSUMER_API_KEY_SECRET }} >> .env
+          echo TWITTER_CONSUMER_KEY=${{ secrets.TWITTER_CONSUMER_KEY }} >> .env
+          echo TWITTER_CONSUMER_KEY_SECRET=${{ secrets.TWITTER_CONSUMER_KEY_SECRET }} >> .env
           echo SESSION_SECRET=${{ secrets.SESSION_SECRET }} >> .env
 
       - name: Tests
