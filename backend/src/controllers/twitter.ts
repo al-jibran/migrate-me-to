@@ -48,7 +48,6 @@ twitterRouter.get('/authorize', async (req, res) => {
 		req.session.save();
 
 		// send the client uri for authorization
-		console.log(oAuthAuthorize);
 		res.json({
 			authorizeUrl: authorizeUserLink,
 		});
