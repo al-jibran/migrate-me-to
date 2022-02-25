@@ -30,6 +30,7 @@ twitterRouter.get('/authorize', async (req, res) => {
 	};
 
 	try {
+		req.session.processing = true;
 		// Make a request to twitter
 		const oAuthHeader = new OAuthHeader(apiKey, secret);
 		const headers = {
