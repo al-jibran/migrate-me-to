@@ -56,8 +56,13 @@ twitterRouter.get('/authorize', async (req, res) => {
 	}
 });
 
-twitterRouter.get('/callback', (req, res) => {
-	res.send(req.query);
+twitterRouter.get('/callback', (req, _res) => {
+	if (req.query.oauth_token === req.session.oauth_token) {
+		req.session.verified = true;
+	} else if (req.query.denied) {
+		req.session.denied = true;
+	}
+});
 });
 
 export default twitterRouter;
