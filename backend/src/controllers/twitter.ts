@@ -57,12 +57,17 @@ twitterRouter.get('/authorize', async (req, res) => {
 	}
 });
 
-twitterRouter.get('/callback', (req, _res) => {
+twitterRouter.get('/callback', (req, res) => {
 	if (req.query.oauth_token === req.session.oauth_token) {
 		req.session.verified = true;
+		req.session.denied = false;
 	} else if (req.query.denied) {
 		req.session.denied = true;
+		req.session.verified = false;
 	}
+
+	req.session.processing = false;
+	res.end();
 });
 });
 
