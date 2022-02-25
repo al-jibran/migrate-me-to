@@ -69,6 +69,18 @@ twitterRouter.get('/callback', (req, res) => {
 	req.session.processing = false;
 	res.end();
 });
+
+twitterRouter.get('/verify', (req, res) => {
+	console.log(req.session);
+	if (req.session.processing) {
+		res.status(202).send();
+	} else if (req.session.verified) {
+		res.status(204).send();
+	} else if (req.session.denied) {
+		res.status(401).send();
+	} else {
+		res.status(502).send();
+	}
 });
 
 export default twitterRouter;
