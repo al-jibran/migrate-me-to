@@ -1,18 +1,27 @@
+import express, { Express, NextFunction } from 'express';
+import supertest, { SuperTest } from 'supertest';
+import { getOAuthToken } from '../api';
 import app from '../app';
-import supertest from 'supertest';
+
+jest.mock('../api');
+
+const mockToken = 'NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0';
 
 const api = supertest(app);
 
 describe('Service', () => {
+	
 	it('returns a link to login to the service', async () => {
-		const response = await api
-			.get('/twitter/authorize')
-			.expect(200)
-			.expect('Content-Type', /application\/json/);
-
+		(getOAuthToken as jest.Mock).mockResolvedValue({
+			oauth_token: 'NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0',
+			oauth_callback_confirmed: true,
+		});
+		
+		const response = await api.get('/twitter/authorize').expect(200);
+		expect(getOAuthToken).toHaveBeenCalled();
+		
 		expect(response.body).toEqual({
-			authorizeUrl:
-				'https://api.twitter.com/oauth/authorize?oauth_token=NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0',
+			authorizeUrl: `https://api.twitter.com/oauth/authorize?oauth_token=${mockToken}`,
 		});
 	});
 
