@@ -8,5 +8,6 @@ module.exports = {
 	transform: {
 		'^.+\\.(ts)$': 'ts-jest',
 	},
+	testPathIgnorePatterns: ['<rootDir>/src/__tests__/__utils__'],
 	preset: 'ts-jest',
 };
