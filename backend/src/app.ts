@@ -24,16 +24,10 @@ app.use(
 		saveUninitialized: false,
 		resave: false,
 		store: new MemoryStore({
-			checkPeriod: 16 * 60 * 60 * 1000,
+			checkPeriod: 6 * 60 * 60 * 1000,
 		}),
 	})
 );
-
-declare module 'express-session' {
-	interface SessionData {
-		view: number;
-	}
-}
 
 app.use('/twitter', twitterRouter);
 
