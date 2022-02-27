@@ -1,12 +1,11 @@
 export interface Token {
 	oauth_token: string;
-	oauth_token_secret: string;
+	oauth_token_secret?: string;
 }
 
 export interface Request {
 	method: METHOD;
 	uri: string;
-	data?: Record<string, string>;
 }
 
 export interface HeaderType extends Record<string, string> {
