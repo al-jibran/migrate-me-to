@@ -50,29 +50,16 @@ class OAuthHeader {
 		return headerString;
 	};
 
-	getEncryptedSignature = (request: Request, paramsForSignature: string[]) => {
-		const signature = this.#getSignature(request, paramsForSignature);
-		const secretKey = `${this.consumerSecret}&${this.tokenSecret}`;
-
-		return crypto
-			.createHmac('sha1', secretKey)
-			.update(signature)
-			.digest('base64');
-	};
-
-	#getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
+	private getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
 		const params = { ...this.oAuthParams, ...additionalParams };
-		return this.#encodeAndSort(params);
+		return this.encodeAndSort(params);
 	};
 
-	#encodeAndSort = (params: Record<string, string>) => {
+	private encodeAndSort = (params: Record<string, string>) => {
 		const oauthStrings = [];
-
 		for (const key in params) {
 			const value = params[key] || '';
-			const oauthString = `${uriPercentEncode(key)}="${uriPercentEncode(
-				value
-			)}"`;
+			const oauthString = `${uriPercentEncode(key)}="${uriPercentEncode(value)}"`;
 
 			oauthStrings.push(oauthString);
 		}
@@ -80,6 +67,11 @@ class OAuthHeader {
 		return oauthStrings.sort();
 	};
 
+	private getEncryptedSignature = (request: Request, paramsForSignature: string[]) => {
+		const signature = this.createSignature(request, paramsForSignature);
+		const secretKey = `${this.consumerSecret}&${this.tokenSecret}`;
+
+		return crypto.createHmac('sha1', secretKey).update(signature).digest('base64');
 	};
 
 	private createSignature = ({ method, uri }: Request, paramsForSignature: string[]): string => {
