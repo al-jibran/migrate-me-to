@@ -62,24 +62,20 @@ class Twitter {
 			}),
 		};
 
-		try {
-			const authorizeString = await postWithHeader(request.uri, headers);
-			const parseAuthorizeString = responseToObject(authorizeString);
+		const authorizeString = await postWithHeader(request.uri, headers);
+		const parseAuthorizeString = responseToObject(authorizeString);
 
-			if (!isAuthorizedToken(parseAuthorizeString)) {
-				throw new Error(
-					'Did not receive the expected response for authorization from Twitter.'
-				);
-			}
-
-			if (!parseAuthorizeString.oauth_callback_confirmed) {
-				throw new Error('OAuth Callback could not be confirmed');
-			}
-
-			return parseAuthorizeString;
-		} catch (e) {
-			throw e;
+		if (!isAuthorizedToken(parseAuthorizeString)) {
+			throw new Error(
+				'Did not receive the expected response for authorization from Twitter.'
+			);
 		}
+
+		if (!parseAuthorizeString.oauth_callback_confirmed) {
+			throw new Error('OAuth Callback could not be confirmed');
+		}
+
+		return parseAuthorizeString;
 	};
 
 	getAccessToken = async (
@@ -98,20 +94,16 @@ class Twitter {
 			}),
 		};
 
-		try {
-			const accessTokenString = await postWithHeader(request.uri, headers);
-			const parseAccessTokenString = responseToObject(accessTokenString);
+		const accessTokenString = await postWithHeader(request.uri, headers);
+		const parseAccessTokenString = responseToObject(accessTokenString);
 
-			if (!isAccessToken(parseAccessTokenString)) {
-				throw new Error(
-					'Did not receive the expected response for access tokens from Twitter'
-				);
-			}
-
-			return parseAccessTokenString;
-		} catch (e) {
-			throw e;
+		if (!isAccessToken(parseAccessTokenString)) {
+			throw new Error(
+				'Did not receive the expected response for access tokens from Twitter'
+			);
 		}
+
+		return parseAccessTokenString;
 	};
 }
 
