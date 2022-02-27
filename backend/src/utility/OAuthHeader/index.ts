@@ -82,42 +82,21 @@ class OAuthHeader {
 
 	};
 
-	#getSignature = (
-		{ method, uri, data }: Request,
-		paramsForSignature: string[]
-	): string => {
-		// Collecting information to sign
+	private createSignature = ({ method, uri }: Request, paramsForSignature: string[]): string => {
+		// Separates url from its queries.
 		const urlAndQuery = uri.split('?');
 		const url = urlAndQuery[0] || '';
 		const queryString = urlAndQuery[1];
 
 		const queryParams: string[] = getUrlQueries(queryString);
 
-		const oAuthParams: string[] = paramsForSignature.map((v) =>
-			v.replace(/"/g, '')
-		);
-
-		let dataEncoded: string[] = [];
-
-		// data will be defined only with POST requests.
-		if (data) {
-			dataEncoded = Object.keys(data).map((k) => {
-				const encodedKey = uriPercentEncode(k);
-				const encodedValue = uriPercentEncode(data[k] || '');
-				return `${encodedKey}=${encodedValue}`;
-			});
-		}
+		// removing " " attached when params were created as header params
+		const oAuthParams: string[] = paramsForSignature.map((v) => v.replace(/"/g, ''));
 
 		// Percent encoding the information to sign
-		const methodAndUrlParams = `${method.toUpperCase()}&${uriPercentEncode(
-			url
-		)}`;
+		const methodAndUrlParams = `${method.toUpperCase()}&${uriPercentEncode(url)}`;
 
-		const signatureParam = queryParams
-			.concat(oAuthParams)
-			.concat(dataEncoded)
-			.sort()
-			.join('&');
+		const signatureParam = queryParams.concat(oAuthParams).sort().join('&');
 
 		return `${methodAndUrlParams}&${uriPercentEncode(signatureParam)}`;
 	};
