@@ -167,10 +167,7 @@ const urlEncoding: Record<string, string> = {
  * @param exceptions an array of symbols not to encode other than the default ones (a-z, A-Z, 0-9, -._~)
  * @returns a percent encoded string
  */
-export const uriPercentEncode = (
-	value: string,
-	exceptions: string[] = ['']
-) => {
+export const uriPercentEncode = (value: string, exceptions: string[] = ['']) => {
 	let encodedString = '';
 	const exceptionsString = exceptions.join('');
 
@@ -189,6 +186,10 @@ export const uriPercentEncode = (
 
 export const randomStringGenerator = () => {
 	return crypto.randomUUID().replace(/[^a-zA-Z0-9]/g, '');
+};
+
+export const getTimestamp = (): string => {
+	return Math.floor(new Date().getTime() / 1000).toString();
 };
 
 export const getUrlQueries = (queries: string | undefined): string[] => {
@@ -223,3 +224,4 @@ export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
 ): obj is X & Record<Y, unknown> {
 	return obj.hasOwnProperty(prop);
 }
+
