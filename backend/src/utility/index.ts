@@ -198,3 +198,22 @@ export const getUrlQueries = (queries: string | undefined): string[] => {
 
 	return queryToAppend;
 };
+
+export const responseToObject = (data: string): Record<string, unknown> => {
+	const responseList: string[] = data.split('&');
+
+	const obj = responseList.reduce((o, item) => {
+		const key = item.split('=')[0];
+
+		if (!key) {
+			throw new Error('String not properly formed to create an object');
+		}
+
+		const value = item.split('=')[1];
+
+		return { ...o, [key]: value };
+	}, {});
+
+	return obj;
+};
+
