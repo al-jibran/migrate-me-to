@@ -80,5 +80,17 @@ describe('OAuth Header', () => {
 				expect(crypto.createHmac).toHaveBeenCalledWith('sha1', `${apiSecret}&`);
 			});
 
+			it('is encrypted with apiKey and oauth_token_secret when it is given', () => {
+				header.getHeaderString(request, data, {
+					oauth_token,
+					oauth_token_secret,
+				});
+
+				expect(crypto.createHmac).toHaveBeenCalledWith(
+					'sha1',
+					`${apiSecret}&${oauth_token_secret}`
+				);
+			});
+
 	});
 });
