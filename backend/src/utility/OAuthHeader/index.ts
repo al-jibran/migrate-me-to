@@ -35,7 +35,9 @@ class OAuthHeader {
 			this.tokenSecret = token.oauth_token_secret;
 		}
 
-		this.#oAuthParams['oauth_signature'] = this.getEncryptedSignature(request);
+		// signature methods requires every oauth parameter in its encoded form.
+		const encodedParamsForSignature: string[] =
+			this.#getOAuthStrings(additionalParams);
 
 		const headerString = `OAuth ${this.#getOAuthStrings(additionalParams).join(
 			', '
@@ -44,8 +46,8 @@ class OAuthHeader {
 		return headerString;
 	};
 
-	getEncryptedSignature = (request: Request) => {
-		const signature = this.#getSignature(request);
+	getEncryptedSignature = (request: Request, paramsForSignature: string[]) => {
+		const signature = this.#getSignature(request, paramsForSignature);
 		const secretKey = `${this.consumerSecret}&${this.tokenSecret}`;
 
 		return crypto
@@ -74,7 +76,14 @@ class OAuthHeader {
 		return oauthStrings.sort();
 	};
 
-	#getSignature = ({ method, uri, data }: Request): string => {
+	#getTimestamp = (): string => {
+		return Math.floor(new Date().getTime() / 1000).toString();
+	};
+
+	#getSignature = (
+		{ method, uri, data }: Request,
+		paramsForSignature: string[]
+	): string => {
 		// Collecting information to sign
 		const urlAndQuery = uri.split('?');
 		const url = urlAndQuery[0] || '';
@@ -82,7 +91,7 @@ class OAuthHeader {
 
 		const queryParams: string[] = getUrlQueries(queryString);
 
-		const oAuthParams: string[] = this.#getOAuthStrings().map((v) =>
+		const oAuthParams: string[] = paramsForSignature.map((v) =>
 			v.replace(/"/g, '')
 		);
 
@@ -98,7 +107,6 @@ class OAuthHeader {
 		}
 
 		// Percent encoding the information to sign
-
 		const methodAndUrlParams = `${method.toUpperCase()}&${uriPercentEncode(
 			url
 		)}`;
