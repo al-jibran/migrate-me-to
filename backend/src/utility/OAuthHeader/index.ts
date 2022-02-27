@@ -39,9 +39,22 @@ class OAuthHeader {
 		const encodedParamsForSignature: string[] =
 			this.#getOAuthStrings(additionalParams);
 
-		const headerString = `OAuth ${this.#getOAuthStrings(additionalParams).join(
-			', '
-		)}`;
+		this.#oAuthParams['oauth_signature'] = this.getEncryptedSignature(
+			request,
+			encodedParamsForSignature
+		);
+
+		const encodedSignature = uriPercentEncode(
+			this.#oAuthParams['oauth_signature']
+		);
+
+		// every other oauth param has already been encoded and sorted for oauth_signature.
+		// Now that we have oauth_signature, we can encode it and sort it with the others.
+		const completeOAuthParams = encodedParamsForSignature
+			.concat(`oauth_signature=${encodedSignature}`)
+			.sort();
+
+		const headerString = `OAuth ${completeOAuthParams.join(', ')}`;
 
 		return headerString;
 	};
