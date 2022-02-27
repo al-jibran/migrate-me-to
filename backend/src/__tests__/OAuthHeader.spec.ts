@@ -11,8 +11,8 @@ describe('OAuth Header', () => {
 	const headerWithoutToken =
 		'OAuth oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg", oauth_signature="tnnArxj06cWHq44gCs1OSKk%2FjLY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1318622958", oauth_version="1.0"';
 
-	const oauthParamsWithToken =
-		/OAuth oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="\w+", oauth_signature="[a-zA-z0-9%]+", oauth_signature_method="HMAC-SHA1", oauth_timestamp="\d+", oauth_token="[a-zA-z0-9%]+", oauth_version="1.0"/g;
+	const headerWithToken =
+		'OAuth oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg", oauth_signature="tnnArxj06cWHq44gCs1OSKk%2FjLY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1318622958", oauth_token="370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb", oauth_version="1.0"';
 
 	const apiKey = 'xvz1evFS4wEEPTGEFPHBog';
 	const apiSecret = 'kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw';
@@ -56,6 +56,17 @@ describe('OAuth Header', () => {
 			expect(receivedString).toMatch(headerWithoutToken);
 		});
 
+		it('returns a header string with token', () => {
+			const receivedString = header.getHeaderString(
+				request,
+				{},
+				{
+					oauth_token,
+				}
+			);
+
+			expect(receivedString).toMatch(headerWithToken);
+		});
 
 		expect(signature).toMatch(validSignature);
 	});
