@@ -35,24 +35,15 @@ class OAuthHeader {
 			this.tokenSecret = token.oauth_token_secret || '';
 		}
 
-		// signature methods requires every oauth parameter in its encoded form.
-		const encodedParamsForSignature: string[] =
-			this.#getOAuthStrings(additionalParams);
+		// signature methods requires every oauth parameter and addition info like queries, data, etc. in its encoded form.
+		const encodedParamsForSignature: string[] = this.getOAuthStrings(additionalParams);
 
 		this.oAuthParams['oauth_signature'] = this.getEncryptedSignature(
 			request,
 			encodedParamsForSignature
 		);
 
-		const encodedSignature = uriPercentEncode(
-			this.oAuthParams['oauth_signature']
-		);
-
-		// every other oauth param has already been encoded and sorted for oauth_signature.
-		// Now that we have oauth_signature, we can encode it and sort it with the others.
-		const completeOAuthParams = encodedParamsForSignature
-			.concat(`oauth_signature=${encodedSignature}`)
-			.sort();
+		const completeOAuthParams = this.getOAuthStrings();
 
 		const headerString = `OAuth ${completeOAuthParams.join(', ')}`;
 
