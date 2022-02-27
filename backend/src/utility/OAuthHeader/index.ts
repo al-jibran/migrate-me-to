@@ -3,7 +3,7 @@ import { uriPercentEncode, randomStringGenerator, getUrlQueries } from '..';
 import { HeaderType, Request, Token } from './types';
 
 class OAuthHeader {
-	#oAuthParams: HeaderType = {
+	private oAuthParams: HeaderType = {
 		oauth_consumer_key: '',
 		oauth_nonce: '',
 		oauth_signature_method: '',
@@ -17,9 +17,9 @@ class OAuthHeader {
 	constructor(consumerKey: string, consumerSecret: string) {
 		this.consumerSecret = consumerSecret;
 
-		this.#oAuthParams['oauth_consumer_key'] = consumerKey;
-		this.#oAuthParams['oauth_signature_method'] = 'HMAC-SHA1';
-		this.#oAuthParams['oauth_version'] = '1.0';
+		this.oAuthParams['oauth_consumer_key'] = consumerKey;
+		this.oAuthParams['oauth_signature_method'] = 'HMAC-SHA1';
+		this.oAuthParams['oauth_version'] = '1.0';
 	}
 
 	getHeaderString = (
@@ -27,11 +27,11 @@ class OAuthHeader {
 		additionalParams?: Record<string, string>,
 		token?: Token
 	): string => {
-		this.#oAuthParams['oauth_timestamp'] = this.#getTimestamp();
-		this.#oAuthParams['oauth_nonce'] = randomStringGenerator();
+		this.oAuthParams['oauth_timestamp'] = this.#getTimestamp();
+		this.oAuthParams['oauth_nonce'] = randomStringGenerator();
 
 		if (token) {
-			this.#oAuthParams['oauth_token'] = token.oauth_token;
+			this.oAuthParams['oauth_token'] = token.oauth_token;
 			this.tokenSecret = token.oauth_token_secret;
 		}
 
@@ -39,13 +39,13 @@ class OAuthHeader {
 		const encodedParamsForSignature: string[] =
 			this.#getOAuthStrings(additionalParams);
 
-		this.#oAuthParams['oauth_signature'] = this.getEncryptedSignature(
+		this.oAuthParams['oauth_signature'] = this.getEncryptedSignature(
 			request,
 			encodedParamsForSignature
 		);
 
 		const encodedSignature = uriPercentEncode(
-			this.#oAuthParams['oauth_signature']
+			this.oAuthParams['oauth_signature']
 		);
 
 		// every other oauth param has already been encoded and sorted for oauth_signature.
@@ -70,7 +70,7 @@ class OAuthHeader {
 	};
 
 	#getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
-		const params = { ...this.#oAuthParams, ...additionalParams };
+		const params = { ...this.oAuthParams, ...additionalParams };
 		return this.#encodeAndSort(params);
 	};
 
