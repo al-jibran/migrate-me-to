@@ -11,11 +11,11 @@ class OAuthHeader {
 		oauth_version: '',
 	};
 
-	#consumerSecret: string;
-	#tokenSecret = '';
+	private consumerSecret: string;
+	private tokenSecret = '';
 
 	constructor(consumerKey: string, consumerSecret: string) {
-		this.#consumerSecret = consumerSecret;
+		this.consumerSecret = consumerSecret;
 
 		this.#oAuthParams['oauth_consumer_key'] = consumerKey;
 		this.#oAuthParams['oauth_signature_method'] = 'HMAC-SHA1';
@@ -35,7 +35,7 @@ class OAuthHeader {
 
 		if (token) {
 			this.#oAuthParams['oauth_token'] = token.oauth_token;
-			this.#tokenSecret = token.tokenSecret;
+			this.tokenSecret = token.oauth_token_secret;
 		}
 
 		this.#oAuthParams['oauth_signature'] = this.getEncryptedSignature(request);
@@ -49,7 +49,7 @@ class OAuthHeader {
 
 	getEncryptedSignature = (request: Request) => {
 		const signature = this.#getSignature(request);
-		const secretKey = `${this.#consumerSecret}&${this.#tokenSecret}`;
+		const secretKey = `${this.consumerSecret}&${this.tokenSecret}`;
 
 		return crypto
 			.createHmac('sha1', secretKey)

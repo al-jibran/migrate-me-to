@@ -1,6 +1,6 @@
 export interface Token {
 	oauth_token: string;
-	tokenSecret: string;
+	oauth_token_secret: string;
 }
 
 export interface Request {
