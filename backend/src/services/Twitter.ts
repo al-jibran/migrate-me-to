@@ -11,11 +11,23 @@ interface AuthorizeToken {
 	oauth_callback_confirmed: boolean;
 }
 
+interface AccessToken {
+	oauth_token: string;
+	oauth_token_secret: string;
+}
+
 const isAuthorizedToken = (obj: AuthorizeToken | {}): obj is AuthorizeToken => {
 	return (
 		hasOwnProperty(obj, 'oauth_token') &&
 		hasOwnProperty(obj, 'oauth_token_secret') &&
 		hasOwnProperty(obj, 'oauth_callback_confirmed')
+	);
+};
+
+const isAccessToken = (obj: AccessToken | {}): obj is AccessToken => {
+	return (
+		hasOwnProperty(obj, 'oauth_token') &&
+		hasOwnProperty(obj, 'oauth_token_secret')
 	);
 };
 
@@ -69,5 +81,38 @@ class Twitter {
 			throw e;
 		}
 	};
+
+	getAccessToken = async (
+		oauth_token: string,
+		oauth_verifier: string
+	): Promise<AccessToken> => {
+		const request: Request = {
+			method: METHOD.POST,
+			uri: `${this.TWITTER_BASE_URL}/oauth/access_token`,
+		};
+
+		const headers = {
+			Authorization: this.oAuthHeader.getHeaderString(request, {
+				oauth_token,
+				oauth_verifier,
+			}),
+		};
+
+		try {
+			const accessTokenString = await postWithHeader(request.uri, headers);
+			const parseAccessTokenString = responseToObject(accessTokenString);
+
+			if (!isAccessToken(parseAccessTokenString)) {
+				throw new Error(
+					'Did not receive the expected response for access tokens from Twitter'
+				);
+			}
+
+			return parseAccessTokenString;
+		} catch (e) {
+			throw e;
+		}
+	};
+}
 
 export default Twitter;
