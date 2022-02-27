@@ -8,24 +8,20 @@ const twitter = new Twitter();
 twitterRouter.get('/authorize', async (req, res) => {
 	// The OAuth process has started!
 	req.session.processing = true;
-	try {
-		// Connect to twitter and get token
-		const oAuthAuthorize = await twitter.getAuthorizeToken(
-			'http://127.0.0.1:4000/twitter/callback'
-		);
 
-		req.session.oauth_token = oAuthAuthorize.oauth_token;
+	// Connect to twitter and get token
+	const oAuthAuthorize = await twitter.getAuthorizeToken(
+		'http://127.0.0.1:4000/twitter/callback'
+	);
 
-		// send the client uri for authorization
-		const authorizeUserLink = `https://api.twitter.com/oauth/authorize?oauth_token=${oAuthAuthorize.oauth_token}`;
+	req.session.oauth_token = oAuthAuthorize.oauth_token;
 
-		res.json({
-			authorizeUrl: authorizeUserLink,
-		});
-	} catch (e) {
-		console.log(e);
-		res.send(e);
-	}
+	// send the client uri for authorization
+	const authorizeUserLink = `https://api.twitter.com/oauth/authorize?oauth_token=${oAuthAuthorize.oauth_token}`;
+
+	res.json({
+		authorizeUrl: authorizeUserLink,
+	});
 });
 
 twitterRouter.get('/callback', async (req, res) => {
@@ -44,17 +40,13 @@ twitterRouter.get('/callback', async (req, res) => {
 
 		const oauth_verifier = req.query.oauth_verifier as string;
 
-		try {
-			const accessTokens = await twitter.getAccessToken(
-				sessionOauthToken,
-				oauth_verifier
-			);
+		const accessTokens = await twitter.getAccessToken(
+			sessionOauthToken,
+			oauth_verifier
+		);
 
-			req.session.oauth_token = accessTokens.oauth_token;
-			req.session.oauth_token_secret = accessTokens.oauth_token_secret;
-		} catch (error) {
-			res.status(500).json(error);
-		}
+		req.session.oauth_token = accessTokens.oauth_token;
+		req.session.oauth_token_secret = accessTokens.oauth_token_secret;
 	} else if (req.query.denied) {
 		req.session.denied = true;
 		req.session.verified = false;
