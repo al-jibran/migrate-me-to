@@ -55,8 +55,12 @@ class OAuthHeader {
 	};
 
 	#getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
-		const oauthStrings: string[] = [];
 		const params = { ...this.#oAuthParams, ...additionalParams };
+		return this.#encodeAndSort(params);
+	};
+
+	#encodeAndSort = (params: Record<string, string>) => {
+		const oauthStrings = [];
 
 		for (const key in params) {
 			const value = params[key] || '';
