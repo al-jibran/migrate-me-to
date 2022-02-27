@@ -24,6 +24,8 @@ describe('OAuth Header', () => {
 		uri: 'https://api.twitter.com/1.1/statuses/update.json?include_entities=true',
 	};
 
+	const data = { status: 'Hello Ladies + Gentlemen, a signed OAuth request!' };
+
 	let header: OAuthHeader;
 	let spiedOnCrypto: jest.SpyInstance;
 
@@ -68,6 +70,10 @@ describe('OAuth Header', () => {
 			expect(receivedString).toMatch(headerWithToken);
 		});
 
-		expect(signature).toMatch(validSignature);
+		it('returns a header without data to send in header', () => {
+			const receivedString = header.getHeaderString(request, data, { oauth_token });
+			expect(receivedString).toMatch(headerWithToken);
+		});
+
 	});
 });
