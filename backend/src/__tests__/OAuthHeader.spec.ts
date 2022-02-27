@@ -75,5 +75,10 @@ describe('OAuth Header', () => {
 			expect(receivedString).toMatch(headerWithToken);
 		});
 
+		describe('signature', () => {
+			it('is encrypted with apiKey only when oauth_token_secret is not given', () => {
+				expect(crypto.createHmac).toHaveBeenCalledWith('sha1', `${apiSecret}&`);
+			});
+
 	});
 });
