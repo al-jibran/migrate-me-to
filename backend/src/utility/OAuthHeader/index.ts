@@ -32,7 +32,7 @@ class OAuthHeader {
 
 		if (token) {
 			this.oAuthParams['oauth_token'] = token.oauth_token;
-			this.tokenSecret = token.oauth_token_secret;
+			this.tokenSecret = token.oauth_token_secret || '';
 		}
 
 		// signature methods requires every oauth parameter in its encoded form.
