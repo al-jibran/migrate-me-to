@@ -1,6 +1,6 @@
 import crypto from 'crypto';
-import { uriPercentEncode, randomStringGenerator, getUrlQueries } from '..';
 import { HeaderType, Request, Token } from './types';
+import { uriPercentEncode, randomStringGenerator, getUrlQueries, getTimestamp } from '..';
 
 class OAuthHeader {
 	private oAuthParams: HeaderType = {
@@ -27,7 +27,7 @@ class OAuthHeader {
 		additionalParams?: Record<string, string>,
 		token?: Token
 	): string => {
-		this.oAuthParams['oauth_timestamp'] = this.#getTimestamp();
+		this.oAuthParams['oauth_timestamp'] = getTimestamp();
 		this.oAuthParams['oauth_nonce'] = randomStringGenerator();
 
 		if (token) {
@@ -89,8 +89,6 @@ class OAuthHeader {
 		return oauthStrings.sort();
 	};
 
-	#getTimestamp = (): string => {
-		return Math.floor(new Date().getTime() / 1000).toString();
 	};
 
 	#getSignature = (
