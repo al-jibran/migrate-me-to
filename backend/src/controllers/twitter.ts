@@ -23,21 +23,47 @@ twitterRouter.get('/authorize', async (req, res) => {
 			authorizeUrl: authorizeUserLink,
 		});
 	} catch (e) {
+		console.log(e);
 		res.send(e);
 	}
 });
 
-twitterRouter.get('/callback', (req, res) => {
-	if (req.query.oauth_token === req.session.oauth_token) {
+twitterRouter.get('/callback', async (req, res) => {
+	const sessionOauthToken = req.session.oauth_token;
+	let statusCode = 200;
+	console.log(sessionOauthToken);
+
+	if (
+		req.query.oauth_token &&
+		req.query.oauth_verifier &&
+		sessionOauthToken &&
+		req.query.oauth_token === sessionOauthToken
+	) {
 		req.session.verified = true;
 		req.session.denied = false;
+
+		const oauth_verifier = req.query.oauth_verifier as string;
+
+		try {
+			const accessTokens = await twitter.getAccessToken(
+				sessionOauthToken,
+				oauth_verifier
+			);
+
+			req.session.oauth_token = accessTokens.oauth_token;
+			req.session.oauth_token_secret = accessTokens.oauth_token_secret;
+		} catch (error) {
+			res.status(500).json(error);
+		}
 	} else if (req.query.denied) {
 		req.session.denied = true;
 		req.session.verified = false;
+	} else {
+		statusCode = 511;
 	}
 
 	req.session.processing = false;
-	res.end();
+	res.status(statusCode).send();
 });
 
 twitterRouter.get('/verify', (req, res) => {
