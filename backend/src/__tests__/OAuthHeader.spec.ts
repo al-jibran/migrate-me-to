@@ -92,5 +92,17 @@ describe('OAuth Header', () => {
 				);
 			});
 
+			it('returns a valid signature for header string', () => {
+				spiedOnCrypto.mockRestore();
+
+				const receivedString = header.getHeaderString(request, data, {
+					oauth_token,
+					oauth_token_secret,
+				});
+
+				const encodedSignature = utility.uriPercentEncode('hCtSmYh+iHYCEqBWrE7C7hYmtUk=');
+				expect(receivedString.search(encodedSignature)).toBeGreaterThan(-1);
+			});
+		});
 	});
 });
