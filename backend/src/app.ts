@@ -14,7 +14,12 @@ if (!process.env.SESSION_SECRET) {
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+	cors({
+		origin: '*',
+		credentials: true,
+	})
+);
 
 const MemoryStore = createMemoryStore(session);
 
