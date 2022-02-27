@@ -4,6 +4,7 @@ import session from 'express-session';
 import createMemoryStore from 'memorystore';
 
 import twitterRouter from './controllers/twitter';
+import { errorHandleMiddleware } from './Errors';
 
 console.log(`MODE: ${process.env.NODE_ENV}`);
 
@@ -40,5 +41,7 @@ app.get('/ping', (_req, res) => {
 	console.log('Someone pinged here');
 	res.send('pong');
 });
+
+app.use(errorHandleMiddleware);
 
 export default app;
