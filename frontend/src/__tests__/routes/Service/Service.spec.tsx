@@ -11,8 +11,15 @@ jest.mock('../../../api');
 window.open = jest.fn();
 
 describe('Service', () => {
-	let serviceContext: RenderResult;
+	let context: RenderResult;
 	let button: HTMLImageElement;
+
+	const error: AppError = {
+		code: 503,
+		data: {
+			message: 'error',
+		},
+	};
 
 	const service: ServiceType = {
 		name: 'Twitter',
