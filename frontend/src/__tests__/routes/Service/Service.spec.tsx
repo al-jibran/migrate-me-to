@@ -4,7 +4,7 @@ import flushPromises from 'flush-promises';
 
 import { ServiceType } from '../../../data/services';
 import { ServiceContainer } from '../../../routes/Service';
-import { Process } from '../../../routes/Service/Process';
+import { AppError, Process } from '../../../routes/Service/Process';
 import { getAuthorizeUserLink } from '../../../api';
 
 jest.mock('../../../api');
@@ -21,40 +21,48 @@ describe('Service', () => {
 	};
 
 	beforeEach(() => {
-		(getAuthorizeUserLink as jest.Mock).mockResolvedValue('resolved');
+		context = render(<ServiceContainer name={service['name']} service={service} />);
 
-		serviceContext = render(
-			<ServiceContainer name={service['name']} service={service} />
-		);
-
-		button = serviceContext.getByRole('link', {
+		button = context.getByRole('link', {
 			name: /log in/i,
 		}) as HTMLImageElement;
 	});
 
-	it('changes the first step to in progress when clicked on log in button', () => {
-		const { getByLabelText } = serviceContext;
+	it('changes the first step to in progress when clicked on log in button', async () => {
+		(getAuthorizeUserLink as jest.Mock).mockResolvedValue('resolved');
+		const { getByLabelText } = context;
 
 		userEvent.click(button);
+		await act(flushPromises);
 
-		expect(getByLabelText('step 1').children).toContain(
-			getByLabelText('in progress')
-		);
+		expect(getByLabelText('step 1').children).toContain(getByLabelText('in progress'));
+	});
+
+	it('displays a cross at the step marking failure on error', async () => {
+		(getAuthorizeUserLink as jest.Mock).mockRejectedValue(error);
+
+		userEvent.click(button);
+		await act(flushPromises);
+
+		const { getByLabelText, queryByText } = context;
+
+		expect(queryByText(error.data.message)).not.toBeNull();
+		expect(getByLabelText('step 1').children).toContain(getByLabelText('fail'));
 	});
 });
 
 describe('Process', () => {
 	let context: RenderResult;
 	const serviceName = 'Twitter';
-	const error = {
+	const error: AppError = {
 		code: 503,
-		message: 'There was a problem connecting to the server. Try again later.',
+		data: {
+			message: 'There was a problem connecting to the server. Try again later.',
+		},
 	};
 
 	beforeEach(() => {
-		context = render(
-			<Process name={serviceName} dispatchStepsStatus={jest.fn()} />
-		);
+		context = render(<Process name={serviceName} dispatchStepsStatus={jest.fn()} />);
 	});
 
 	describe('when the log in button is clicked', () => {
@@ -85,7 +93,7 @@ describe('Process', () => {
 
 			it('does not display the error', () => {
 				const { queryByText } = context;
-				expect(queryByText(error.message)).toBeNull();
+				expect(queryByText(error.data.message)).toBeNull();
 			});
 
 			it('does not display the button', () => {
@@ -101,7 +109,7 @@ describe('Process', () => {
 
 			it('displays the error message', async () => {
 				const { queryByText } = context;
-				expect(queryByText(error.message)).not.toBeNull();
+				expect(queryByText(error.data.message)).not.toBeNull();
 			});
 
 			it('does not display the loading indicator', async () => {
@@ -127,7 +135,7 @@ describe('Process', () => {
 
 				beforeEach(() => {
 					const { queryByText } = context;
-					expect(queryByText(error.message)).not.toBeNull();
+					expect(queryByText(error.data.message)).not.toBeNull();
 
 					(getAuthorizeUserLink as jest.Mock).mockResolvedValue('resolved');
 
@@ -136,7 +144,7 @@ describe('Process', () => {
 
 				it('removes the error', () => {
 					const { queryByText } = context;
-					expect(queryByText(error.message)).toBeNull();
+					expect(queryByText(error.data.message)).toBeNull();
 				});
 
 				it('displays the loading indicator', () => {
