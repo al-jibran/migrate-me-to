@@ -1,4 +1,6 @@
 import OAuthHeader from '../utility/OAuthHeader';
+import * as utility from '../utility';
+import crypto from 'crypto';
 
 enum METHOD {
 	POST = 'POST',
@@ -6,43 +8,112 @@ enum METHOD {
 }
 
 describe('OAuth Header', () => {
-	const oauthParamsWithoutToken =
-		/OAuth oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="\w+", oauth_signature="[a-zA-z0-9%]+", oauth_signature_method="HMAC-SHA1", oauth_timestamp="\d+", oauth_version="1.0"/g;
+	const headerWithoutToken =
+		'OAuth oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg", oauth_signature="tnnArxj06cWHq44gCs1OSKk%2FjLY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1318622958", oauth_version="1.0"';
 
-	const oauthParamsWithToken =
-		/OAuth oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="\w+", oauth_signature="[a-zA-z0-9%]+", oauth_signature_method="HMAC-SHA1", oauth_timestamp="\d+", oauth_token="[a-zA-z0-9%]+", oauth_version="1.0"/g;
+	const headerWithToken =
+		'OAuth oauth_consumer_key="xvz1evFS4wEEPTGEFPHBog", oauth_nonce="kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg", oauth_signature="tnnArxj06cWHq44gCs1OSKk%2FjLY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1318622958", oauth_token="370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb", oauth_version="1.0"';
 
-	const validSignature =
-		/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$/g;
+	const apiKey = 'xvz1evFS4wEEPTGEFPHBog';
+	const apiSecret = 'kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw';
+	const oauth_token = '370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb';
+	const oauth_token_secret = 'LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE';
 
 	const request = {
 		method: METHOD.POST,
 		uri: 'https://api.twitter.com/1.1/statuses/update.json?include_entities=true',
-		data: { status: 'Hello Ladies + Gentlemen, a signed OAuth request!' },
 	};
 
+	const data = { status: 'Hello Ladies + Gentlemen, a signed OAuth request!' };
+
 	let header: OAuthHeader;
+	let spiedOnCrypto: jest.SpyInstance;
 
 	beforeEach(() => {
-		header = new OAuthHeader('xvz1evFS4wEEPTGEFPHBog', 'def');
+		header = new OAuthHeader(apiKey, apiSecret);
+
+		jest.spyOn(utility, 'getTimestamp').mockImplementation(() => '1318622958');
+
+		jest
+			.spyOn(utility, 'randomStringGenerator')
+			.mockImplementation(() => 'kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg');
 	});
 
-	it('returns a header string without token', () => {
-		const headerString = header.getHeaderString(request);
-		expect(headerString).toMatch(oauthParamsWithoutToken);
-	});
+	describe('getHeaderString', () => {
+		beforeEach(() => {
+			// since getEncryptSignature method is private in class,
+			// we are stubbing the method that it uses to encrypt the value.
 
-	it('returns a header string with token', () => {
-		const headerString = header.getHeaderString(request, {
-			oauth_token: 'abcdefghi',
-			tokenSecret: 'secret',
+			spiedOnCrypto = jest.spyOn(crypto, 'createHmac').mockImplementation(
+				jest.fn().mockImplementation(() => ({
+					update: () => ({
+						digest: jest.fn().mockReturnValue('tnnArxj06cWHq44gCs1OSKk/jLY='),
+					}),
+				}))
+			);
 		});
-		expect(headerString).toMatch(oauthParamsWithToken);
-	});
 
-	it('returns a valid base64 string encoded signature with getEncryptedSignature', () => {
-		const signature = header.getEncryptedSignature(request);
+		it('returns a header string without token', () => {
+			const receivedString = header.getHeaderString(request);
+			expect(receivedString).toMatch(headerWithoutToken);
+		});
 
-		expect(signature).toMatch(validSignature);
+		it('returns a header string with token', () => {
+			const receivedString = header.getHeaderString(request, { oauth_token });
+
+			expect(receivedString).toMatch(headerWithToken);
+		});
+
+		it('returns a header without data to send in header', () => {
+			const receivedString = header.getHeaderString(request, { oauth_token }, data);
+			expect(receivedString).toMatch(headerWithToken);
+		});
+
+		it('returns a header string with encoded oauth_callback when it is passed as an additional param', () => {
+			const oauth_callback = 'http://callbackurl.ex';
+			const encoded = utility.uriPercentEncode(oauth_callback);
+
+			const receivedString = header.getHeaderString(request, { oauth_token, oauth_callback });
+
+			expect(receivedString.search(`oauth_callback="${encoded}"`)).toBeGreaterThan(-1);
+		});
+
+		describe('signature', () => {
+			it('is encrypted with apiKey only when oauth_token_secret is not given', () => {
+				expect(crypto.createHmac).toHaveBeenCalledWith('sha1', `${apiSecret}&`);
+			});
+
+			it('is encrypted with apiKey and oauth_token_secret when it is given', () => {
+				header.getHeaderString(
+					request,
+					{
+						oauth_token,
+						oauth_token_secret,
+					},
+					data
+				);
+
+				expect(crypto.createHmac).toHaveBeenCalledWith(
+					'sha1',
+					`${apiSecret}&${oauth_token_secret}`
+				);
+			});
+
+			it('returns a valid signature for header string', () => {
+				spiedOnCrypto.mockRestore();
+
+				const receivedString = header.getHeaderString(
+					request,
+					{
+						oauth_token,
+						oauth_token_secret,
+					},
+					data
+				);
+
+				const encodedSignature = utility.uriPercentEncode('hCtSmYh+iHYCEqBWrE7C7hYmtUk=');
+				expect(receivedString.search(encodedSignature)).toBeGreaterThan(-1);
+			});
+		});
 	});
 });

@@ -1,9 +1,10 @@
 import crypto from 'crypto';
-import { uriPercentEncode, randomStringGenerator, getUrlQueries } from '..';
-import { HeaderType, Request, Token } from './types';
+import { AdditionalOauth, HeaderType, Request } from './types';
+import { uriPercentEncode, randomStringGenerator, getUrlQueries, getTimestamp } from '..';
+import { ProxyError } from '../../Errors';
 
 class OAuthHeader {
-	#oAuthParams: HeaderType = {
+	private oAuthParams: HeaderType = {
 		oauth_consumer_key: '',
 		oauth_nonce: '',
 		oauth_signature_method: '',
@@ -11,61 +12,70 @@ class OAuthHeader {
 		oauth_version: '',
 	};
 
-	#consumerSecret: string;
-	#tokenSecret = '';
+	private consumerSecret: string;
+	private tokenSecret = '';
 
 	constructor(consumerKey: string, consumerSecret: string) {
-		this.#consumerSecret = consumerSecret;
+		this.consumerSecret = consumerSecret;
 
-		this.#oAuthParams['oauth_consumer_key'] = consumerKey;
-		this.#oAuthParams['oauth_signature_method'] = 'HMAC-SHA1';
-		this.#oAuthParams['oauth_version'] = '1.0';
+		this.oAuthParams['oauth_consumer_key'] = consumerKey;
+		this.oAuthParams['oauth_signature_method'] = 'HMAC-SHA1';
+		this.oAuthParams['oauth_version'] = '1.0';
 	}
 
+	/**
+	 * This method generates a header string that is used for Authorization of OAuth 1.0 requests.
+	 * @param request A request object that contains uri endpoint to send request to and HTTP Method like GET, POST, etc.
+	 * @param additionalOAuthParams An optional object that may contain oauth_callback, oauth_verifier, oauth_token (access token), oauth_token_secret (access token secret)
+	 * @param dataToSend An optional object that may contain data to send with POST methods.
+	 * @returns A string to be used in the Authorization Header for making oauth requests.
+	 */
 	getHeaderString = (
 		request: Request,
-		additionalParams?: Record<string, string>,
-		token?: Token
+		additionalOAuthParams?: AdditionalOauth,
+		dataToSend: Record<string, string> = {}
 	): string => {
-		this.#oAuthParams['oauth_timestamp'] = Math.floor(
-			new Date().getTime() / 1000
-		).toString();
+		this.oAuthParams['oauth_timestamp'] = getTimestamp();
+		this.oAuthParams['oauth_nonce'] = randomStringGenerator();
 
-		this.#oAuthParams['oauth_nonce'] = randomStringGenerator();
+		if (additionalOAuthParams) {
+			Object.keys(additionalOAuthParams).forEach((param) => {
+				const value = additionalOAuthParams[param as keyof AdditionalOauth];
 
-		if (token) {
-			this.#oAuthParams['oauth_token'] = token.oauth_token;
-			this.#tokenSecret = token.tokenSecret;
+				if (!value) {
+					throw new ProxyError('Could not create header for OAuth Request', 500);
+				}
+
+				if (param === 'oauth_token_secret') this.tokenSecret = value;
+				else this.oAuthParams[param] = value;
+			});
 		}
 
-		this.#oAuthParams['oauth_signature'] = this.getEncryptedSignature(request);
+		// signature methods requires every oauth parameter and addition info like queries, data, etc. in its encoded form.
+		const encodedParamsForSignature: string[] = this.getOAuthStrings(dataToSend);
 
-		const headerString = `OAuth ${this.#getOAuthStrings(additionalParams).join(
-			', '
-		)}`;
+		this.oAuthParams['oauth_signature'] = this.getEncryptedSignature(
+			request,
+			encodedParamsForSignature
+		);
+
+		const completeOAuthParams = this.getOAuthStrings();
+
+		const headerString = `OAuth ${completeOAuthParams.join(', ')}`;
 
 		return headerString;
 	};
 
-	getEncryptedSignature = (request: Request) => {
-		const signature = this.#getSignature(request);
-		const secretKey = `${this.#consumerSecret}&${this.#tokenSecret}`;
-
-		return crypto
-			.createHmac('sha1', secretKey)
-			.update(signature)
-			.digest('base64');
+	private getOAuthStrings = (additionalParams: Record<string, string> = {}): string[] => {
+		const params = { ...this.oAuthParams, ...additionalParams };
+		return this.encodeAndSort(params);
 	};
 
-	#getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
-		const oauthStrings: string[] = [];
-		const params = { ...this.#oAuthParams, ...additionalParams };
-
+	private encodeAndSort = (params: Record<string, string>) => {
+		const oauthStrings = [];
 		for (const key in params) {
 			const value = params[key] || '';
-			const oauthString = `${uriPercentEncode(key)}="${uriPercentEncode(
-				value
-			)}"`;
+			const oauthString = `${uriPercentEncode(key)}="${uriPercentEncode(value)}"`;
 
 			oauthStrings.push(oauthString);
 		}
@@ -73,40 +83,28 @@ class OAuthHeader {
 		return oauthStrings.sort();
 	};
 
-	#getSignature = ({ method, uri, data }: Request): string => {
-		// Collecting information to sign
+	private getEncryptedSignature = (request: Request, paramsForSignature: string[]) => {
+		const signature = this.createSignature(request, paramsForSignature);
+		const secretKey = `${this.consumerSecret}&${this.tokenSecret}`;
+
+		return crypto.createHmac('sha1', secretKey).update(signature).digest('base64');
+	};
+
+	private createSignature = ({ method, uri }: Request, paramsForSignature: string[]): string => {
+		// Separates url from its queries.
 		const urlAndQuery = uri.split('?');
 		const url = urlAndQuery[0] || '';
 		const queryString = urlAndQuery[1];
 
 		const queryParams: string[] = getUrlQueries(queryString);
 
-		const oAuthParams: string[] = this.#getOAuthStrings().map((v) =>
-			v.replace(/"/g, '')
-		);
-
-		let dataEncoded: string[] = [];
-
-		// data will be defined only with POST requests.
-		if (data) {
-			dataEncoded = Object.keys(data).map((k) => {
-				const encodedKey = uriPercentEncode(k);
-				const encodedValue = uriPercentEncode(data[k] || '');
-				return `${encodedKey}=${encodedValue}`;
-			});
-		}
+		// removing " " attached when params were created as header params
+		const oAuthParams: string[] = paramsForSignature.map((v) => v.replace(/"/g, ''));
 
 		// Percent encoding the information to sign
+		const methodAndUrlParams = `${method.toUpperCase()}&${uriPercentEncode(url)}`;
 
-		const methodAndUrlParams = `${method.toUpperCase()}&${uriPercentEncode(
-			url
-		)}`;
-
-		const signatureParam = queryParams
-			.concat(oAuthParams)
-			.concat(dataEncoded)
-			.sort()
-			.join('&');
+		const signatureParam = queryParams.concat(oAuthParams).sort().join('&');
 
 		return `${methodAndUrlParams}&${uriPercentEncode(signatureParam)}`;
 	};

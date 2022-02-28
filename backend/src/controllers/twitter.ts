@@ -1,77 +1,62 @@
 import express from 'express';
-
-import OAuthHeader from '../utility/OAuthHeader';
-import { METHOD, Request } from '../utility/OAuthHeader/types';
-import { uriPercentEncode } from '../utility';
-import { TWITTER_BASE_URL } from '../config';
-import { getOAuthToken } from '../api';
+import { CALLBACK_URL } from '../config';
+import Twitter from '../services/Twitter';
 
 const twitterRouter = express.Router();
 
-const encodedCallback = uriPercentEncode(
-	'http://127.0.0.1:4000/twitter/callback'
-);
+const twitter = new Twitter();
 
 twitterRouter.get('/authorize', async (req, res) => {
-	const apiKey = process.env.TWITTER_CONSUMER_KEY;
-	const secret = process.env.TWITTER_CONSUMER_KEY_SECRET;
-
-	if (!apiKey) {
-		throw new Error('The Consumer/API key was not provided');
+	if (!CALLBACK_URL) {
+		throw new Error('No Callback url was provided.');
 	}
+	// The OAuth process has started!
+	req.session.processing = true;
 
-	if (!secret) {
-		throw new Error('The Consumer/API Secret was not provided');
-	}
+	// Connect to twitter and get token
+	const oAuthAuthorize = await twitter.getAuthorizeToken(CALLBACK_URL);
 
-	const request: Request = {
-		method: METHOD.POST,
-		uri: `${TWITTER_BASE_URL}/oauth/request_token?oauth_callback=${encodedCallback}`,
-	};
+	req.session.oauth_token = oAuthAuthorize.oauth_token;
 
-	try {
-		req.session.processing = true;
-		// Make a request to twitter
-		const oAuthHeader = new OAuthHeader(apiKey, secret);
-		const headers = {
-			Authorization: oAuthHeader.getHeaderString(request),
-		};
-		const oAuthAuthorize = await getOAuthToken(request.uri, headers);
+	// send the client uri for authorization
+	const authorizeUserLink = `https://api.twitter.com/oauth/authorize?oauth_token=${oAuthAuthorize.oauth_token}`;
 
-		// confirm callback
-		if (!oAuthAuthorize.oauth_callback_confirmed) {
-			throw new Error('Could not confirm callback for oauth.');
-		}
-
-		// set the token received in session
-		req.session.oauth_token = oAuthAuthorize.oauth_token;
-		const authorizeUserLink = `https://api.twitter.com/oauth/authorize?oauth_token=${oAuthAuthorize.oauth_token}`;
-		req.session.save();
-
-		// send the client uri for authorization
-		res.json({
-			authorizeUrl: authorizeUserLink,
-		});
-	} catch (e) {
-		res.send(e);
-	}
+	res.json({
+		authorizeUrl: authorizeUserLink,
+	});
 });
 
-twitterRouter.get('/callback', (req, res) => {
-	if (req.query.oauth_token === req.session.oauth_token) {
+twitterRouter.get('/callback', async (req, res) => {
+	const sessionOauthToken = req.session.oauth_token;
+	let statusCode = 200;
+
+	if (
+		req.query.oauth_token &&
+		req.query.oauth_verifier &&
+		sessionOauthToken &&
+		req.query.oauth_token === sessionOauthToken
+	) {
 		req.session.verified = true;
 		req.session.denied = false;
+
+		const oauth_verifier = req.query.oauth_verifier as string;
+
+		const accessTokens = await twitter.getAccessToken(sessionOauthToken, oauth_verifier);
+
+		req.session.oauth_token = accessTokens.oauth_token;
+		req.session.oauth_token_secret = accessTokens.oauth_token_secret;
 	} else if (req.query.denied) {
 		req.session.denied = true;
 		req.session.verified = false;
+	} else {
+		statusCode = 511;
 	}
 
 	req.session.processing = false;
-	res.end();
+	res.status(statusCode).send();
 });
 
 twitterRouter.get('/verify', (req, res) => {
-	console.log(req.session);
 	if (req.session.processing) {
 		res.status(202).send();
 	} else if (req.session.verified) {

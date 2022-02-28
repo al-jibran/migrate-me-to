@@ -1,23 +1,32 @@
 import supertest from 'supertest';
 import { stubApiForRoute } from './__utils__/stub-api';
-import { getOAuthToken } from '../api';
 import app from '../app';
-
-jest.mock('../api');
+import Twitter from '../services/Twitter';
+import { CALLBACK_URL } from '../config';
 
 const mockToken = 'NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0';
 
 const api = supertest(app);
 
 describe('Service', () => {
+	let mockGetAuthorizeToken: jest.SpyInstance;
+
+	beforeEach(() => {
+		mockGetAuthorizeToken = jest.spyOn(Twitter.prototype, 'getAuthorizeToken');
+	});
+
 	it('returns a link to login to the service', async () => {
-		(getOAuthToken as jest.Mock).mockResolvedValue({
-			oauth_token: 'NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0',
-			oauth_callback_confirmed: true,
-		});
+		mockGetAuthorizeToken.mockImplementation(() =>
+			Promise.resolve({
+				oauth_token: mockToken,
+				oauth_callback_confirmed: true,
+				oauth_token_secret: 'secret',
+			})
+		);
 
 		const response = await api.get('/twitter/authorize').expect(200);
-		expect(getOAuthToken).toHaveBeenCalled();
+
+		expect(mockGetAuthorizeToken).toHaveBeenCalledWith(CALLBACK_URL);
 
 		expect(response.body).toEqual({
 			authorizeUrl: `https://api.twitter.com/oauth/authorize?oauth_token=${mockToken}`,
@@ -26,9 +35,7 @@ describe('Service', () => {
 
 	describe('/verify', () => {
 		const fromRoute = (route: string, session: Record<string, any>) => {
-			return stubApiForRoute(app, route)
-				.withSession(session)
-				.get(`/twitter/verify`);
+			return stubApiForRoute(app, route).withSession(session).get(`/twitter/verify`);
 		};
 
 		const routeToTest = '/twitter/verify';

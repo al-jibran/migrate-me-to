@@ -5,6 +5,7 @@ import app from './app';
 declare module 'express-session' {
 	interface SessionData {
 		oauth_token: string;
+		oauth_token_secret: string;
 		verified: boolean;
 		denied: boolean;
 		processing: boolean;

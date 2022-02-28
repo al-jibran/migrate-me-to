@@ -167,10 +167,7 @@ const urlEncoding: Record<string, string> = {
  * @param exceptions an array of symbols not to encode other than the default ones (a-z, A-Z, 0-9, -._~)
  * @returns a percent encoded string
  */
-export const uriPercentEncode = (
-	value: string,
-	exceptions: string[] = ['']
-) => {
+export const uriPercentEncode = (value: string, exceptions: string[] = ['']) => {
 	let encodedString = '';
 	const exceptionsString = exceptions.join('');
 
@@ -191,6 +188,10 @@ export const randomStringGenerator = () => {
 	return crypto.randomUUID().replace(/[^a-zA-Z0-9]/g, '');
 };
 
+export const getTimestamp = (): string => {
+	return Math.floor(new Date().getTime() / 1000).toString();
+};
+
 export const getUrlQueries = (queries: string | undefined): string[] => {
 	if (!queries) return [];
 
@@ -198,3 +199,29 @@ export const getUrlQueries = (queries: string | undefined): string[] => {
 
 	return queryToAppend;
 };
+
+export const responseToObject = (data: string): Record<string, unknown> => {
+	const responseList: string[] = data.split('&');
+
+	const obj = responseList.reduce((o, item) => {
+		const key = item.split('=')[0];
+
+		if (!key) {
+			throw new Error('String not properly formed to create an object');
+		}
+
+		const value = item.split('=')[1];
+
+		return { ...o, [key]: value };
+	}, {});
+
+	return obj;
+};
+
+export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
+	obj: X,
+	prop: Y
+): obj is X & Record<Y, unknown> {
+	return obj.hasOwnProperty(prop);
+}
+
