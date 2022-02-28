@@ -69,6 +69,15 @@ describe('OAuth Header', () => {
 			expect(receivedString).toMatch(headerWithToken);
 		});
 
+		it('returns a header string with encoded oauth_callback when it is passed as an additional param', () => {
+			const oauth_callback = 'http://callbackurl.ex';
+			const encoded = utility.uriPercentEncode(oauth_callback);
+
+			const receivedString = header.getHeaderString(request, { oauth_token, oauth_callback });
+
+			expect(receivedString.search(`oauth_callback="${encoded}"`)).toBeGreaterThan(-1);
+		});
+
 		describe('signature', () => {
 			it('is encrypted with apiKey only when oauth_token_secret is not given', () => {
 				expect(crypto.createHmac).toHaveBeenCalledWith('sha1', `${apiSecret}&`);
