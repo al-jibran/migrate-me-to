@@ -45,7 +45,7 @@ class Twitter {
 		this.oAuthHeader = new OAuthHeader(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_KEY_SECRET);
 	}
 
-	getAuthorizeToken = async (callbackUrl: string): Promise<AuthorizeToken> => {
+	async getAuthorizeToken(callbackUrl: string): Promise<AuthorizeToken> {
 		const request: Request = {
 			method: METHOD.POST,
 			uri: `${this.TWITTER_BASE_URL}/oauth/request_token`,
@@ -69,9 +69,9 @@ class Twitter {
 		}
 
 		return parseAuthorizeString;
-	};
+	}
 
-	getAccessToken = async (oauth_token: string, oauth_verifier: string): Promise<AccessToken> => {
+	async getAccessToken(oauth_token: string, oauth_verifier: string): Promise<AccessToken> {
 		const request: Request = {
 			method: METHOD.POST,
 			uri: `${this.TWITTER_BASE_URL}/oauth/access_token`,
@@ -92,7 +92,7 @@ class Twitter {
 		}
 
 		return parseAccessTokenString;
-	};
+	}
 }
 
 export default Twitter;
