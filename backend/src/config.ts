@@ -3,6 +3,10 @@ config();
 
 export const PORT = process.env.PORT || 4000;
 
+if (!process.env.CALLBACK_URL) {
+	throw new Error('No Callback url was provided.');
+}
+
 export const CALLBACK_URL =
 	process.env.NODE_ENV === 'production'
 		? process.env.CALLBACK_URL
