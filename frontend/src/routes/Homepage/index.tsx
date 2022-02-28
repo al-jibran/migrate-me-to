@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { DownArrow } from '../components/svgs';
-import ServiceCardLarge from '../components/ServiceCardLarge';
-import { ServiceType, services } from '../data/services';
-import { normalizeClass } from '../utility/normalizeClass';
+import { DownArrow } from '../../components/svgs';
+import ServiceCardLarge from '../../components/ServiceCardLarge';
+import { ServiceType, services } from '../../data/services';
+import { normalizeClass } from '../../utility/normalizeClass';
 
 const Homepage = () => {
 	return (

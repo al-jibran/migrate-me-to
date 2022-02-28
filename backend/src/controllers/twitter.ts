@@ -21,12 +21,16 @@ twitterRouter.get('/authorize', async (req, res) => {
 	// send the client uri for authorization
 	const authorizeUserLink = `https://api.twitter.com/oauth/authorize?oauth_token=${oAuthAuthorize.oauth_token}`;
 
+	console.log(req.sessionID);
+	req.session.save();
+
 	res.json({
 		authorizeUrl: authorizeUserLink,
 	});
 });
 
 twitterRouter.get('/callback', async (req, res) => {
+	console.log(req.sessionID);
 	const sessionOauthToken = req.session.oauth_token;
 	let statusCode = 200;
 
@@ -48,12 +52,11 @@ twitterRouter.get('/callback', async (req, res) => {
 	} else if (req.query.denied) {
 		req.session.denied = true;
 		req.session.verified = false;
-	} else {
-		statusCode = 511;
 	}
 
+	statusCode;
 	req.session.processing = false;
-	res.status(statusCode).send();
+	res.redirect('http://127.0.0.1:3000/service/Twitter');
 });
 
 twitterRouter.get('/verify', (req, res) => {

@@ -25,10 +25,7 @@ ReactDOM.render(
 				<Route index element={<Homepage />} />
 				<Route path='service/:name' element={<Service />} />
 			</Route>
-			<Route
-				path='*'
-				element={<div>Oooops... There&apos;s nothing here</div>}
-			/>
+			<Route path='*' element={<div>Oooops... There&apos;s nothing here</div>} />
 		</Routes>
 	</BrowserRouter>,
 	document.getElementById('app')
