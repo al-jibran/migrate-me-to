@@ -18,8 +18,16 @@ export const getAuthorizeUserLink = async () => {
 		if (!err.response) {
 			throw {
 				code: 503,
-				message: 'There was a problem connecting to the server. Try again later.',
+				data: {
+					message: 'There was a problem connecting to the server. Try again later.',
+				},
 			};
-		} else throw error;
+		} else {
+			console.log('error here: ', err.response);
+			throw {
+				code: err.code,
+				data: err.response.data,
+			};
+		}
 	}
 };
