@@ -4,19 +4,18 @@ import { ProxyError } from '../Errors';
 import Twitter from '../services/Twitter';
 
 const twitterRouter = express.Router();
-
 const twitter = new Twitter();
 
 twitterRouter.get('/authorize', async (req, res, next) => {
-	console.log(req.session);
 	try {
 		if (!CALLBACK_URL) {
 			throw new Error('No Callback url was provided.');
 		}
 
 		if (req.session.oauth_token) {
-			throw new ProxyError('Already authorized', 401);
+			throw new ProxyError('Already signed in!', 400);
 		}
+
 		// The OAuth process has started!
 		req.session.processing = true;
 
@@ -40,7 +39,6 @@ twitterRouter.get('/authorize', async (req, res, next) => {
 
 twitterRouter.get('/callback', async (req, res) => {
 	const sessionOauthToken = req.session.oauth_token;
-	let statusCode = 200;
 
 	if (
 		req.query.oauth_token &&
@@ -62,7 +60,6 @@ twitterRouter.get('/callback', async (req, res) => {
 		req.session.verified = false;
 	}
 
-	statusCode;
 	req.session.processing = false;
 	res.redirect('http://127.0.0.1:3000/service/Twitter');
 });

@@ -19,9 +19,8 @@ export const errorHandleMiddleware = (
 
 	if (axios.isAxiosError(err)) {
 		const errorCode = err.response?.status || parseInt(err.code || '500');
-		res.status(errorCode).json({ message: err.message });
+		res.status(errorCode).json({ message: err.response?.data || err.message });
 	} else if (err instanceof ProxyError) {
-		console.log('gets in proxy error');
 		res.status(err.code).json({ message: err.message });
 	}
 
