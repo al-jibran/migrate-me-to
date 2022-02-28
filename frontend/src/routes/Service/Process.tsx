@@ -27,10 +27,7 @@ interface ProcessProps {
 	dispatchStepsStatus: Dispatch<ReducerActionType>;
 }
 
-export const Process: React.FC<ProcessProps> = ({
-	name,
-	dispatchStepsStatus,
-}) => {
+export const Process: React.FC<ProcessProps> = ({ name, dispatchStepsStatus }) => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<AppError | null>(null);
 
@@ -46,24 +43,20 @@ export const Process: React.FC<ProcessProps> = ({
 				window.open(data.authorizeUrl, '_self');
 			})
 			.catch((e: AppError) => {
+				handleDispatchStatus('FAIL', 'stepOne');
 				setLoading(false);
 				setError(e);
 			});
 	};
 
-	return (
-		<ProcessContainer
-			name={name}
-			loading={loading}
-			error={error}
-			handleLogin={handleLogin}
-		/>
-	);
+	return <ProcessContainer name={name} loading={loading} error={error} handleLogin={handleLogin} />;
 };
 
-interface AppError {
+export interface AppError {
 	code: number;
-	message: string;
+	data: {
+		message: string;
+	};
 }
 
 interface ProcessContainerProps {
@@ -85,9 +78,7 @@ const ProcessContainer: React.FC<ProcessContainerProps> = ({
 	return (
 		<div className='mt-14'>
 			{error && (
-				<div className='bg-red-700 px-4 py-3 rounded-md text-white'>
-					{error.message}
-				</div>
+				<div className='bg-red-700 px-4 py-3 rounded-md text-white'>{error.data.message}</div>
 			)}
 			<div className='flex justify-between mt-5'>
 				<h3 className={`uppercase border-b-4 ${headingBorderColor} w-fit`}>
