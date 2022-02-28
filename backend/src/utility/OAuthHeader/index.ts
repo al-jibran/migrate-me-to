@@ -38,13 +38,21 @@ class OAuthHeader {
 		this.oAuthParams['oauth_timestamp'] = getTimestamp();
 		this.oAuthParams['oauth_nonce'] = randomStringGenerator();
 
-		if (token) {
-			this.oAuthParams['oauth_token'] = token.oauth_token;
-			this.tokenSecret = token.oauth_token_secret || '';
+		if (additionalOAuthParams) {
+			Object.keys(additionalOAuthParams).forEach((param) => {
+				const value = additionalOAuthParams[param as keyof AdditionalOauth];
+
+				if (!value) {
+					throw new ProxyError('Could not create header for OAuth Request', 500);
+				}
+
+				if (param === 'oauth_token_secret') this.tokenSecret = value;
+				else this.oAuthParams[param] = value;
+			});
 		}
 
 		// signature methods requires every oauth parameter and addition info like queries, data, etc. in its encoded form.
-		const encodedParamsForSignature: string[] = this.getOAuthStrings(additionalParams);
+		const encodedParamsForSignature: string[] = this.getOAuthStrings(dataToSend);
 
 		this.oAuthParams['oauth_signature'] = this.getEncryptedSignature(
 			request,
@@ -58,7 +66,7 @@ class OAuthHeader {
 		return headerString;
 	};
 
-	private getOAuthStrings = (additionalParams?: Record<string, string>): string[] => {
+	private getOAuthStrings = (additionalParams: Record<string, string> = {}): string[] => {
 		const params = { ...this.oAuthParams, ...additionalParams };
 		return this.encodeAndSort(params);
 	};
