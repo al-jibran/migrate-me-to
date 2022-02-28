@@ -1,6 +1,8 @@
-export interface Token {
-	oauth_token: string;
+export interface AdditionalOauth {
+	oauth_token?: string;
 	oauth_token_secret?: string;
+	oauth_verifier?: string;
+	oauth_callback?: string;
 }
 
 export interface Request {

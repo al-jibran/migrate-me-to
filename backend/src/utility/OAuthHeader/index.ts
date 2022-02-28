@@ -1,6 +1,7 @@
 import crypto from 'crypto';
-import { HeaderType, Request, Token } from './types';
+import { AdditionalOauth, HeaderType, Request } from './types';
 import { uriPercentEncode, randomStringGenerator, getUrlQueries, getTimestamp } from '..';
+import { ProxyError } from '../../Errors';
 
 class OAuthHeader {
 	private oAuthParams: HeaderType = {
@@ -22,10 +23,17 @@ class OAuthHeader {
 		this.oAuthParams['oauth_version'] = '1.0';
 	}
 
+	/**
+	 * This method generates a header string that is used for Authorization of OAuth 1.0 requests.
+	 * @param request A request object that contains uri endpoint to send request to and HTTP Method like GET, POST, etc.
+	 * @param additionalOAuthParams An optional object that may contain oauth_callback, oauth_verifier, oauth_token (access token), oauth_token_secret (access token secret)
+	 * @param dataToSend An optional object that may contain data to send with POST methods.
+	 * @returns A string to be used in the Authorization Header for making oauth requests.
+	 */
 	getHeaderString = (
 		request: Request,
-		additionalParams?: Record<string, string>,
-		token?: Token
+		additionalOAuthParams?: AdditionalOauth,
+		dataToSend: Record<string, string> = {}
 	): string => {
 		this.oAuthParams['oauth_timestamp'] = getTimestamp();
 		this.oAuthParams['oauth_nonce'] = randomStringGenerator();
