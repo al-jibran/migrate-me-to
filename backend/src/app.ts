@@ -14,10 +14,16 @@ if (!process.env.SESSION_SECRET) {
 
 const app = express();
 
+const whitelist =
+	process.env.NODE_ENV === 'production'
+		? 'https://migratemeto.netlify.app'
+		: 'http://127.0.0.1:3000';
+
 app.use(express.json());
+
 app.use(
 	cors({
-		origin: '*',
+		origin: whitelist,
 		credentials: true,
 	})
 );
@@ -27,7 +33,7 @@ const MemoryStore = createMemoryStore(session);
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
-		saveUninitialized: false,
+		saveUninitialized: true,
 		resave: false,
 		store: new MemoryStore({
 			checkPeriod: 6 * 60 * 60 * 1000,
