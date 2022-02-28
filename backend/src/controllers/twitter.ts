@@ -7,6 +7,9 @@ const twitterRouter = express.Router();
 const twitter = new Twitter();
 
 twitterRouter.get('/authorize', async (req, res) => {
+	if (!CALLBACK_URL) {
+		throw new Error('No Callback url was provided.');
+	}
 	// The OAuth process has started!
 	req.session.processing = true;
 
