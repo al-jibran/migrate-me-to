@@ -1,4 +1,5 @@
 import express from 'express';
+import { CALLBACK_URL } from '../config';
 import Twitter from '../services/Twitter';
 
 const twitterRouter = express.Router();
@@ -10,9 +11,7 @@ twitterRouter.get('/authorize', async (req, res) => {
 	req.session.processing = true;
 
 	// Connect to twitter and get token
-	const oAuthAuthorize = await twitter.getAuthorizeToken(
-		'http://127.0.0.1:4000/twitter/callback'
-	);
+	const oAuthAuthorize = await twitter.getAuthorizeToken(CALLBACK_URL);
 
 	req.session.oauth_token = oAuthAuthorize.oauth_token;
 
@@ -39,10 +38,7 @@ twitterRouter.get('/callback', async (req, res) => {
 
 		const oauth_verifier = req.query.oauth_verifier as string;
 
-		const accessTokens = await twitter.getAccessToken(
-			sessionOauthToken,
-			oauth_verifier
-		);
+		const accessTokens = await twitter.getAccessToken(sessionOauthToken, oauth_verifier);
 
 		req.session.oauth_token = accessTokens.oauth_token;
 		req.session.oauth_token_secret = accessTokens.oauth_token_secret;
