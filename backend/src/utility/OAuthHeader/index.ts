@@ -39,8 +39,10 @@ class OAuthHeader {
 		this.oAuthParams['oauth_nonce'] = randomStringGenerator();
 
 		if (additionalOAuthParams) {
-			Object.keys(additionalOAuthParams).forEach((param) => {
-				const value = additionalOAuthParams[param as keyof AdditionalOauth];
+			Object.keys(additionalOAuthParams).forEach((key) => {
+				const param = key as keyof AdditionalOauth;
+
+				const value = additionalOAuthParams[param];
 
 				if (!value) {
 					throw new ProxyError('Could not create header for OAuth Request', 500);

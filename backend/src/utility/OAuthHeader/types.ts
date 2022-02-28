@@ -10,9 +10,10 @@ export interface Request {
 	uri: string;
 }
 
-export interface HeaderType extends Record<string, string> {
+export interface HeaderType extends AdditionalOauth {
 	oauth_consumer_key: string;
 	oauth_nonce: string;
+	oauth_signature?: string;
 	oauth_signature_method: string;
 	oauth_timestamp: string;
 	oauth_version: string;
