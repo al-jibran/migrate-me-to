@@ -1,36 +1,44 @@
 import express from 'express';
 import { CALLBACK_URL } from '../config';
+import { ProxyError } from '../Errors';
 import Twitter from '../services/Twitter';
 
 const twitterRouter = express.Router();
 
 const twitter = new Twitter();
 
-twitterRouter.get('/authorize', async (req, res) => {
-	if (!CALLBACK_URL) {
-		throw new Error('No Callback url was provided.');
+twitterRouter.get('/authorize', async (req, res, next) => {
+	console.log(req.session);
+	try {
+		if (!CALLBACK_URL) {
+			throw new Error('No Callback url was provided.');
+		}
+
+		if (req.session.oauth_token) {
+			throw new ProxyError('Already authorized', 401);
+		}
+		// The OAuth process has started!
+		req.session.processing = true;
+
+		// Connect to twitter and get token
+		const oAuthAuthorize = await twitter.getAuthorizeToken(CALLBACK_URL);
+
+		req.session.oauth_token = oAuthAuthorize.oauth_token;
+
+		// send the client uri for authorization
+		const authorizeUserLink = `https://api.twitter.com/oauth/authorize?oauth_token=${oAuthAuthorize.oauth_token}`;
+
+		req.session.save();
+
+		res.json({
+			authorizeUrl: authorizeUserLink,
+		});
+	} catch (e) {
+		next(e);
 	}
-	// The OAuth process has started!
-	req.session.processing = true;
-
-	// Connect to twitter and get token
-	const oAuthAuthorize = await twitter.getAuthorizeToken(CALLBACK_URL);
-
-	req.session.oauth_token = oAuthAuthorize.oauth_token;
-
-	// send the client uri for authorization
-	const authorizeUserLink = `https://api.twitter.com/oauth/authorize?oauth_token=${oAuthAuthorize.oauth_token}`;
-
-	console.log(req.sessionID);
-	req.session.save();
-
-	res.json({
-		authorizeUrl: authorizeUserLink,
-	});
 });
 
 twitterRouter.get('/callback', async (req, res) => {
-	console.log(req.sessionID);
 	const sessionOauthToken = req.session.oauth_token;
 	let statusCode = 200;
 
