@@ -25,10 +25,7 @@ const isAuthorizedToken = (obj: AuthorizeToken | {}): obj is AuthorizeToken => {
 };
 
 const isAccessToken = (obj: AccessToken | {}): obj is AccessToken => {
-	return (
-		hasOwnProperty(obj, 'oauth_token') &&
-		hasOwnProperty(obj, 'oauth_token_secret')
-	);
+	return hasOwnProperty(obj, 'oauth_token') && hasOwnProperty(obj, 'oauth_token_secret');
 };
 
 class Twitter {
@@ -66,9 +63,7 @@ class Twitter {
 		const parseAuthorizeString = responseToObject(authorizeString);
 
 		if (!isAuthorizedToken(parseAuthorizeString)) {
-			throw new Error(
-				'Did not receive the expected response for authorization from Twitter.'
-			);
+			throw new Error('Did not receive the expected response for authorization from Twitter.');
 		}
 
 		if (!parseAuthorizeString.oauth_callback_confirmed) {
@@ -78,10 +73,7 @@ class Twitter {
 		return parseAuthorizeString;
 	};
 
-	getAccessToken = async (
-		oauth_token: string,
-		oauth_verifier: string
-	): Promise<AccessToken> => {
+	getAccessToken = async (oauth_token: string, oauth_verifier: string): Promise<AccessToken> => {
 		const request: Request = {
 			method: METHOD.POST,
 			uri: `${this.TWITTER_BASE_URL}/oauth/access_token`,
@@ -98,9 +90,7 @@ class Twitter {
 		const parseAccessTokenString = responseToObject(accessTokenString);
 
 		if (!isAccessToken(parseAccessTokenString)) {
-			throw new Error(
-				'Did not receive the expected response for access tokens from Twitter'
-			);
+			throw new Error('Did not receive the expected response for access tokens from Twitter');
 		}
 
 		return parseAccessTokenString;
