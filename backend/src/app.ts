@@ -38,6 +38,9 @@ app.use(
 		store: new MemoryStore({
 			checkPeriod: 6 * 60 * 60 * 1000,
 		}),
+		cookie: {
+			secure: process.env.NODE_ENV === 'production',
+		},
 	})
 );
 
