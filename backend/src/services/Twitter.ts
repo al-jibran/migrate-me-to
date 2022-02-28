@@ -31,7 +31,8 @@ const isAccessToken = (obj: AccessToken | {}): obj is AccessToken => {
 
 class Twitter {
 	private TWITTER_BASE_URL = 'https://api.twitter.com';
-	private oAuthHeader: OAuthHeader;
+	private CONSUMER_KEY: string;
+	private CONSUMER_KEY_SECRET: string;
 
 	constructor() {
 		if (!TWITTER_CONSUMER_KEY) {
@@ -42,17 +43,20 @@ class Twitter {
 			throw new Error('The Consumer/API Secret was not provided');
 		}
 
-		this.oAuthHeader = new OAuthHeader(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_KEY_SECRET);
+		this.CONSUMER_KEY = TWITTER_CONSUMER_KEY;
+		this.CONSUMER_KEY_SECRET = TWITTER_CONSUMER_KEY_SECRET;
 	}
 
 	async getAuthorizeToken(callbackUrl: string): Promise<AuthorizeToken> {
+		const oAuthHeader = new OAuthHeader(this.CONSUMER_KEY, this.CONSUMER_KEY_SECRET);
+
 		const request: Request = {
 			method: METHOD.POST,
 			uri: `${this.TWITTER_BASE_URL}/oauth/request_token`,
 		};
 
 		const headers = {
-			Authorization: this.oAuthHeader.getHeaderString(request, {
+			Authorization: oAuthHeader.getHeaderString(request, {
 				oauth_callback: callbackUrl,
 			}),
 		};
@@ -72,13 +76,15 @@ class Twitter {
 	}
 
 	async getAccessToken(oauth_token: string, oauth_verifier: string): Promise<AccessToken> {
+		const oAuthHeader = new OAuthHeader(this.CONSUMER_KEY, this.CONSUMER_KEY_SECRET);
+
 		const request: Request = {
 			method: METHOD.POST,
 			uri: `${this.TWITTER_BASE_URL}/oauth/access_token`,
 		};
 
 		const headers = {
-			Authorization: this.oAuthHeader.getHeaderString(request, {
+			Authorization: oAuthHeader.getHeaderString(request, {
 				oauth_token,
 				oauth_verifier,
 			}),
