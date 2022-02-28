@@ -59,19 +59,13 @@ describe('OAuth Header', () => {
 		});
 
 		it('returns a header string with token', () => {
-			const receivedString = header.getHeaderString(
-				request,
-				{},
-				{
-					oauth_token,
-				}
-			);
+			const receivedString = header.getHeaderString(request, { oauth_token });
 
 			expect(receivedString).toMatch(headerWithToken);
 		});
 
 		it('returns a header without data to send in header', () => {
-			const receivedString = header.getHeaderString(request, data, { oauth_token });
+			const receivedString = header.getHeaderString(request, { oauth_token }, data);
 			expect(receivedString).toMatch(headerWithToken);
 		});
 
@@ -81,10 +75,14 @@ describe('OAuth Header', () => {
 			});
 
 			it('is encrypted with apiKey and oauth_token_secret when it is given', () => {
-				header.getHeaderString(request, data, {
-					oauth_token,
-					oauth_token_secret,
-				});
+				header.getHeaderString(
+					request,
+					{
+						oauth_token,
+						oauth_token_secret,
+					},
+					data
+				);
 
 				expect(crypto.createHmac).toHaveBeenCalledWith(
 					'sha1',
@@ -95,10 +93,14 @@ describe('OAuth Header', () => {
 			it('returns a valid signature for header string', () => {
 				spiedOnCrypto.mockRestore();
 
-				const receivedString = header.getHeaderString(request, data, {
-					oauth_token,
-					oauth_token_secret,
-				});
+				const receivedString = header.getHeaderString(
+					request,
+					{
+						oauth_token,
+						oauth_token_secret,
+					},
+					data
+				);
 
 				const encodedSignature = utility.uriPercentEncode('hCtSmYh+iHYCEqBWrE7C7hYmtUk=');
 				expect(receivedString.search(encodedSignature)).toBeGreaterThan(-1);
