@@ -27,7 +27,6 @@ twitterRouter.get('/authorize', async (req, res) => {
 twitterRouter.get('/callback', async (req, res) => {
 	const sessionOauthToken = req.session.oauth_token;
 	let statusCode = 200;
-	console.log(sessionOauthToken);
 
 	if (
 		req.query.oauth_token &&
@@ -59,7 +58,6 @@ twitterRouter.get('/callback', async (req, res) => {
 });
 
 twitterRouter.get('/verify', (req, res) => {
-	console.log(req.session);
 	if (req.session.processing) {
 		res.status(202).send();
 	} else if (req.session.verified) {

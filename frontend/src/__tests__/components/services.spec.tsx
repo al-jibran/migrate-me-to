@@ -37,7 +37,6 @@ describe('Services', () => {
 	it('renders all the items in the array', async () => {
 		const { container } = context;
 		const elements = container.querySelector('#services div')?.children;
-		console.log(elements);
 
 		expect(elements).toHaveLength(services.length);
 	});
