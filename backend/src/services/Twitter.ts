@@ -4,6 +4,7 @@ import { hasOwnProperty } from '../utility';
 import { Request } from '../utility/OAuthHeader/types';
 import { postWithHeader } from '../api';
 import { responseToObject } from '../utility';
+import { TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_KEY_SECRET } from '../config';
 
 interface AuthorizeToken {
 	oauth_token: string;
@@ -33,18 +34,15 @@ class Twitter {
 	private oAuthHeader: OAuthHeader;
 
 	constructor() {
-		if (!process.env.TWITTER_CONSUMER_KEY) {
+		if (!TWITTER_CONSUMER_KEY) {
 			throw new Error('The Consumer/API key was not provided');
 		}
 
-		if (!process.env.TWITTER_CONSUMER_KEY_SECRET) {
+		if (!TWITTER_CONSUMER_KEY_SECRET) {
 			throw new Error('The Consumer/API Secret was not provided');
 		}
 
-		const apiKey = process.env.TWITTER_CONSUMER_KEY;
-		const apiKeySecret = process.env.TWITTER_CONSUMER_KEY_SECRET;
-
-		this.oAuthHeader = new OAuthHeader(apiKey, apiKeySecret);
+		this.oAuthHeader = new OAuthHeader(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_KEY_SECRET);
 	}
 
 	getAuthorizeToken = async (callbackUrl: string): Promise<AuthorizeToken> => {
