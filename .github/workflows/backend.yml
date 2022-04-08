@@ -1,0 +1,41 @@
+name: Migrate Me To Backend Pipeline
+on:
+  push:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+
+jobs:
+  deploy_pipeline:
+    name: Deploy Pipeline
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo TWITTER_CONSUMER_KEY=${{ secrets.TWITTER_CONSUMER_KEY }} >> .env
+          echo TWITTER_CONSUMER_KEY_SECRET=${{ secrets.TWITTER_CONSUMER_KEY_SECRET }} >> .env
+          echo SESSION_SECRET=${{ secrets.SESSION_SECRET }} >> .env
+
+      - name: Tests
+        run: npm test
+
+      - name: Deploy To Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: 'migrate-me-to-backend'
+          heroku_email: 'jibran1in1000.web@gmail.com'
+          healthcheck: 'https://migrate-me-to-backend.herokuapp.com/ping'
+          appdir: backend
