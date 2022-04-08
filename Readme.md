@@ -154,8 +154,8 @@ Start the server (development mode)
 Start the server (production mode)
 
 ```bash
-	npm run build
-	npm run start:prod
+  npm run build
+  npm run start:prod
 ```
 
 <!-- Running Tests -->
